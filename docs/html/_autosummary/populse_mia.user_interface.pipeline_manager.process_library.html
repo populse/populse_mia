@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 3.0.0-dev+da5ace3e documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=8de605bd"></script>
+    <script src="../_static/documentation_options.js?v=13d1b248"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+da5ace3e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_library</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -36,7 +36,7 @@ the project.</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.import_file" title="populse_mia.user_interface.pipeline_manager.process_library.import_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_file</span></code></a>(full_name, path)</p></td>
-<td><p>Import a Python module from a specified file path.</p></td>
+<td><p>Import a Python module from a file without registering it in <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.node_structure_from_dict" title="populse_mia.user_interface.pipeline_manager.process_library.node_structure_from_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_structure_from_dict</span></code></a>(datadict[, parent, ...])</p></td>
 <td><p>Construct a hierarchical node structure from a dictionary.</p></td>
@@ -76,11 +76,9 @@ the project.</p>
 <p>Data model providing a tree structure for an arbitrary dictionary.</p>
 <p>This model is designed to represent a dictionary as a tree structure,
 enabling interaction with the data through a tree view.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>columnCount: Return always 1.</p></li>
 <li><p>data: Return the data requested by the view.</p></li>
 <li><p>flags: Everything is enabled and selectable, only the leaves can
@@ -98,8 +96,10 @@ by rows.</p></li>
 <li><p>setData: Method called when the user changes data.</p></li>
 <li><p>to_dict: return the root node as a dictionary.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#DictionaryTreeModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.__init__" title="Link to this definition">¶</a></dt>
@@ -120,11 +120,13 @@ by rows.</p></li>
 <dd><p>Returns the number of columns, which is always 1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> – (QModelIndex) The parent index (unused in this
-implementation).</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The parent index (unused in this implementation).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) The number of columns.</p>
+<dd class="field-even"><p>The number of columns.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -132,18 +134,25 @@ implementation).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.data">
 <span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#DictionaryTreeModel.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.data" title="Link to this definition">¶</a></dt>
-<dd><p>Returns the data stored under the given role for the item at the
-given index.</p>
+<dd><p>Returns the data associated with the item at the given index and role.</p>
+<p>This method is called by Qt’s model/view framework to retrieve data for
+a model item. The <code class="docutils literal notranslate"><span class="pre">role</span></code> specifies how the data will be used, for
+example, <code class="docutils literal notranslate"><span class="pre">Qt.DisplayRole</span></code> for displaying the item or <code class="docutils literal notranslate"><span class="pre">Qt.EditRole</span></code>
+when editing it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index</strong> – (QModelIndex) The index of the item.</p></li>
-<li><p><strong>role</strong> – (Qt.ItemDataRole) The role of the data to retrieve.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The model index of the item for which data is requested.</p></li>
+<li><p><strong>role</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The Qt item-data role specifying the type or purpose of
+the requested data, such as <code class="docutils literal notranslate"><span class="pre">Qt.DisplayRole</span></code> or <code class="docutils literal notranslate"><span class="pre">Qt.EditRole</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The data stored under the given role, or None if not
-available.</p>
+<dd class="field-even"><p>The item’s name for <code class="docutils literal notranslate"><span class="pre">Qt.DisplayRole</span></code> and <code class="docutils literal notranslate"><span class="pre">Qt.EditRole</span></code>,
+or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the index is invalid or the role is not handled.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -154,10 +163,13 @@ available.</p>
 <dd><p>Get the item flags for the specified index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>index</strong> – (QModelIndex) The model index to retrieve flags for.</p>
+<dd class="field-odd"><p><strong>index</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The model index to retrieve flags for.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(Qt.ItemFlags) The corresponding item flags.</p>
+<dd class="field-even"><p>The corresponding item flags.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qt-itemflags.html" title="(in Qt5 v5.15)">ItemFlags</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -168,10 +180,13 @@ available.</p>
 <dd><p>Retrieves the Node object from the given index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>index</strong> – (QModelIndex) The index of the node.</p>
+<dd class="field-odd"><p><strong>index</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The index of the node.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The Node object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node">populse_mia.user_interface.pipeline_manager.process_library.Node</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -179,18 +194,24 @@ available.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.headerData">
 <span class="sig-name descname"><span class="pre">headerData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#DictionaryTreeModel.headerData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.headerData" title="Link to this definition">¶</a></dt>
-<dd><p>Returns the data for the given role and section in the header.</p>
+<dd><p>Returns the header label for the given section.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>section</strong> – (int) The section number.</p></li>
-<li><p><strong>orientation</strong> – (Qt.Orientation) The orientation of the header
-(unused in this implementation).</p></li>
-<li><p><strong>role</strong> – (Qt.ItemDataRole) The role of the data to retrieve.</p></li>
+<li><p><strong>section</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The section number for which to retrieve the header
+label.</p></li>
+<li><p><strong>orientation</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qt.html#Orientation-enum" title="(in Qt5 v5.15)"><em>Orientation</em></a>) – The orientation of the header, either horizontal or
+vertical. This parameter is unused in this implementation.</p></li>
+<li><p><strong>role</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The role for which to retrieve the header data. Only
+<code class="docutils literal notranslate"><span class="pre">Qt.DisplayRole</span></code> is handled by this implementation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) The header data, or None if not available.</p>
+<dd class="field-even"><p>The header label for the requested section, or None if the
+section or role is not handled.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,14 +223,16 @@ available.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>row</strong> – (int) The row number.</p></li>
-<li><p><strong>column</strong> – (int) The column number.</p></li>
-<li><p><strong>parent</strong> – (QModelIndex) The parent index.</p></li>
+<li><p><strong>row</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The row number.</p></li>
+<li><p><strong>column</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The column number.</p></li>
+<li><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The parent index.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QModelIndex) The created index, or an invalid index if not
-available.</p>
+<dd class="field-even"><p>The created index, or an invalid index if not available.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)">QModelIndex</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -221,14 +244,16 @@ available.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>position</strong> – (int) The starting position to insert rows.</p></li>
-<li><p><strong>rows</strong> – (int) The number of rows to insert.</p></li>
-<li><p><strong>parent</strong> – (QModelIndex) The parent index.</p></li>
+<li><p><strong>position</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The starting position to insert rows.</p></li>
+<li><p><strong>rows</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The number of rows to insert.</p></li>
+<li><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The parent index.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the rows were successfully inserted, False
-otherwise.</p>
+<dd class="field-even"><p>True if the rows were successfully inserted, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -236,15 +261,20 @@ otherwise.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.mimeData">
 <span class="sig-name descname"><span class="pre">mimeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indexes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#DictionaryTreeModel.mimeData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.mimeData" title="Link to this definition">¶</a></dt>
-<dd><p>Generate MIME data for a drag-and-drop operation.</p>
+<dd><p>Return MIME data for the specified model indexes.</p>
+<p>The data associated with each valid index is encoded as bytes and
+concatenated into a single <a class="reference external" href="https://doc.qt.io/qt-5/qbytearray.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QByteArray</span></code></a>, which is stored under
+the <code class="docutils literal notranslate"><span class="pre">&quot;component/name&quot;</span></code> MIME type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>indexes</strong> – (list of QModelIndex) The list of model indexes being
-dragged.</p>
+<dd class="field-odd"><p><strong>indexes</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a><em>]</em>) – The model indexes to include in the MIME data.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QMimeData) A QMimeData object containing serialized node
-information.</p>
+<dd class="field-even"><p>MIME data containing the encoded data associated with the
+specified indexes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qmimedata.html" title="(in Qt5 v5.15)">QMimeData</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -255,7 +285,10 @@ information.</p>
 <dd><p>Returns the supported MIME types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list of str) A list of supported MIME types.</p>
+<dd class="field-odd"><p>A list of supported MIME types.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -266,11 +299,13 @@ information.</p>
 <dd><p>Returns the parent index for the given index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>index</strong> – (QModelIndex) The index of the item.</p>
+<dd class="field-odd"><p><strong>index</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The index of the item.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QModelIndex) The parent index, or an invalid index if not
-available.</p>
+<dd class="field-even"><p>The parent index, or an invalid index if not available.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)">QModelIndex</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -282,14 +317,16 @@ available.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>position</strong> – (int) The starting position to remove rows.</p></li>
-<li><p><strong>rows</strong> – (int) The number of rows to remove.</p></li>
-<li><p><strong>parent</strong> – (QModelIndex) The parent index.</p></li>
+<li><p><strong>position</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The starting position to remove rows.</p></li>
+<li><p><strong>rows</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The number of rows to remove.</p></li>
+<li><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The parent index.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if all rows were successfully removed, False
-otherwise.</p>
+<dd class="field-even"><p>True if all rows were successfully removed, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -301,10 +338,13 @@ otherwise.</p>
 children.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> – (QModelIndex) The parent index.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The parent index.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) The number of rows.</p>
+<dd class="field-even"><p>The number of rows.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -316,14 +356,16 @@ children.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index</strong> – (QModelIndex) The index of the item.</p></li>
-<li><p><strong>value</strong> – The new value to set.</p></li>
-<li><p><strong>role</strong> – (Qt.ItemDataRole) The role of the data to set.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The index of the item.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The new value to set.</p></li>
+<li><p><strong>role</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qt.html#ItemDataRole-enum" title="(in Qt5 v5.15)"><em>ItemDataRole</em></a>) – The role of the data to set.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the data was successfully set, False
-otherwise.</p>
+<dd class="field-even"><p>True if the data was successfully set, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -334,7 +376,10 @@ otherwise.</p>
 <dd><p>Converts the root node to a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(dict) The dictionary representation of the root node.</p>
+<dd class="field-odd"><p>The dictionary representation of the root node.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -348,11 +393,9 @@ otherwise.</p>
 <p>Dialog for installing Python packages from a folder or zip file.</p>
 <p>This widget allows users to browse and select a Python package or zip file
 containing packages, then install them into Mia.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_add_package: Add a package and its modules to the process tree.</p></li>
 <li><p>_change_pattern_in_folder: Replace pattern in all Python files
 within a folder.</p></li>
@@ -368,15 +411,15 @@ failure.</p></li>
 to install.</p></li>
 <li><p>install: Installs the selected file/folder on Populse_mia.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>process_installed: Signal emitted when a process is successfully
 installed.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.InstallProcesses.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#InstallProcesses.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.InstallProcesses.__init__" title="Link to this definition">¶</a></dt>
@@ -384,9 +427,9 @@ installed.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>main_window</strong> – The main application window.</p></li>
-<li><p><strong>folder</strong> – (bool) If True, install from folder; if False, install
-from zip file.</p></li>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – The main application window.</p></li>
+<li><p><strong>folder</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, install from folder; if False, install from zip
+file.</p></li>
 </ul>
 </dd>
 </dl>
@@ -399,12 +442,15 @@ from zip file.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>proc_dic</strong> – (dict) The process tree dictionary to update.</p></li>
-<li><p><strong>module_name</strong> – (str) Name of the module to add.</p></li>
+<li><p><strong>proc_dic</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The process tree dictionary to update.</p></li>
+<li><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the module to add.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) The updated process tree dictionary.</p>
+<dd class="field-even"><p>The updated process tree dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -416,9 +462,9 @@ from zip file.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> – (str) Directory path to process.</p></li>
-<li><p><strong>old_pattern</strong> – (str) Pattern to search for.</p></li>
-<li><p><strong>new_pattern</strong> – (str) Pattern to replace with.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Directory path to process.</p></li>
+<li><p><strong>old_pattern</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Pattern to search for.</p></li>
+<li><p><strong>new_pattern</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Pattern to replace with.</p></li>
 </ul>
 </dd>
 </dl>
@@ -431,9 +477,9 @@ from zip file.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – (str) Path to zip file or directory.</p></li>
-<li><p><strong>package_name</strong> – (str) Name of the package to install.</p></li>
-<li><p><strong>processes_path</strong> – (str) Target directory for installation.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to zip file or directory.</p></li>
+<li><p><strong>package_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the package to install.</p></li>
+<li><p><strong>processes_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Target directory for installation.</p></li>
 </ul>
 </dd>
 </dl>
@@ -445,10 +491,13 @@ from zip file.</p></li>
 <dd><p>Load the process configuration from YAML.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config_path</strong> – (str) Path to the configuration file.</p>
+<dd class="field-odd"><p><strong>config_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the configuration file.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) The loaded configuration or empty dict if error.</p>
+<dd class="field-even"><p>The loaded configuration or empty dict if error.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -460,14 +509,13 @@ from zip file.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>config_path</strong> – (str) Path to configuration file.</p></li>
-<li><p><strong>original_config</strong> – (dict) Original configuration to restore.</p></li>
-<li><p><strong>processes_path</strong> – (str) Path to processes directory.</p></li>
-<li><p><strong>package_names</strong> – (list) Names of packages that were being
-installed.</p></li>
-<li><p><strong>mia_processes_not_found</strong> – (bool) Flag indicating if Mia processes
-backup was made.</p></li>
-<li><p><strong>tmp_folder4MIA</strong> – (str) Path to Mia processes backup.</p></li>
+<li><p><strong>config_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to configuration file.</p></li>
+<li><p><strong>original_config</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Original configuration to restore.</p></li>
+<li><p><strong>processes_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to processes directory.</p></li>
+<li><p><strong>package_names</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Names of packages that were being installed.</p></li>
+<li><p><strong>mia_processes_not_found</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Flag indicating if Mia processes backup
+was made.</p></li>
+<li><p><strong>tmp_folder4MIA</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to Mia processes backup.</p></li>
 </ul>
 </dd>
 </dl>
@@ -480,8 +528,8 @@ backup was made.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>message</strong> – (str) Message to display.</p></li>
-<li><p><strong>critical</strong> – (bool) If True, display a critical message box.</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Message to display.</p></li>
+<li><p><strong>critical</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, display a critical message box.</p></li>
 </ul>
 </dd>
 </dl>
@@ -493,7 +541,7 @@ backup was made.</p></li>
 <dd><p>Update status message in the main window.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>message</strong> – (str) Status message to display.</p>
+<dd class="field-odd"><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Status message to display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -505,13 +553,16 @@ backup was made.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – (str) Path to zip file or directory.</p></li>
-<li><p><strong>package_name</strong> – (str) Name of the package to update.</p></li>
-<li><p><strong>processes_path</strong> – (str) Target directory for installation.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to zip file or directory.</p></li>
+<li><p><strong>package_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the package to update.</p></li>
+<li><p><strong>processes_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Target directory for installation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) The new package name (with timestamp).</p>
+<dd class="field-even"><p>The new package name (with timestamp).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -522,10 +573,13 @@ backup was made.</p></li>
 <dd><p>Validate the input file or directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> – (str) Path to the file or directory.</p>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the file or directory.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if valid, False otherwise</p>
+<dd class="field-even"><p>True if valid, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -536,8 +590,8 @@ backup was made.</p></li>
 <dd><p>Open a file dialog to select the package source.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>folder</strong> – (bool) If True, opens a directory selection dialog; If
-False, opens a zip file selection dialog.</p>
+<dd class="field-odd"><p><strong>folder</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, opens a directory selection dialog; If False,
+opens a zip file selection dialog.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -568,11 +622,9 @@ with automatic rollback of any changes made.</p>
 relationships.</p>
 <p>This class provides functionality to create and manipulate tree nodes,
 where each node can have a name, value, parent, and multiple children.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>__repr__: Define what should be printed by the class.</p></li>
 <li><p>_recurse_dict: Recursively build a dictionary representation of
 the node hierarchy.</p></li>
@@ -595,8 +647,10 @@ children.</p></li>
 <li><p>to_list: Convert the node hierarchy to a list.</p></li>
 <li><p>value: Gets or sets the value of the node.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.Node.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#Node.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.Node.__init__" title="Link to this definition">¶</a></dt>
@@ -604,9 +658,10 @@ children.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – (str) The name of the node.</p></li>
-<li><p><strong>parent</strong> – The parent node. If provided, this node is automatically
-added as a child to the parent. Defaults to None.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the node.</p></li>
+<li><p><strong>parent</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>populse_mia.user_interface.pipeline_manager.process_library.Node</em></a><em> |
+</em><em>None</em>) – The parent node. If provided, this node is automatically
+added to the parent’s list of children. Defaults to None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -618,7 +673,7 @@ added as a child to the parent. Defaults to None.</p></li>
 <dd><p>Recursively build a dictionary representation of the node hierarchy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>d</strong> – (dict) The dictionary to populate with the node hierarchy.</p>
+<dd class="field-odd"><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The dictionary to populate with the node hierarchy.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -629,7 +684,7 @@ added as a child to the parent. Defaults to None.</p></li>
 <dd><p>Add a child node to this node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>child</strong> – The child node to add.</p>
+<dd class="field-odd"><p><strong>child</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>populse_mia.user_interface.pipeline_manager.process_library.Node</em></a>) – The child node to add.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -640,7 +695,10 @@ added as a child to the parent. Defaults to None.</p></li>
 <dd><p>Get attributes of this node as a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(dict) A dictionary of property names and their values.</p>
+<dd class="field-odd"><p>A dictionary of property names and their values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -651,10 +709,13 @@ added as a child to the parent. Defaults to None.</p></li>
 <dd><p>Get a child node by its index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>row</strong> – (int) The index of the child node in the children list.</p>
+<dd class="field-odd"><p><strong>row</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The index of the child node in the children list.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The child node at the specified index.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node">populse_mia.user_interface.pipeline_manager.process_library.Node</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -665,7 +726,10 @@ added as a child to the parent. Defaults to None.</p></li>
 <dd><p>Get the number of children of this node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(int) The number of child nodes.</p>
+<dd class="field-odd"><p>The number of child nodes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -676,11 +740,14 @@ added as a child to the parent. Defaults to None.</p></li>
 <dd><p>Get data about this node based on the column parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>column</strong> – (int) 0 for the fully qualified name (including parent
-names), 1 for the value of this node.</p>
+<dd class="field-odd"><p><strong>column</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – 0 for the fully qualified name (including parent names),
+1 for the value of this node.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) The requested data (either string path or node value).</p>
+<dd class="field-even"><p>The requested data (either string path or node value).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -692,12 +759,15 @@ names), 1 for the value of this node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>position</strong> – (int) The position at which to insert the child.</p></li>
-<li><p><strong>child</strong> – The child node to insert.</p></li>
+<li><p><strong>position</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The position at which to insert the child.</p></li>
+<li><p><strong>child</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>populse_mia.user_interface.pipeline_manager.process_library.Node</em></a>) – The child node to insert.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if insertion was successful, False otherwise.</p>
+<dd class="field-even"><p>True if insertion was successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -708,10 +778,13 @@ names), 1 for the value of this node.</p>
 <dd><p>Generate a formatted string representation of the node hierarchy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tabLevel</strong> – (int) The current indentation level. Defaults to -1.</p>
+<dd class="field-odd"><p><strong>tabLevel</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The current indentation level. Defaults to -1.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) A formatted string showing the node hierarchy.</p>
+<dd class="field-even"><p>A formatted string showing the node hierarchy.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -722,7 +795,10 @@ names), 1 for the value of this node.</p>
 <dd><p>Get the name of this node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The name of the node.</p>
+<dd class="field-odd"><p>The name of the node.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -735,6 +811,10 @@ names), 1 for the value of this node.</p>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The parent node or None if this is a root node.</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node">populse_mia.user_interface.pipeline_manager.process_library.Node</a> |
+None</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -745,12 +825,15 @@ names), 1 for the value of this node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>position</strong> – (int) The position of the child to remove.</p></li>
-<li><p><strong>child</strong> – The child node to remove.</p></li>
+<li><p><strong>position</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The position of the child to remove.</p></li>
+<li><p><strong>child</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>populse_mia.user_interface.pipeline_manager.process_library.Node</em></a>) – The child node to remove.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if removal was successful, False otherwise.</p>
+<dd class="field-even"><p>True if removal was successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -764,6 +847,9 @@ names), 1 for the value of this node.</p>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None.</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -773,8 +859,11 @@ names), 1 for the value of this node.</p>
 <dd><p>Get the index of this node in its parent’s children list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(int) The index of this node in its parent’s children list,
-or None if this node has no parent.</p>
+<dd class="field-odd"><p>The index of this node in its parent’s children list, or None
+if this node has no parent.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -786,8 +875,8 @@ or None if this node has no parent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>column</strong> – (int) 0 to set the name, 1 to set the value.</p></li>
-<li><p><strong>value</strong> – The new name or value to set.</p></li>
+<li><p><strong>column</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – 0 to set the name, 1 to set the value.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The new name or value to set.</p></li>
 </ul>
 </dd>
 </dl>
@@ -799,10 +888,13 @@ or None if this node has no parent.</p>
 <dd><p>Convert the node hierarchy to a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>d</strong> – (dict) A dictionary to populate. Defaults to empty dict.</p>
+<dd class="field-odd"><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> | </em><em>None</em>) – A dictionary to populate. Defaults to None.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) A dictionary representation of the node hierarchy.</p>
+<dd class="field-even"><p>A dictionary representation of the node hierarchy.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -813,7 +905,10 @@ or None if this node has no parent.</p>
 <dd><p>Convert the node hierarchy to a list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list) A list representation of the node hierarchy.</p>
+<dd class="field-odd"><p>A list representation of the node hierarchy.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -825,6 +920,9 @@ or None if this node has no parent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The value of the node.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -839,11 +937,9 @@ or None if this node has no parent.</p>
 <p>This widget allows users to enable or disable packages and modules by
 checking or unchecking them in the tree view. The tree structure
 reflects the hierarchical organization of packages and their modules.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>fill_item: fills the items of the tree recursively.</p></li>
 <li><p>generate_tree: generates the package tree.</p></li>
 <li><p>recursive_checks: checks/unchecks all child items.</p></li>
@@ -852,8 +948,10 @@ reflects the hierarchical organization of packages and their modules.</p>
 in the process library.</p></li>
 <li><p>update_checks: updates the checks of the tree from an item.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibrary.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibrary.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibrary.__init__" title="Link to this definition">¶</a></dt>
@@ -861,8 +959,8 @@ in the process library.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>package_tree</strong> – (dict) Hierarchical representation of packages.</p></li>
-<li><p><strong>paths</strong> – (list) System paths for importing the packages.</p></li>
+<li><p><strong>package_tree</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Hierarchical representation of packages.</p></li>
+<li><p><strong>paths</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – System paths for importing the packages.</p></li>
 </ul>
 </dd>
 </dl>
@@ -877,8 +975,8 @@ with appropriate check states.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> – (QTreeWidgetItem) Current tree item to populate.</p></li>
-<li><p><strong>value</strong> – (dict, list, or str) Value to populate the item with.</p></li>
+<li><p><strong>item</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qtreewidgetitem.html" title="(in Qt5 v5.15)"><em>QTreeWidgetItem</em></a>) – Current tree item to populate.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Value to populate the item with.</p></li>
 </ul>
 </dd>
 </dl>
@@ -901,8 +999,7 @@ updates.</p>
 inherit the same check state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> – (QTreeWidgetItem) Parent item whose check state is
-propagated.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qtreewidgetitem.html" title="(in Qt5 v5.15)"><em>QTreeWidgetItem</em></a>) – Parent item whose check state is propagated.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -916,8 +1013,7 @@ child item is unchecked, its parent is unchecked only if all siblings
 are also unchecked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>child</strong> – (QTreeWidgetItem) Child item whose check state affects
-parents.</p>
+<dd class="field-odd"><p><strong>child</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qtreewidgetitem.html" title="(in Qt5 v5.15)"><em>QTreeWidgetItem</em></a>) – Child item whose check state affects parents.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -925,16 +1021,16 @@ parents.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibrary.set_module_view">
 <span class="sig-name descname"><span class="pre">set_module_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibrary.set_module_view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibrary.set_module_view" title="Link to this definition">¶</a></dt>
-<dd><p>Update the module’s enabled/disabled status in the package tree.</p>
-<p>Updates the underlying package_tree data structure when an item’s
-check state changes in the UI.</p>
+<dd><p>Update the enabled/disabled state of a module in the package tree.</p>
+<p>Updates the underlying <code class="docutils literal notranslate"><span class="pre">package_tree</span></code> data structure according to the
+check state of the module’s tree item. <code class="docutils literal notranslate"><span class="pre">Qt.Checked</span></code> has a value of 2,
+while <code class="docutils literal notranslate"><span class="pre">Qt.Unchecked</span></code> has a value of 0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> – (QTreeWidgetItem) Tree item corresponding to a module.</p></li>
-<li><p><strong>state</strong> – (Qt.CheckState) New check state: Qt.Checked or
-Qt.Unchecked. (Qt.Checked == 2. So if val == 2 -&gt; checkbox is checked,
-and if val == 0 -&gt; checkbox is not checked)</p></li>
+<li><p><strong>item</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qtreewidgetitem.html" title="(in Qt5 v5.15)"><em>QTreeWidgetItem</em></a>) – Tree item corresponding to a module.</p></li>
+<li><p><strong>state</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qt.html#CheckState-enum" title="(in Qt5 v5.15)"><em>CheckState</em></a>) – New check state of the module, either <code class="docutils literal notranslate"><span class="pre">Qt.Checked</span></code> (2)
+or <code class="docutils literal notranslate"><span class="pre">Qt.Unchecked</span></code> (0).</p></li>
 </ul>
 </dd>
 </dl>
@@ -949,8 +1045,8 @@ properly propagated to children and parent items.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> – (QTreeWidgetItem) Item whose check state changed.</p></li>
-<li><p><strong>column</strong> – (int) Column index of the change (should be 0).</p></li>
+<li><p><strong>item</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qtreewidgetitem.html" title="(in Qt5 v5.15)"><em>QTreeWidgetItem</em></a>) – Item whose check state changed.</p></li>
+<li><p><strong>column</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Column index of the change (should be 0).</p></li>
 </ul>
 </dd>
 </dl>
@@ -966,11 +1062,9 @@ properly propagated to children and parent items.</p>
 <p>This dialog allows users to add, remove, and delete packages from the
 process library. It provides interfaces for installing packages, updating
 the package tree, and saving configurations.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_create_button: Create a standardized button.</p></li>
 <li><p>_create_install_buttons: Create buttons for installing processes.</p></li>
 <li><p>_create_line_edit: Create and configure the line edit.</p></li>
@@ -1006,14 +1100,14 @@ text.</p></li>
 <li><p>update_config: Update package configuration and library
 attributes.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>signal_save: Signal emitted when configuration is saved.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mia_main_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.__init__" title="Link to this definition">¶</a></dt>
@@ -1021,8 +1115,8 @@ attributes.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mia_main_window</strong> – Reference to the main application window.</p></li>
-<li><p><strong>parent</strong> – (QWidget) Parent widget for the dialog.</p></li>
+<li><p><strong>mia_main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – Reference to the main application window.</p></li>
+<li><p><strong>parent</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a><em> | </em><em>None</em>) – Parent widget for the dialog.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1031,16 +1125,21 @@ attributes.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog._create_button">
 <span class="sig-name descname"><span class="pre">_create_button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog._create_button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog._create_button" title="Link to this definition">¶</a></dt>
-<dd><p>Create a standardized button.</p>
+<dd><p>Create and configure a push button.</p>
+<p>The button is configured not to be the dialog’s default button and not
+to become the default button automatically.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – (str) Button text.</p></li>
-<li><p><strong>callback</strong> – (a callable) Function to call when button is clicked.</p></li>
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Text displayed on the button.</p></li>
+<li><p><strong>callback</strong> (<em>callable</em>) – Callback invoked when the button is clicked.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QPushButton) Configured button.</p>
+<dd class="field-even"><p>Configured push button.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qpushbutton.html" title="(in Qt5 v5.15)">QPushButton</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1051,7 +1150,10 @@ attributes.</p></li>
 <dd><p>Create buttons for installing processes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(QHBoxLayout) Layout with install process buttons.</p>
+<dd class="field-odd"><p>Layout with install process buttons.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://doc.qt.io/qt-5/qhboxlayout.html" title="(in Qt5 v5.15)">QHBoxLayout</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1062,7 +1164,10 @@ attributes.</p></li>
 <dd><p>Create and configure the line edit.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(QLineEdit) Configured line edit for package input.</p>
+<dd class="field-odd"><p>Configured line edit for package input.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://doc.qt.io/qt-5/qlineedit.html" title="(in Qt5 v5.15)">QLineEdit</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1074,13 +1179,16 @@ attributes.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>title</strong> – (str) Group box title.</p></li>
-<li><p><strong>list_widget</strong> – (QListWidget) List widget to add to group.</p></li>
-<li><p><strong>reset_callback</strong> – (callable) Callback for reset button.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Group box title.</p></li>
+<li><p><strong>list_widget</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qlistwidget.html" title="(in Qt5 v5.15)"><em>QListWidget</em></a>) – List widget to add to group.</p></li>
+<li><p><strong>reset_callback</strong> (<em>callable</em>) – Callback for reset button.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QGroupBox) Configured group box with list and reset button.</p>
+<dd class="field-even"><p>Configured group box with list and reset button.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qgroupbox.html" title="(in Qt5 v5.15)">QGroupBox</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1106,14 +1214,17 @@ attributes.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>install_layout</strong> – (QHBoxLayout) Layout for install buttons.</p></li>
-<li><p><strong>management_layout</strong> – (QHBoxLayout) Layout for package management
+<li><p><strong>install_layout</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qhboxlayout.html" title="(in Qt5 v5.15)"><em>QHBoxLayout</em></a>) – Layout for install buttons.</p></li>
+<li><p><strong>management_layout</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qhboxlayout.html" title="(in Qt5 v5.15)"><em>QHBoxLayout</em></a>) – Layout for package management
 buttons.</p></li>
-<li><p><strong>user_mode</strong> – (bool) Whether the application is in user mode.</p></li>
+<li><p><strong>user_mode</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the application is in user mode.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QHBoxLayout) Main layout of the dialog.</p>
+<dd class="field-even"><p>Main layout of the dialog.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qhboxlayout.html" title="(in Qt5 v5.15)">QHBoxLayout</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1124,10 +1235,13 @@ buttons.</p></li>
 <dd><p>Create buttons for package management.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>user_mode</strong> – (bool) Whether the application is in user mode.</p>
+<dd class="field-odd"><p><strong>user_mode</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the application is in user mode.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QHBoxLayout) Layout with package management buttons.</p>
+<dd class="field-even"><p>Layout with package management buttons.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qhboxlayout.html" title="(in Qt5 v5.15)">QHBoxLayout</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1138,7 +1252,10 @@ buttons.</p></li>
 <dd><p>Create layout for save and cancel buttons.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(QHBoxLayout) Layout with save and cancel buttons.</p>
+<dd class="field-odd"><p>Layout with save and cancel buttons.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://doc.qt.io/qt-5/qhboxlayout.html" title="(in Qt5 v5.15)">QHBoxLayout</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1149,7 +1266,10 @@ buttons.</p></li>
 <dd><p>Create and configure the status label.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(QLabel) Configured status label.</p>
+<dd class="field-odd"><p>Configured status label.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://doc.qt.io/qt-5/qlabel.html" title="(in Qt5 v5.15)">QLabel</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1177,22 +1297,24 @@ package initialization and error handling.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>module_name</strong> – (str) Fully qualified name of the module to add.
+<li><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Fully qualified name of the module to add.
 Example: ‘myproject.processors’</p></li>
-<li><p><strong>class_name</strong> – (str) Specific class name to focus on during package
+<li><p><strong>class_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – Specific class name to focus on during package
 addition. If provided, only this class or its parent packages will be
 processed.</p></li>
-<li><p><strong>show_error</strong> – (bool) Controls error reporting behavior. If True,
-displays error messages in a QMessageBox. If False, collects errors
-silently. Defaults to False.</p></li>
-<li><p><strong>init_package_tree</strong> – (bool) If True, reinitializes the entire
-package tree before adding the module. Defaults to False.</p></li>
+<li><p><strong>show_error</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Controls error reporting behavior. If True, displays
+error messages in a QMessageBox. If False, collects errors silently.
+Defaults to False.</p></li>
+<li><p><strong>init_package_tree</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, reinitializes the entire package
+tree before adding the module. Defaults to False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(List[str] | str) A list of error messages encountered during
-package addition, or “No package selected!” if no module name is
-provided.</p>
+<dd class="field-even"><p>A list of error messages encountered during package addition,
+or “No package selected!” if no module name is provided.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>] | <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1207,10 +1329,10 @@ without file extensions, and handles various import scenarios.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>package_name</strong> – (str | False) Name of the package to add. If False
-(default), uses the text from the line edit widget.</p></li>
-<li><p><strong>update_view</strong> – (bool) Whether to update the package list view.
-Defaults to True.</p></li>
+<li><p><strong>package_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Name of the package to add. If False (default),
+uses the text from the line edit widget.</p></li>
+<li><p><strong>update_view</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to update the package list view. Defaults
+to True.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1226,20 +1348,22 @@ files if they are empty.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index</strong> – (int) Recursive index for navigating modules. Defaults
-to 1.</p></li>
-<li><p><strong>to_delete</strong> – (str) The package/brick to delete (e.g.,
-‘test.Test’). Defaults to None.</p></li>
-<li><p><strong>remove</strong> – (bool) Whether to remove the brick from the package
-tree. Defaults to True.</p></li>
-<li><p><strong>loop</strong> – (bool) Whether to delete silently without confirmation.
-Defaults to False.</p></li>
-<li><p><strong>from_pipeline_manager</strong> – (bool) Whether deletion is initiated
-from pipeline manager. Defaults to False.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Recursive index for navigating modules. Defaults to 1.</p></li>
+<li><p><strong>to_delete</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – The package / brick to delete (e.g., ‘test.Test’).
+Defaults to None.</p></li>
+<li><p><strong>remove</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to remove the brick from the package tree.
+Defaults to True.</p></li>
+<li><p><strong>loop</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to delete silently without confirmation. Defaults
+to False.</p></li>
+<li><p><strong>from_pipeline_manager</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether deletion is initiated from
+pipeline manager. Defaults to False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list[str]) A list of deleted packages/bricks (classes).</p>
+<dd class="field-even"><p>A list of deleted packages/bricks (classes).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1251,10 +1375,10 @@ from pipeline manager. Defaults to False.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>package_name</strong> – (str) The name of the package to delete. Defaults
-to the text in the line edit.</p></li>
-<li><p><strong>update_view</strong> – (bool) Whether to update the QListWidget after
-deletion. Defaults to True.</p></li>
+<li><p><strong>package_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the package to delete. Defaults to the
+text in the line edit.</p></li>
+<li><p><strong>update_view</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to update the QListWidget after deletion.
+Defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1266,8 +1390,8 @@ deletion. Defaults to True.</p></li>
 <dd><p>Display the install processes pop-up.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>from_folder</strong> – (bool) Whether the installation is from a folder.
-Defaults to False.</p>
+<dd class="field-odd"><p><strong>from_folder</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the installation is from a folder. Defaults
+to False.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1275,11 +1399,17 @@ Defaults to False.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.load_config">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#PackageLibraryDialog.load_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog.load_config" title="Link to this definition">¶</a></dt>
-<dd><p>Loads and returns the configuration from ‘process_config.yml’.</p>
+<dd><p>Load the process configuration from <code class="docutils literal notranslate"><span class="pre">process_config.yml</span></code>.</p>
+<p>The configuration file is searched for in the <code class="docutils literal notranslate"><span class="pre">properties</span></code> directory
+of the configured properties path. If the file cannot be read or
+parsed, an empty dictionary is returned and a warning is logged.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(dict | {}) The configuration dictionary if successfully
-loaded, otherwise None in case of an error.</p>
+<dd class="field-odd"><p>The loaded configuration dictionary, or an empty dictionary if
+the configuration cannot be loaded.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1305,12 +1435,15 @@ library. If the package is not found, a warning message is displayed.
 The package tree is updated after a successful removal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>package</strong> – (str) The fully qualified module name (e.g.,
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The fully qualified module name (e.g.,
 ‘nipype.interfaces.spm’).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the package was successfully removed, False
-if the package was not found or no package was provided.</p>
+<dd class="field-even"><p>True if the package was successfully removed, False if the
+package was not found or no package was provided.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1323,11 +1456,11 @@ view accordingly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>package_name</strong> – (str) The name of the package to remove. If not
+<li><p><strong>package_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the package to remove. If not
 provided, the package name is taken from the line edit.</p></li>
-<li><p><strong>update_view</strong> – (bool) Whether to update the QListWidget view after
+<li><p><strong>update_view</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to update the QListWidget view after
 removal. Defaults to True.</p></li>
-<li><p><strong>tree_remove</strong> – (bool) Whether to remove the package from the tree.
+<li><p><strong>tree_remove</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to remove the package from the tree.
 Defaults to True.</p></li>
 </ul>
 </dd>
@@ -1341,10 +1474,9 @@ Defaults to True.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>itemlist</strong> – (QListWidget) The list widget containing items to
-reset.</p></li>
-<li><p><strong>add</strong> – (bool) If True, resets an addition by removing the package
-if it exists in the configuration. If False, re-adds the package.</p></li>
+<li><p><strong>itemlist</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qlistwidget.html" title="(in Qt5 v5.15)"><em>QListWidget</em></a>) – The list widget containing items to reset.</p></li>
+<li><p><strong>add</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, resets an addition by removing the package if it
+exists in the configuration. If False, re-adds the package.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1359,8 +1491,8 @@ tree and writes it to the configuration file. Optionally, it can close
 the dialog after saving.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>close</strong> – (bool) If True, closes the dialog after saving. Defaults
-to True.</p>
+<dd class="field-odd"><p><strong>close</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, closes the dialog after saving. Defaults to
+True.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1381,25 +1513,23 @@ tree.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_library.</span></span><span class="sig-name descname"><span class="pre">ProcessLibrary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pkg_lib</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#ProcessLibrary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qtreeview.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QTreeView</span></code></a></p>
 <p>A tree view to display available Capsul’s processes.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>keyPressEvent: Event when the delete key is pressed.</p></li>
 <li><p>load_dictionary: Loads a dictionary to the tree.</p></li>
 <li><p>mousePressEvent: Event when the mouse is pressed.</p></li>
 <li><p>to_dict: Returns a dictionary from the current tree.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>item_library_clicked: Signal emitted when an item in the library is
 clicked.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pkg_lib</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#ProcessLibrary.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary.__init__" title="Link to this definition">¶</a></dt>
@@ -1407,8 +1537,9 @@ clicked.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>d</strong> – (dict) Dictionary corresponding to the tree.</p></li>
-<li><p><strong>pkg_lib</strong> – An instance of the PackageLibraryDialog class.</p></li>
+<li><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary corresponding to the tree.</p></li>
+<li><p><strong>pkg_lib</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog" title="populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog"><em>PackageLibraryDialog</em></a>) – Package library dialog associated with this process
+library.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1422,7 +1553,7 @@ clicked.</p></li>
 selected package(s) will be deleted from the package library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> – (QKeyEvent) The key event triggering this handler.</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qkeyevent.html" title="(in Qt5 v5.15)"><em>QKeyEvent</em></a>) – The key event triggering this handler.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1431,8 +1562,10 @@ selected package(s) will be deleted from the package library.</p>
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary.load_dictionary">
 <span class="sig-name descname"><span class="pre">load_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#ProcessLibrary.load_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary.load_dictionary" title="Link to this definition">¶</a></dt>
 <dd><p>Load a dictionary into the tree.</p>
-<dl class="simple">
-<dt>:param d :(dict) Dictionary to load. See the packages attribute in the</dt><dd><p>ProcessLibraryWidget class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary to load. See the packages attribute in the
+ProcessLibraryWidget class.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1447,7 +1580,7 @@ pressed, a context menu is displayed, allowing the user to remove or
 delete a package.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> – (QMouseEvent) The mouse event triggering this handler.</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmouseevent.html" title="(in Qt5 v5.15)"><em>QMouseEvent</em></a>) – The mouse event triggering this handler.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1460,6 +1593,9 @@ delete a package.</p>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The dictionary of the tree.</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1470,11 +1606,9 @@ delete a package.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_library.</span></span><span class="sig-name descname"><span class="pre">ProcessLibraryWidget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#ProcessLibraryWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibraryWidget" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QWidget</span></code></a></p>
 <p>Widget that manages the available Capsul’s processes in the software.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_configure_process_library: Configure the process library
 settings.</p></li>
 <li><p>_setup_layout: Setup the layout for the widget.</p></li>
@@ -1489,15 +1623,17 @@ system paths.</p></li>
 packages.</p></li>
 <li><p>update_process_library: Update the tree of the process library.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.ProcessLibraryWidget.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#ProcessLibraryWidget.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibraryWidget.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the ProcessLibraryWidget.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>main_window</strong> – The current main window.</p>
+<dd class="field-odd"><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – The current main window.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1520,7 +1656,8 @@ packages.</p></li>
 <dd><p>Read the configuration from process_config.yml and return it as a
 dictionary.
 .
-:return: The configuration as a dictionary.</p>
+:return: The configuration as a dictionary.
+:rtype: dict</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1552,18 +1689,22 @@ dictionary.
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_library.import_file">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_library.</span></span><span class="sig-name descname"><span class="pre">import_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_library.html#import_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_library.import_file" title="Link to this definition">¶</a></dt>
-<dd><p>Import a Python module from a specified file path.</p>
-<p>This function dynamically imports a module from a given file path and
-returns the module object. It does not modify <cite>sys.modules</cite>.</p>
+<dd><p>Import a Python module from a file without registering it in
+<code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>.</p>
+<p>Creates a module specification from the specified file, creates the
+corresponding module object, and executes the module using its loader.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>full_name</strong> – (str) The name of the module to import.</p></li>
-<li><p><strong>path</strong> – (str) The file path of the module.</p></li>
+<li><p><strong>full_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name to assign to the imported module.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the Python file to import.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The imported module.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/types.html#types.ModuleType" title="(in Python v3.10)">types.ModuleType</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1578,13 +1719,16 @@ recursively builds the tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>datadict</strong> – (dict) The dictionary to convert into a node structure.</p></li>
-<li><p><strong>parent</strong> – The parent node of the current node. Defaults to None.</p></li>
-<li><p><strong>root_node</strong> – The root node of the tree. Defaults to None.</p></li>
+<li><p><strong>datadict</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The dictionary to convert into a node structure.</p></li>
+<li><p><strong>parent</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>populse_mia.user_interface.pipeline_manager.process_library.Node</em></a><em> | </em><em>None</em>) – The parent node of the current node. Defaults to None.</p></li>
+<li><p><strong>root_node</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>populse_mia.user_interface.pipeline_manager.process_library.Node</em></a><em> | </em><em>None</em>) – The root node of the tree. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The root node of the constructed tree.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node">populse_mia.user_interface.pipeline_manager.process_library.Node</a> | None</p>
 </dd>
 </dl>
 </dd></dl>

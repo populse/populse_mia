@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 3.0.0-dev+da5ace3e documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=8de605bd"></script>
+    <script src="../../../../_static/documentation_options.js?v=13d1b248"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+da5ace3e documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_library</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -484,9 +484,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    enabling interaction with the data through a tree view.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - columnCount: Return always 1.</span>
 <span class="sd">            - data: Return the data requested by the view.</span>
 <span class="sd">            - flags: Everything is enabled and selectable, only the leaves can</span>
@@ -527,10 +525,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the number of columns, which is always 1.</span>
 
-<span class="sd">        :param parent: (QModelIndex) The parent index (unused in this</span>
-<span class="sd">         implementation).</span>
+<span class="sd">        :param parent: The parent index (unused in this implementation).</span>
+<span class="sd">        :type parent: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :return: (int) The number of columns.</span>
+<span class="sd">        :return: The number of columns.</span>
+<span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">1</span></div>
 
@@ -539,14 +538,22 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the data stored under the given role for the item at the</span>
-<span class="sd">        given index.</span>
+<span class="sd">        Returns the data associated with the item at the given index and role.</span>
 
-<span class="sd">        :param index: (QModelIndex) The index of the item.</span>
-<span class="sd">        :param role: (Qt.ItemDataRole) The role of the data to retrieve.</span>
+<span class="sd">        This method is called by Qt&#39;s model/view framework to retrieve data for</span>
+<span class="sd">        a model item. The ``role`` specifies how the data will be used, for</span>
+<span class="sd">        example, ``Qt.DisplayRole`` for displaying the item or ``Qt.EditRole``</span>
+<span class="sd">        when editing it.</span>
 
-<span class="sd">        :return: The data stored under the given role, or None if not</span>
-<span class="sd">         available.</span>
+<span class="sd">        :param index: The model index of the item for which data is requested.</span>
+<span class="sd">        :type index: PyQt5.QtCore.QModelIndex</span>
+<span class="sd">        :param role: The Qt item-data role specifying the type or purpose of</span>
+<span class="sd">         the requested data, such as ``Qt.DisplayRole`` or ``Qt.EditRole``.</span>
+<span class="sd">        :type role: int</span>
+
+<span class="sd">        :return: The item&#39;s name for ``Qt.DisplayRole`` and ``Qt.EditRole``,</span>
+<span class="sd">         or ``None`` if the index is invalid or the role is not handled.</span>
+<span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
@@ -565,9 +572,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the item flags for the specified index.</span>
 
-<span class="sd">        :param index: (QModelIndex) The model index to retrieve flags for.</span>
+<span class="sd">        :param index: The model index to retrieve flags for.</span>
+<span class="sd">        :type index: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :return: (Qt.ItemFlags) The corresponding item flags.</span>
+<span class="sd">        :return: The corresponding item flags.</span>
+<span class="sd">        :rtype: PyQt5.QtCore.Qt.ItemFlags</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">internalPointer</span><span class="p">()</span>
         <span class="n">base_flags</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEnabled</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsSelectable</span>
@@ -584,9 +593,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the Node object from the given index.</span>
 
-<span class="sd">        :param index: (QModelIndex) The index of the node.</span>
+<span class="sd">        :param index: The index of the node.</span>
+<span class="sd">        :type index: PyQt5.QtCore.QModelIndex</span>
 
 <span class="sd">        :return: The Node object.</span>
+<span class="sd">        :rtype:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.Node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">internalPointer</span><span class="p">()</span> <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">node</span> <span class="k">if</span> <span class="n">node</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span></div>
@@ -596,14 +608,21 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.headerData">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">headerData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the data for the given role and section in the header.</span>
+<span class="sd">        Returns the header label for the given section.</span>
 
-<span class="sd">        :param section: (int) The section number.</span>
-<span class="sd">        :param orientation: (Qt.Orientation) The orientation of the header</span>
-<span class="sd">         (unused in this implementation).</span>
-<span class="sd">        :param role: (Qt.ItemDataRole) The role of the data to retrieve.</span>
+<span class="sd">        :param section: The section number for which to retrieve the header</span>
+<span class="sd">         label.</span>
+<span class="sd">        :type section: int</span>
+<span class="sd">        :param orientation: The orientation of the header, either horizontal or</span>
+<span class="sd">         vertical. This parameter is unused in this implementation.</span>
+<span class="sd">        :type orientation: PyQt5.QtCore.Qt.Orientation</span>
+<span class="sd">        :param role: The role for which to retrieve the header data. Only</span>
+<span class="sd">         ``Qt.DisplayRole`` is handled by this implementation.</span>
+<span class="sd">        :type role: int</span>
 
-<span class="sd">        :return: (str) The header data, or None if not available.</span>
+<span class="sd">        :return: The header label for the requested section, or None if the</span>
+<span class="sd">         section or role is not handled.</span>
+<span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">DisplayRole</span><span class="p">:</span>
@@ -623,12 +642,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates an index for the given row, column, and parent.</span>
 
-<span class="sd">        :param row: (int) The row number.</span>
-<span class="sd">        :param column: (int) The column number.</span>
-<span class="sd">        :param parent: (QModelIndex) The parent index.</span>
+<span class="sd">        :param row: The row number.</span>
+<span class="sd">        :type row: int</span>
+<span class="sd">        :param column: The column number.</span>
+<span class="sd">        :type column: int</span>
+<span class="sd">        :param parent: The parent index.</span>
+<span class="sd">        :type parent: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :return: (QModelIndex) The created index, or an invalid index if not</span>
-<span class="sd">         available.</span>
+<span class="sd">        :return: The created index, or an invalid index if not available.</span>
+<span class="sd">        :rtype: PyQt5.QtCore.QModelIndex</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parentNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="n">childItem</span> <span class="o">=</span> <span class="n">parentNode</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
@@ -645,12 +667,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inserts rows starting from the specified position.</span>
 
-<span class="sd">        :param position: (int) The starting position to insert rows.</span>
-<span class="sd">        :param rows: (int) The number of rows to insert.</span>
-<span class="sd">        :param parent: (QModelIndex) The parent index.</span>
+<span class="sd">        :param position: The starting position to insert rows.</span>
+<span class="sd">        :type position: int</span>
+<span class="sd">        :param rows: The number of rows to insert.</span>
+<span class="sd">        :type rows: int</span>
+<span class="sd">        :param parent: The parent index.</span>
+<span class="sd">        :type parent: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :return: (bool) True if the rows were successfully inserted, False</span>
-<span class="sd">         otherwise.</span>
+<span class="sd">        :return: True if the rows were successfully inserted, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parentNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">beginInsertRows</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">position</span> <span class="o">+</span> <span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
@@ -671,13 +696,19 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.DictionaryTreeModel.mimeData">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">mimeData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indexes</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate MIME data for a drag-and-drop operation.</span>
+<span class="sd">        Return MIME data for the specified model indexes.</span>
 
-<span class="sd">        :param indexes: (list of QModelIndex) The list of model indexes being</span>
-<span class="sd">         dragged.</span>
+<span class="sd">        The data associated with each valid index is encoded as bytes and</span>
+<span class="sd">        concatenated into a single :class:`QByteArray`, which is stored under</span>
+<span class="sd">        the ``&quot;component/name&quot;`` MIME type.</span>
 
-<span class="sd">        :return: (QMimeData) A QMimeData object containing serialized node</span>
-<span class="sd">         information.</span>
+
+<span class="sd">        :param indexes: The model indexes to include in the MIME data.</span>
+<span class="sd">        :type indexes: list[PyQt5.QtCore.QModelIndex]</span>
+
+<span class="sd">        :return: MIME data containing the encoded data associated with the</span>
+<span class="sd">         specified indexes.</span>
+<span class="sd">        :rtype: PyQt5.QtCore.QMimeData</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">mimedata</span> <span class="o">=</span> <span class="n">QMimeData</span><span class="p">()</span>
         <span class="n">encoded_data</span> <span class="o">=</span> <span class="n">QByteArray</span><span class="p">()</span>
@@ -699,7 +730,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the supported MIME types.</span>
 
-<span class="sd">        :return: (list of str) A list of supported MIME types.</span>
+<span class="sd">        :return: A list of supported MIME types.</span>
+<span class="sd">        :rtype: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;component/name&quot;</span><span class="p">]</span></div>
 
@@ -710,10 +742,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the parent index for the given index.</span>
 
-<span class="sd">        :param index: (QModelIndex) The index of the item.</span>
+<span class="sd">        :param index: The index of the item.</span>
+<span class="sd">        :type index: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :return: (QModelIndex) The parent index, or an invalid index if not</span>
-<span class="sd">         available.</span>
+<span class="sd">        :return: The parent index, or an invalid index if not available.</span>
+<span class="sd">        :rtype: PyQt5.QtCore.QModelIndex</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
         <span class="n">parentNode</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
@@ -730,12 +763,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes rows starting from the specified position to position+rows.</span>
 
-<span class="sd">        :param position: (int) The starting position to remove rows.</span>
-<span class="sd">        :param rows: (int) The number of rows to remove.</span>
-<span class="sd">        :param parent: (QModelIndex) The parent index.</span>
+<span class="sd">        :param position: The starting position to remove rows.</span>
+<span class="sd">        :type position: int</span>
+<span class="sd">        :param rows: The number of rows to remove.</span>
+<span class="sd">        :type rows: int</span>
+<span class="sd">        :param parent: The parent index.</span>
+<span class="sd">        :type parent: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :return: (bool) True if all rows were successfully removed, False</span>
-<span class="sd">         otherwise.</span>
+<span class="sd">        :return: True if all rows were successfully removed, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parentNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">beginRemoveRows</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">position</span> <span class="o">+</span> <span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
@@ -757,9 +793,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns the number of rows, which corresponds to the number of</span>
 <span class="sd">        children.</span>
 
-<span class="sd">        :param parent: (QModelIndex) The parent index.</span>
+<span class="sd">        :param parent: The parent index.</span>
+<span class="sd">        :type parent: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :return: (int) The number of rows.</span>
+<span class="sd">        :return: The number of rows.</span>
+<span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parentNode</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span> <span class="k">if</span> <span class="n">parent</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span>
@@ -773,12 +811,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the data when the user makes changes.</span>
 
-<span class="sd">        :param index: (QModelIndex) The index of the item.</span>
+<span class="sd">        :param index: The index of the item.</span>
+<span class="sd">        :type index: PyQt5.QtCore.QModelIndex</span>
 <span class="sd">        :param value: The new value to set.</span>
-<span class="sd">        :param role: (Qt.ItemDataRole) The role of the data to set.</span>
+<span class="sd">        :type value: str</span>
+<span class="sd">        :param role: The role of the data to set.</span>
+<span class="sd">        :type role: Qt.ItemDataRole</span>
 
-<span class="sd">        :return: (bool) True if the data was successfully set, False</span>
-<span class="sd">         otherwise.</span>
+<span class="sd">        :return: True if the data was successfully set, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span> <span class="ow">and</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">:</span>
@@ -795,7 +836,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the root node to a dictionary.</span>
 
-<span class="sd">        :return: (dict) The dictionary representation of the root node.</span>
+<span class="sd">        :return: The dictionary representation of the root node.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
 </div>
@@ -812,9 +854,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    containing packages, then install them into Mia.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _add_package: Add a package and its modules to the process tree.</span>
 <span class="sd">            - _change_pattern_in_folder: Replace pattern in all Python files</span>
 <span class="sd">              within a folder.</span>
@@ -831,7 +871,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - install: Installs the selected file/folder on Populse_mia.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - process_installed: Signal emitted when a process is successfully</span>
 <span class="sd">          installed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -845,8 +884,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the installation dialog.</span>
 
 <span class="sd">        :param main_window: The main application window.</span>
-<span class="sd">        :param folder: (bool) If True, install from folder; if False, install</span>
-<span class="sd">         from zip file.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
+<span class="sd">        :param folder: If True, install from folder; if False, install from zip</span>
+<span class="sd">         file.</span>
+<span class="sd">        :type folder: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">main_window</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
@@ -889,10 +930,13 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a package and its modules to the process tree.</span>
 
-<span class="sd">        :param proc_dic: (dict) The process tree dictionary to update.</span>
-<span class="sd">        :param module_name: (str) Name of the module to add.</span>
+<span class="sd">        :param proc_dic: The process tree dictionary to update.</span>
+<span class="sd">        :type proc_dic: dict</span>
+<span class="sd">        :param module_name: Name of the module to add.</span>
+<span class="sd">        :type module_name: str</span>
 
-<span class="sd">        :return: (dict) The updated process tree dictionary.</span>
+<span class="sd">        :return: The updated process tree dictionary.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">module_name</span><span class="p">:</span>
@@ -970,9 +1014,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Replace pattern in all Python files within a folder.</span>
 
-<span class="sd">        :param path: (str) Directory path to process.</span>
-<span class="sd">        :param old_pattern: (str) Pattern to search for.</span>
-<span class="sd">        :param new_pattern: (str) Pattern to replace with.</span>
+<span class="sd">        :param path: Directory path to process.</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        :param old_pattern: Pattern to search for.</span>
+<span class="sd">        :type old_pattern: str</span>
+<span class="sd">        :param new_pattern: Pattern to replace with.</span>
+<span class="sd">        :type new_pattern: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
@@ -1004,9 +1051,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Install a new package.</span>
 
-<span class="sd">        :param filename: (str) Path to zip file or directory.</span>
-<span class="sd">        :param package_name: (str) Name of the package to install.</span>
-<span class="sd">        :param processes_path: (str) Target directory for installation.</span>
+<span class="sd">        :param filename: Path to zip file or directory.</span>
+<span class="sd">        :type filename: str</span>
+<span class="sd">        :param package_name: Name of the package to install.</span>
+<span class="sd">        :type package_name: str</span>
+<span class="sd">        :param processes_path: Target directory for installation.</span>
+<span class="sd">        :type processes_path: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">is_zipfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
@@ -1031,9 +1081,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load the process configuration from YAML.</span>
 
-<span class="sd">        :param config_path: (str) Path to the configuration file.</span>
+<span class="sd">        :param config_path: Path to the configuration file.</span>
+<span class="sd">        :type config_path: str</span>
 
-<span class="sd">        :return: (dict) The loaded configuration or empty dict if error.</span>
+<span class="sd">        :return: The loaded configuration or empty dict if error.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -1067,14 +1119,19 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Roll back changes in case of installation failure.</span>
 
-<span class="sd">        :param config_path: (str) Path to configuration file.</span>
-<span class="sd">        :param original_config: (dict) Original configuration to restore.</span>
-<span class="sd">        :param processes_path: (str) Path to processes directory.</span>
-<span class="sd">        :param package_names: (list) Names of packages that were being</span>
-<span class="sd">         installed.</span>
-<span class="sd">        :param mia_processes_not_found: (bool) Flag indicating if Mia processes</span>
-<span class="sd">         backup was made.</span>
-<span class="sd">        :param tmp_folder4MIA: (str) Path to Mia processes backup.</span>
+<span class="sd">        :param config_path: Path to configuration file.</span>
+<span class="sd">        :type config_path: str</span>
+<span class="sd">        :param original_config: Original configuration to restore.</span>
+<span class="sd">        :type original_config: dict</span>
+<span class="sd">        :param processes_path: Path to processes directory.</span>
+<span class="sd">        :type processes_path: str</span>
+<span class="sd">        :param package_names: Names of packages that were being installed.</span>
+<span class="sd">        :type package_names: list</span>
+<span class="sd">        :param mia_processes_not_found: Flag indicating if Mia processes backup</span>
+<span class="sd">         was made.</span>
+<span class="sd">        :type mia_processes_not_found: bool</span>
+<span class="sd">        :param tmp_folder4MIA: Path to Mia processes backup.</span>
+<span class="sd">        :type tmp_folder4MIA: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">original_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">original_config</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1110,8 +1167,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display an error message box.</span>
 
-<span class="sd">        :param message: (str) Message to display.</span>
-<span class="sd">        :param critical: (bool) If True, display a critical message box.</span>
+<span class="sd">        :param message: Message to display.</span>
+<span class="sd">        :type message: str</span>
+<span class="sd">        :param critical: If True, display a critical message box.</span>
+<span class="sd">        :type critical: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
 
@@ -1134,7 +1193,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update status message in the main window.</span>
 
-<span class="sd">        :param message: (str) Status message to display.</span>
+<span class="sd">        :param message: Status message to display.</span>
+<span class="sd">        :type message: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -1151,11 +1211,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update an existing package.</span>
 
-<span class="sd">        :param filename: (str) Path to zip file or directory.</span>
-<span class="sd">        :param package_name: (str) Name of the package to update.</span>
-<span class="sd">        :param processes_path: (str) Target directory for installation.</span>
+<span class="sd">        :param filename: Path to zip file or directory.</span>
+<span class="sd">        :type filename: str</span>
+<span class="sd">        :param package_name: Name of the package to update.</span>
+<span class="sd">        :type package_name: str</span>
+<span class="sd">        :param processes_path: Target directory for installation.</span>
+<span class="sd">        :type processes_path: str</span>
 
-<span class="sd">        :return: (str) The new package name (with timestamp).</span>
+<span class="sd">        :return: The new package name (with timestamp).</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Create timestamped name for the new version</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
@@ -1198,9 +1262,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate the input file or directory.</span>
 
-<span class="sd">        :param filename: (str) Path to the file or directory.</span>
+<span class="sd">        :param filename: Path to the file or directory.</span>
+<span class="sd">        :type filename: str</span>
 
-<span class="sd">        :return: (bool) True if valid, False otherwise</span>
+<span class="sd">        :return: True if valid, False otherwise</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
@@ -1222,8 +1288,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a file dialog to select the package source.</span>
 
-<span class="sd">        :param folder: (bool) If True, opens a directory selection dialog; If</span>
-<span class="sd">         False, opens a zip file selection dialog.</span>
+<span class="sd">        :param folder: If True, opens a directory selection dialog; If False,</span>
+<span class="sd">         opens a zip file selection dialog.</span>
+<span class="sd">        :type folder: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">folder</span><span class="p">:</span>
@@ -1453,9 +1520,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    where each node can have a name, value, parent, and multiple children.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - __repr__: Define what should be printed by the class.</span>
 <span class="sd">            - _recurse_dict: Recursively build a dictionary representation of</span>
 <span class="sd">              the node hierarchy.</span>
@@ -1485,9 +1550,13 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize a new Node instance.</span>
 
-<span class="sd">        :param name: (str) The name of the node.</span>
+<span class="sd">        :param name: The name of the node.</span>
+<span class="sd">        :type name: str</span>
 <span class="sd">        :param parent: The parent node. If provided, this node is automatically</span>
-<span class="sd">         added as a child to the parent. Defaults to None.</span>
+<span class="sd">         added to the parent&#39;s list of children. Defaults to None.</span>
+<span class="sd">        :type parent:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.Node |</span>
+<span class="sd">         None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1503,7 +1572,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a string representation of the node hierarchy.</span>
 
-<span class="sd">        :return: (str) A formatted string showing the node hierarchy.</span>
+<span class="sd">        :return: A formatted string showing the node hierarchy.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">()</span>
 
@@ -1513,7 +1583,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively build a dictionary representation of the node hierarchy.</span>
 
-<span class="sd">        :param d: (dict) The dictionary to populate with the node hierarchy.</span>
+<span class="sd">        :param d: The dictionary to populate with the node hierarchy.</span>
+<span class="sd">        :type d: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 
@@ -1528,6 +1599,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Add a child node to this node.</span>
 
 <span class="sd">        :param child: The child node to add.</span>
+<span class="sd">        :type child:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.Node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span></div>
 
@@ -1538,7 +1611,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get attributes of this node as a dictionary.</span>
 
-<span class="sd">        :return: (dict) A dictionary of property names and their values.</span>
+<span class="sd">        :return: A dictionary of property names and their values.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__mro__</span>
         <span class="n">keyvalued</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1559,9 +1633,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a child node by its index.</span>
 
-<span class="sd">        :param row: (int) The index of the child node in the children list.</span>
+<span class="sd">        :param row: The index of the child node in the children list.</span>
+<span class="sd">        :type row: int</span>
 
 <span class="sd">        :return: The child node at the specified index.</span>
+<span class="sd">        :rtype:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.Node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">[</span><span class="n">row</span><span class="p">]</span></div>
 
@@ -1572,7 +1649,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of children of this node.</span>
 
-<span class="sd">        :return: (int) The number of child nodes.</span>
+<span class="sd">        :return: The number of child nodes.</span>
+<span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">)</span></div>
 
@@ -1583,10 +1661,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get data about this node based on the column parameter.</span>
 
-<span class="sd">        :param column: (int) 0 for the fully qualified name (including parent</span>
-<span class="sd">         names), 1 for the value of this node.</span>
+<span class="sd">        :param column: 0 for the fully qualified name (including parent names),</span>
+<span class="sd">         1 for the value of this node.</span>
+<span class="sd">        :type column: int</span>
 
-<span class="sd">        :return: (str) The requested data (either string path or node value).</span>
+<span class="sd">        :return: The requested data (either string path or node value).</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1610,10 +1690,14 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Insert a child node at a specific position.</span>
 
-<span class="sd">        :param position: (int) The position at which to insert the child.</span>
+<span class="sd">        :param position: The position at which to insert the child.</span>
+<span class="sd">        :type position: int</span>
 <span class="sd">        :param child: The child node to insert.</span>
+<span class="sd">        :type child:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.Node</span>
 
-<span class="sd">        :return: (bool) True if insertion was successful, False otherwise.</span>
+<span class="sd">        :return: True if insertion was successful, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">position</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">):</span>
@@ -1630,9 +1714,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a formatted string representation of the node hierarchy.</span>
 
-<span class="sd">        :param tabLevel: (int) The current indentation level. Defaults to -1.</span>
+<span class="sd">        :param tabLevel: The current indentation level. Defaults to -1.</span>
+<span class="sd">        :type tabLevel: int</span>
 
-<span class="sd">        :return: (str) A formatted string showing the node hierarchy.</span>
+<span class="sd">        :return: A formatted string showing the node hierarchy.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tabLevel</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;    &quot;</span> <span class="o">*</span> <span class="n">tabLevel</span>
@@ -1649,7 +1735,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the name of this node.</span>
 
-<span class="sd">        :return: (str) The name of the node.</span>
+<span class="sd">        :return: The name of the node.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
@@ -1658,7 +1745,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the name of this node.</span>
 
-<span class="sd">        :param value: (str) The new name for the node.</span>
+<span class="sd">        :param value: The new name for the node.</span>
+<span class="sd">        :type value: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -1669,7 +1757,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Get the parent of this node.</span>
 
 <span class="sd">        :return: The parent node or None if this is a root node.</span>
-
+<span class="sd">        :rtype:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.Node |</span>
+<span class="sd">         None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span></div>
 
@@ -1680,10 +1770,14 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove a child node at the specified position.</span>
 
-<span class="sd">        :param position: (int) The position of the child to remove.</span>
+<span class="sd">        :param position: The position of the child to remove.</span>
+<span class="sd">        :type position: int</span>
 <span class="sd">        :param child: The child node to remove.</span>
+<span class="sd">        :type child:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.Node</span>
 
-<span class="sd">        :return: (bool) True if removal was successful, False otherwise.</span>
+<span class="sd">        :return: True if removal was successful, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">position</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">):</span>
@@ -1703,6 +1797,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method is a placeholder that always returns None.</span>
 
 <span class="sd">        :return: None.</span>
+<span class="sd">        :rtype: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -1713,8 +1808,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the index of this node in its parent&#39;s children list.</span>
 
-<span class="sd">        :return: (int) The index of this node in its parent&#39;s children list,</span>
-<span class="sd">         or None if this node has no parent.</span>
+<span class="sd">        :return: The index of this node in its parent&#39;s children list, or None</span>
+<span class="sd">         if this node has no parent.</span>
+<span class="sd">        :rtype: int | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1729,8 +1825,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the name or value of this node based on the column parameter.</span>
 
-<span class="sd">        :param column: (int) 0 to set the name, 1 to set the value.</span>
+<span class="sd">        :param column: 0 to set the name, 1 to set the value.</span>
+<span class="sd">        :type column: int</span>
 <span class="sd">        :param value: The new name or value to set.</span>
+<span class="sd">        :type value: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1746,9 +1844,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert the node hierarchy to a dictionary.</span>
 
-<span class="sd">        :param d: (dict) A dictionary to populate. Defaults to empty dict.</span>
+<span class="sd">        :param d: A dictionary to populate. Defaults to None.</span>
+<span class="sd">        :type d: dict | None</span>
 
-<span class="sd">        :return: (dict) A dictionary representation of the node hierarchy.</span>
+<span class="sd">        :return: A dictionary representation of the node hierarchy.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1766,7 +1866,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert the node hierarchy to a list.</span>
 
-<span class="sd">        :return: (list) A list representation of the node hierarchy.</span>
+<span class="sd">        :return: A list representation of the node hierarchy.</span>
+<span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1787,6 +1888,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Get the value of this node.</span>
 
 <span class="sd">        :return: The value of the node.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
 
@@ -1796,6 +1898,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Set the value of this node.</span>
 
 <span class="sd">        :param value: The new value for the node.</span>
+<span class="sd">        :type value: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span></div>
 
@@ -1812,9 +1915,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    reflects the hierarchical organization of packages and their modules.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - fill_item: fills the items of the tree recursively.</span>
 <span class="sd">            - generate_tree: generates the package tree.</span>
 <span class="sd">            - recursive_checks: checks/unchecks all child items.</span>
@@ -1831,8 +1932,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the PackageLibrary widget.</span>
 
-<span class="sd">        :param package_tree: (dict) Hierarchical representation of packages.</span>
-<span class="sd">        :param paths: (list) System paths for importing the packages.</span>
+<span class="sd">        :param package_tree: Hierarchical representation of packages.</span>
+<span class="sd">        :type package_tree: dict</span>
+<span class="sd">        :param paths: System paths for importing the packages.</span>
+<span class="sd">        :type paths: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_checks</span><span class="p">)</span>
@@ -1852,9 +1955,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Traverses the package tree and creates corresponding QTreeWidgetItems</span>
 <span class="sd">        with appropriate check states.</span>
 
-<span class="sd">        :param item: (QTreeWidgetItem) Current tree item to populate.</span>
-<span class="sd">        :param value: (dict, list, or str) Value to populate the item with.</span>
-
+<span class="sd">        :param item: Current tree item to populate.</span>
+<span class="sd">        :type item: PyQt5.QtWidgets.QTreeWidgetItem</span>
+<span class="sd">        :param value: Value to populate the item with.</span>
+<span class="sd">        :type value: dict | list | str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setExpanded</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -1927,8 +2031,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        When a parent item is checked/unchecked, all its children</span>
 <span class="sd">        inherit the same check state.</span>
 
-<span class="sd">        :param parent: (QTreeWidgetItem) Parent item whose check state is</span>
-<span class="sd">         propagated.</span>
+<span class="sd">        :param parent: Parent item whose check state is propagated.</span>
+<span class="sd">        :type parent: PyQt5.QtWidgets.QTreeWidgetItem</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_state</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">checkState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
@@ -1950,8 +2054,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        child item is unchecked, its parent is unchecked only if all siblings</span>
 <span class="sd">        are also unchecked.</span>
 
-<span class="sd">        :param child: (QTreeWidgetItem) Child item whose check state affects</span>
-<span class="sd">         parents.</span>
+<span class="sd">        :param child: Child item whose check state affects parents.</span>
+<span class="sd">        :type child: PyQt5.QtWidgets.QTreeWidgetItem</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_state</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">checkState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
@@ -1982,15 +2086,17 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibrary.set_module_view">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_module_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update the module&#39;s enabled/disabled status in the package tree.</span>
+<span class="sd">        Update the enabled/disabled state of a module in the package tree.</span>
 
-<span class="sd">        Updates the underlying package_tree data structure when an item&#39;s</span>
-<span class="sd">        check state changes in the UI.</span>
+<span class="sd">        Updates the underlying ``package_tree`` data structure according to the</span>
+<span class="sd">        check state of the module&#39;s tree item. ``Qt.Checked`` has a value of 2,</span>
+<span class="sd">        while ``Qt.Unchecked`` has a value of 0.</span>
 
-<span class="sd">        :param item: (QTreeWidgetItem) Tree item corresponding to a module.</span>
-<span class="sd">        :param state: (Qt.CheckState) New check state: Qt.Checked or</span>
-<span class="sd">         Qt.Unchecked. (Qt.Checked == 2. So if val == 2 -&gt; checkbox is checked,</span>
-<span class="sd">         and if val == 0 -&gt; checkbox is not checked)</span>
+<span class="sd">        :param item: Tree item corresponding to a module.</span>
+<span class="sd">        :type item: PyQt5.QtWidgets.QTreeWidgetItem</span>
+<span class="sd">        :param state: New check state of the module, either ``Qt.Checked`` (2)</span>
+<span class="sd">         or ``Qt.Unchecked`` (0).</span>
+<span class="sd">        :type state: PyQt5.QtCore.Qt.CheckState</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;process_enabled&quot;</span> <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span> <span class="k">else</span> <span class="s2">&quot;process_disabled&quot;</span>
 
@@ -2031,8 +2137,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        When an item&#39;s check state changes, this method ensures the change is</span>
 <span class="sd">        properly propagated to children and parent items.</span>
 
-<span class="sd">        :param item: (QTreeWidgetItem) Item whose check state changed.</span>
-<span class="sd">        :param column: (int) Column index of the change (should be 0).</span>
+<span class="sd">        :param item: Item whose check state changed.</span>
+<span class="sd">        :type item: PyQt5.QtWidgets.QTreeWidgetItem</span>
+<span class="sd">        :param column: Column index of the change (should be 0).</span>
+<span class="sd">        :type column: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Checked state is stored on column 0</span>
@@ -2065,9 +2173,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    the package tree, and saving configurations.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _create_button: Create a standardized button.</span>
 <span class="sd">            - _create_install_buttons: Create buttons for installing processes.</span>
 <span class="sd">            - _create_line_edit: Create and configure the line edit.</span>
@@ -2104,7 +2210,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              attributes.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - signal_save: Signal emitted when configuration is saved.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2118,7 +2223,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the PackageLibraryDialog.</span>
 
 <span class="sd">        :param mia_main_window: Reference to the main application window.</span>
-<span class="sd">        :param parent: (QWidget) Parent widget for the dialog.</span>
+<span class="sd">        :type mia_main_window:</span>
+<span class="sd">         populse_mia.user_interface.main_window.MainWindow</span>
+<span class="sd">        :param parent: Parent widget for the dialog.</span>
+<span class="sd">        :type parent:</span>
+<span class="sd">         populse_mia.user_interface.main_window.MainWindow | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">mia_main_window</span>
@@ -2129,12 +2238,18 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PackageLibraryDialog._create_button">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.PackageLibraryDialog._create_button">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a standardized button.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create and configure a push button.</span>
 
-<span class="sd">        :param text: (str) Button text.</span>
-<span class="sd">        :param callback: (a callable) Function to call when button is clicked.</span>
+<span class="sd">        The button is configured not to be the dialog&#39;s default button and not</span>
+<span class="sd">        to become the default button automatically.</span>
 
-<span class="sd">        :return: (QPushButton) Configured button.</span>
+<span class="sd">        :param text: Text displayed on the button.</span>
+<span class="sd">        :type text: str</span>
+<span class="sd">        :param callback: Callback invoked when the button is clicked.</span>
+<span class="sd">        :type callback: callable</span>
+
+<span class="sd">        :return: Configured push button.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QPushButton</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">btn</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">autoDefault</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">btn</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
@@ -2147,7 +2262,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create buttons for installing processes.</span>
 
-<span class="sd">        :return: (QHBoxLayout) Layout with install process buttons.</span>
+<span class="sd">        :return: Layout with install process buttons.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QHBoxLayout</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Install processes from:&quot;</span><span class="p">))</span>
@@ -2169,7 +2285,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure the line edit.</span>
 
-<span class="sd">        :return: (QLineEdit) Configured line edit for package input.</span>
+<span class="sd">        :return: Configured line edit for package input.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QLineEdit</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">line_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">()</span>
         <span class="n">line_edit</span><span class="o">.</span><span class="n">setPlaceholderText</span><span class="p">(</span>
@@ -2184,11 +2301,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a group box for a list with reset functionality.</span>
 
-<span class="sd">        :param title: (str) Group box title.</span>
-<span class="sd">        :param list_widget: (QListWidget) List widget to add to group.</span>
-<span class="sd">        :param reset_callback: (callable) Callback for reset button.</span>
+<span class="sd">        :param title: Group box title.</span>
+<span class="sd">        :type title: str</span>
+<span class="sd">        :param list_widget: List widget to add to group.</span>
+<span class="sd">        :type list_widget: PyQt5.QtWidgets.QListWidget</span>
+<span class="sd">        :param reset_callback: Callback for reset button.</span>
+<span class="sd">        :type reset_callback: callable</span>
 
-<span class="sd">        :return: (QGroupBox) Configured group box with list and reset button.</span>
+<span class="sd">        :return: Configured group box with list and reset button.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QGroupBox</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">QGroupBox</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
@@ -2207,7 +2328,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Create a list widget with extended selection mode.</span>
 
 <span class="sd">        :return: Configured list widget.</span>
-<span class="sd">        :rtype: QListWidget</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QListWidget</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">list_widget</span> <span class="o">=</span> <span class="n">QListWidget</span><span class="p">()</span>
         <span class="n">list_widget</span><span class="o">.</span><span class="n">setSelectionMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">ExtendedSelection</span><span class="p">)</span>
@@ -2222,12 +2343,16 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the main layout for the dialog.</span>
 
-<span class="sd">        :param install_layout: (QHBoxLayout) Layout for install buttons.</span>
-<span class="sd">        :param management_layout: (QHBoxLayout) Layout for package management</span>
+<span class="sd">        :param install_layout: Layout for install buttons.</span>
+<span class="sd">        :type install_layout: PyQt5.QtWidgets.QHBoxLayout</span>
+<span class="sd">        :param management_layout: Layout for package management</span>
 <span class="sd">         buttons.</span>
-<span class="sd">        :param user_mode: (bool) Whether the application is in user mode.</span>
+<span class="sd">        :type management_layout: PyQt5.QtWidgets.QHBoxLayout</span>
+<span class="sd">        :param user_mode: Whether the application is in user mode.</span>
+<span class="sd">        :type user_mode: bool</span>
 
-<span class="sd">        :return: (QHBoxLayout) Main layout of the dialog.</span>
+<span class="sd">        :return: Main layout of the dialog.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QHBoxLayout</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Create package library and vertical layout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">package_library</span> <span class="o">=</span> <span class="n">PackageLibrary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">packages</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">)</span>
@@ -2286,9 +2411,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create buttons for package management.</span>
 
-<span class="sd">        :param user_mode: (bool) Whether the application is in user mode.</span>
+<span class="sd">        :param user_mode: Whether the application is in user mode.</span>
+<span class="sd">        :type user_mode: bool</span>
 
-<span class="sd">        :return: (QHBoxLayout) Layout with package management buttons.</span>
+<span class="sd">        :return: Layout with package management buttons.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QHBoxLayout</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">add_btn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_button</span><span class="p">(</span>
@@ -2315,7 +2442,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create layout for save and cancel buttons.</span>
 
-<span class="sd">        :return: (QHBoxLayout) Layout with save and cancel buttons.</span>
+<span class="sd">        :return: Layout with save and cancel buttons.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QHBoxLayout</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -2332,7 +2460,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure the status label.</span>
 
-<span class="sd">        :return: (QLabel) Configured status label.</span>
+<span class="sd">        :return: Configured status label.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QLabel</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">()</span>
         <span class="n">label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -2404,20 +2533,24 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        their classes to the package tree. It provides flexible options for</span>
 <span class="sd">        package initialization and error handling.</span>
 
-<span class="sd">        :param module_name: (str) Fully qualified name of the module to add.</span>
+<span class="sd">        :param module_name: Fully qualified name of the module to add.</span>
 <span class="sd">         Example: &#39;myproject.processors&#39;</span>
-<span class="sd">        :param class_name: (str) Specific class name to focus on during package</span>
+<span class="sd">        :type module_name: str</span>
+<span class="sd">        :param class_name: Specific class name to focus on during package</span>
 <span class="sd">         addition. If provided, only this class or its parent packages will be</span>
 <span class="sd">         processed.</span>
-<span class="sd">        :param show_error: (bool) Controls error reporting behavior. If True,</span>
-<span class="sd">         displays error messages in a QMessageBox. If False, collects errors</span>
-<span class="sd">         silently. Defaults to False.</span>
-<span class="sd">        :param init_package_tree: (bool) If True, reinitializes the entire</span>
-<span class="sd">         package tree before adding the module. Defaults to False.</span>
+<span class="sd">        :type class_name: str | None</span>
+<span class="sd">        :param show_error: Controls error reporting behavior. If True, displays</span>
+<span class="sd">         error messages in a QMessageBox. If False, collects errors silently.</span>
+<span class="sd">         Defaults to False.</span>
+<span class="sd">        :type show_error: bool</span>
+<span class="sd">        :param init_package_tree: If True, reinitializes the entire package</span>
+<span class="sd">         tree before adding the module. Defaults to False.</span>
+<span class="sd">        :type init_package_tree: bool</span>
 
-<span class="sd">        :return: (List[str] | str) A list of error messages encountered during</span>
-<span class="sd">         package addition, or &quot;No package selected!&quot; if no module name is</span>
-<span class="sd">         provided.</span>
+<span class="sd">        :return: A list of error messages encountered during package addition,</span>
+<span class="sd">         or &quot;No package selected!&quot; if no module name is provided.</span>
+<span class="sd">        :rtype: list[str] | str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">init_package_tree</span><span class="p">:</span>
@@ -2540,10 +2673,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        on the provided package name. It supports adding packages with or</span>
 <span class="sd">        without file extensions, and handles various import scenarios.</span>
 
-<span class="sd">        :param package_name: (str | False) Name of the package to add. If False</span>
-<span class="sd">         (default), uses the text from the line edit widget.</span>
-<span class="sd">        :param update_view: (bool) Whether to update the package list view.</span>
-<span class="sd">         Defaults to True.</span>
+<span class="sd">        :param package_name: Name of the package to add. If False (default),</span>
+<span class="sd">         uses the text from the line edit widget.</span>
+<span class="sd">        :type package_name: str | bool</span>
+<span class="sd">        :param update_view: Whether to update the package list view. Defaults</span>
+<span class="sd">         to True.</span>
+<span class="sd">        :type update_view: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Use line edit text if no package name provided</span>
@@ -2709,18 +2844,23 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        updates the `__init__.py` file, and deletes the package directory and</span>
 <span class="sd">        files if they are empty.</span>
 
-<span class="sd">        :param index: (int) Recursive index for navigating modules. Defaults</span>
-<span class="sd">         to 1.</span>
-<span class="sd">        :param to_delete: (str) The package/brick to delete (e.g.,</span>
-<span class="sd">         &#39;test.Test&#39;). Defaults to None.</span>
-<span class="sd">        :param remove: (bool) Whether to remove the brick from the package</span>
-<span class="sd">         tree. Defaults to True.</span>
-<span class="sd">        :param loop: (bool) Whether to delete silently without confirmation.</span>
-<span class="sd">         Defaults to False.</span>
-<span class="sd">        :param from_pipeline_manager: (bool) Whether deletion is initiated</span>
-<span class="sd">         from pipeline manager. Defaults to False.</span>
+<span class="sd">        :param index: Recursive index for navigating modules. Defaults to 1.</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :param to_delete: The package / brick to delete (e.g., &#39;test.Test&#39;).</span>
+<span class="sd">         Defaults to None.</span>
+<span class="sd">        :type to_delete: str | None</span>
+<span class="sd">        :param remove: Whether to remove the brick from the package tree.</span>
+<span class="sd">         Defaults to True.</span>
+<span class="sd">        :type remove: bool</span>
+<span class="sd">        :param loop: Whether to delete silently without confirmation. Defaults</span>
+<span class="sd">         to False.</span>
+<span class="sd">        :type loop: bool</span>
+<span class="sd">        :param from_pipeline_manager: Whether deletion is initiated from</span>
+<span class="sd">         pipeline manager. Defaults to False.</span>
+<span class="sd">        :type from_pipeline_manager: bool</span>
 
-<span class="sd">        :return: (list[str]) A list of deleted packages/bricks (classes).</span>
+<span class="sd">        :return: A list of deleted packages/bricks (classes).</span>
+<span class="sd">        :rtype: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">deleted_packages</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">packages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">package_library</span><span class="o">.</span><span class="n">package_tree</span>
@@ -3079,10 +3219,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a package from the line edit&#39;s text.</span>
 
-<span class="sd">        :param package_name: (str) The name of the package to delete. Defaults</span>
-<span class="sd">         to the text in the line edit.</span>
-<span class="sd">        :param update_view: (bool) Whether to update the QListWidget after</span>
-<span class="sd">         deletion. Defaults to True.</span>
+<span class="sd">        :param package_name: The name of the package to delete. Defaults to the</span>
+<span class="sd">         text in the line edit.</span>
+<span class="sd">        :type package_name: str</span>
+<span class="sd">        :param update_view: Whether to update the QListWidget after deletion.</span>
+<span class="sd">         Defaults to True.</span>
+<span class="sd">        :type update_view: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">old_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">package_name</span> <span class="o">=</span> <span class="n">package_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
@@ -3131,8 +3273,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the install processes pop-up.</span>
 
-<span class="sd">        :param from_folder: (bool) Whether the installation is from a folder.</span>
-<span class="sd">         Defaults to False.</span>
+<span class="sd">        :param from_folder: Whether the installation is from a folder. Defaults</span>
+<span class="sd">         to False.</span>
+<span class="sd">        :type from_folder: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_install_processes</span> <span class="o">=</span> <span class="n">InstallProcesses</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="n">from_folder</span>
@@ -3148,10 +3291,15 @@ window.runMermaid = runMermaid;</script>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Loads and returns the configuration from &#39;process_config.yml&#39;.</span>
+<span class="sd">        Load the process configuration from ``process_config.yml``.</span>
 
-<span class="sd">        :return: (dict | {}) The configuration dictionary if successfully</span>
-<span class="sd">         loaded, otherwise None in case of an error.</span>
+<span class="sd">        The configuration file is searched for in the ``properties`` directory</span>
+<span class="sd">        of the configured properties path. If the file cannot be read or</span>
+<span class="sd">        parsed, an empty dictionary is returned and a warning is logged.</span>
+
+<span class="sd">        :return: The loaded configuration dictionary, or an empty dictionary if</span>
+<span class="sd">         the configuration cannot be loaded.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -3243,11 +3391,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        library. If the package is not found, a warning message is displayed.</span>
 <span class="sd">        The package tree is updated after a successful removal.</span>
 
-<span class="sd">        :param package: (str) The fully qualified module name (e.g.,</span>
+<span class="sd">        :param package: The fully qualified module name (e.g.,</span>
 <span class="sd">         &#39;nipype.interfaces.spm&#39;).</span>
+<span class="sd">        :type package: str</span>
 
-<span class="sd">        :return: (bool) True if the package was successfully removed, False</span>
-<span class="sd">         if the package was not found or no package was provided.</span>
+<span class="sd">        :return: True if the package was successfully removed, False if the</span>
+<span class="sd">         package was not found or no package was provided.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">package</span><span class="p">:</span>
@@ -3310,12 +3460,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Removes the specified package from the package tree and updates the</span>
 <span class="sd">        view accordingly.</span>
 
-<span class="sd">        :param package_name: (str) The name of the package to remove. If not</span>
+<span class="sd">        :param package_name: The name of the package to remove. If not</span>
 <span class="sd">         provided, the package name is taken from the line edit.</span>
-<span class="sd">        :param update_view: (bool) Whether to update the QListWidget view after</span>
+<span class="sd">        :type package_name: str</span>
+<span class="sd">        :param update_view: Whether to update the QListWidget view after</span>
 <span class="sd">         removal. Defaults to True.</span>
-<span class="sd">        :param tree_remove: (bool) Whether to remove the package from the tree.</span>
+<span class="sd">        :type update_view: bool</span>
+<span class="sd">        :param tree_remove: Whether to remove the package from the tree.</span>
 <span class="sd">         Defaults to True.</span>
+<span class="sd">        :type tree_remove: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">old_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">package_name</span> <span class="o">=</span> <span class="n">package_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
@@ -3365,10 +3518,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resets a previous package addition or removal action.</span>
 
-<span class="sd">        :param itemlist: (QListWidget) The list widget containing items to</span>
-<span class="sd">         reset.</span>
-<span class="sd">        :param add: (bool) If True, resets an addition by removing the package</span>
-<span class="sd">         if it exists in the configuration. If False, re-adds the package.</span>
+<span class="sd">        :param itemlist: The list widget containing items to reset.</span>
+<span class="sd">        :type itemlist: PyQt5.QtWidgets.QListWidget</span>
+<span class="sd">        :param add: If True, resets an addition by removing the package if it</span>
+<span class="sd">         exists in the configuration. If False, re-adds the package.</span>
+<span class="sd">        :type add: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">itemlist</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">():</span>
@@ -3406,8 +3560,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        tree and writes it to the configuration file. Optionally, it can close</span>
 <span class="sd">        the dialog after saving.</span>
 
-<span class="sd">        :param close: (bool) If True, closes the dialog after saving. Defaults</span>
-<span class="sd">         to True.</span>
+<span class="sd">        :param close: If True, closes the dialog after saving. Defaults to</span>
+<span class="sd">         True.</span>
+<span class="sd">        :type close: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">process_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_config</span> <span class="ow">or</span> <span class="p">{}</span>
@@ -3502,16 +3657,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    A tree view to display available Capsul&#39;s processes.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - keyPressEvent: Event when the delete key is pressed.</span>
 <span class="sd">            - load_dictionary: Loads a dictionary to the tree.</span>
 <span class="sd">            - mousePressEvent: Event when the mouse is pressed.</span>
 <span class="sd">            - to_dict: Returns a dictionary from the current tree.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - item_library_clicked: Signal emitted when an item in the library is</span>
 <span class="sd">          clicked.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3524,8 +3676,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the ProcessLibrary class.</span>
 
-<span class="sd">        :param d: (dict) Dictionary corresponding to the tree.</span>
-<span class="sd">        :param pkg_lib: An instance of the PackageLibraryDialog class.</span>
+<span class="sd">        :param d: Dictionary corresponding to the tree.</span>
+<span class="sd">        :type d: dict</span>
+<span class="sd">        :param pkg_lib: Package library dialog associated with this process</span>
+<span class="sd">         library.</span>
+<span class="sd">        :type pkg_lib: PackageLibraryDialog</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load_dictionary</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
@@ -3541,7 +3697,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        If the Delete key is pressed and the user is not in user mode, the</span>
 <span class="sd">        selected package(s) will be deleted from the package library.</span>
 
-<span class="sd">        :param event: (QKeyEvent) The key event triggering this handler.</span>
+<span class="sd">        :param event: The key event triggering this handler.</span>
+<span class="sd">        :type event: PyQt5.QtGui.QKeyEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
@@ -3569,8 +3726,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a dictionary into the tree.</span>
 
-<span class="sd">        :param d :(dict) Dictionary to load. See the packages attribute in the</span>
+<span class="sd">        :param d: Dictionary to load. See the packages attribute in the</span>
 <span class="sd">         ProcessLibraryWidget class.</span>
+<span class="sd">        :type d: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span> <span class="o">=</span> <span class="n">d</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span> <span class="o">=</span> <span class="n">node_structure_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
@@ -3589,7 +3747,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        pressed, a context menu is displayed, allowing the user to remove or</span>
 <span class="sd">        delete a package.</span>
 
-<span class="sd">        :param event: (QMouseEvent) The mouse event triggering this handler.</span>
+<span class="sd">        :param event: The mouse event triggering this handler.</span>
+<span class="sd">        :type event: PyQt5.QtGui.QMouseEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexAt</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
@@ -3640,6 +3799,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Return a dictionary representation of the current tree.</span>
 
 <span class="sd">        :return: The dictionary of the tree.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
 </div>
@@ -3653,9 +3813,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Widget that manages the available Capsul&#39;s processes in the software.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _configure_process_library: Configure the process library</span>
 <span class="sd">              settings.</span>
 <span class="sd">            - _setup_layout: Setup the layout for the widget.</span>
@@ -3678,6 +3836,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the ProcessLibraryWidget.</span>
 
 <span class="sd">        :param main_window: The current main window.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">main_window</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Process Library&quot;</span><span class="p">)</span>
@@ -3738,6 +3897,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        dictionary.</span>
 <span class="sd">        .</span>
 <span class="sd">        :return: The configuration as a dictionary.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -3826,15 +3986,19 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.import_file">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">import_file</span><span class="p">(</span><span class="n">full_name</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Import a Python module from a specified file path.</span>
+<span class="sd">    Import a Python module from a file without registering it in</span>
+<span class="sd">    ``sys.modules``.</span>
 
-<span class="sd">    This function dynamically imports a module from a given file path and</span>
-<span class="sd">    returns the module object. It does not modify `sys.modules`.</span>
+<span class="sd">    Creates a module specification from the specified file, creates the</span>
+<span class="sd">    corresponding module object, and executes the module using its loader.</span>
 
-<span class="sd">    :param full_name: (str) The name of the module to import.</span>
-<span class="sd">    :param path: (str) The file path of the module.</span>
+<span class="sd">    :param full_name: Name to assign to the imported module.</span>
+<span class="sd">    :type full_name: str</span>
+<span class="sd">    :param path: Path to the Python file to import.</span>
+<span class="sd">    :type path: str</span>
 
 <span class="sd">    :return: The imported module.</span>
+<span class="sd">    :rtype: types.ModuleType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">spec</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="n">full_name</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
     <span class="n">module</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
@@ -3853,11 +4017,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    for a TreeModel. It processes nodes based on specific conditions and</span>
 <span class="sd">    recursively builds the tree.</span>
 
-<span class="sd">    :param datadict: (dict) The dictionary to convert into a node structure.</span>
+<span class="sd">    :param datadict: The dictionary to convert into a node structure.</span>
+<span class="sd">    :type datadict: dict</span>
 <span class="sd">    :param parent: The parent node of the current node. Defaults to None.</span>
+<span class="sd">    :type parent:</span>
+<span class="sd">     populse_mia.user_interface.pipeline_manager.process_library.Node | None</span>
 <span class="sd">    :param root_node: The root node of the tree. Defaults to None.</span>
+<span class="sd">    :type root_node:</span>
+<span class="sd">     populse_mia.user_interface.pipeline_manager.process_library.Node | None</span>
 
 <span class="sd">    :return: The root node of the constructed tree.</span>
+<span class="sd">    :rtype:</span>
+<span class="sd">     populse_mia.user_interface.pipeline_manager.process_library.Node | None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
