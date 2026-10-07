@@ -96,9 +96,7 @@ class DictionaryTreeModel(QAbstractItemModel):
     enabling interaction with the data through a tree view.
 
     Contains:
-
         Methods:
-
             - columnCount: Return always 1.
             - data: Return the data requested by the view.
             - flags: Everything is enabled and selectable, only the leaves can
@@ -134,23 +132,32 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Returns the number of columns, which is always 1.
 
-        :param parent: (QModelIndex) The parent index (unused in this
-         implementation).
+        :param parent: The parent index (unused in this implementation).
+        :type parent: PyQt5.QtCore.QModelIndex
 
-        :return: (int) The number of columns.
+        :return: The number of columns.
+        :rtype: int
         """
         return 1
 
     def data(self, index, role):
         """
-        Returns the data stored under the given role for the item at the
-        given index.
+        Returns the data associated with the item at the given index and role.
 
-        :param index: (QModelIndex) The index of the item.
-        :param role: (Qt.ItemDataRole) The role of the data to retrieve.
+        This method is called by Qt's model/view framework to retrieve data for
+        a model item. The ``role`` specifies how the data will be used, for
+        example, ``Qt.DisplayRole`` for displaying the item or ``Qt.EditRole``
+        when editing it.
 
-        :return: The data stored under the given role, or None if not
-         available.
+        :param index: The model index of the item for which data is requested.
+        :type index: PyQt5.QtCore.QModelIndex
+        :param role: The Qt item-data role specifying the type or purpose of
+         the requested data, such as ``Qt.DisplayRole`` or ``Qt.EditRole``.
+        :type role: int
+
+        :return: The item's name for ``Qt.DisplayRole`` and ``Qt.EditRole``,
+         or ``None`` if the index is invalid or the role is not handled.
+        :rtype: str | None
         """
 
         if not index.isValid():
@@ -166,9 +173,11 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Get the item flags for the specified index.
 
-        :param index: (QModelIndex) The model index to retrieve flags for.
+        :param index: The model index to retrieve flags for.
+        :type index: PyQt5.QtCore.QModelIndex
 
-        :return: (Qt.ItemFlags) The corresponding item flags.
+        :return: The corresponding item flags.
+        :rtype: PyQt5.QtCore.Qt.ItemFlags
         """
         node = index.internalPointer()
         base_flags = Qt.ItemIsEnabled | Qt.ItemIsSelectable
@@ -182,23 +191,33 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Retrieves the Node object from the given index.
 
-        :param index: (QModelIndex) The index of the node.
+        :param index: The index of the node.
+        :type index: PyQt5.QtCore.QModelIndex
 
         :return: The Node object.
+        :rtype:
+         populse_mia.user_interface.pipeline_manager.process_library.Node
         """
         node = index.internalPointer() if index.isValid() else None
         return node if node else self._rootNode
 
     def headerData(self, section, orientation, role):
         """
-        Returns the data for the given role and section in the header.
+        Returns the header label for the given section.
 
-        :param section: (int) The section number.
-        :param orientation: (Qt.Orientation) The orientation of the header
-         (unused in this implementation).
-        :param role: (Qt.ItemDataRole) The role of the data to retrieve.
+        :param section: The section number for which to retrieve the header
+         label.
+        :type section: int
+        :param orientation: The orientation of the header, either horizontal or
+         vertical. This parameter is unused in this implementation.
+        :type orientation: PyQt5.QtCore.Qt.Orientation
+        :param role: The role for which to retrieve the header data. Only
+         ``Qt.DisplayRole`` is handled by this implementation.
+        :type role: int
 
-        :return: (str) The header data, or None if not available.
+        :return: The header label for the requested section, or None if the
+         section or role is not handled.
+        :rtype: str | None
         """
 
         if role == Qt.DisplayRole:
@@ -215,12 +234,15 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Creates an index for the given row, column, and parent.
 
-        :param row: (int) The row number.
-        :param column: (int) The column number.
-        :param parent: (QModelIndex) The parent index.
+        :param row: The row number.
+        :type row: int
+        :param column: The column number.
+        :type column: int
+        :param parent: The parent index.
+        :type parent: PyQt5.QtCore.QModelIndex
 
-        :return: (QModelIndex) The created index, or an invalid index if not
-         available.
+        :return: The created index, or an invalid index if not available.
+        :rtype: PyQt5.QtCore.QModelIndex
         """
         parentNode = self.getNode(parent)
         childItem = parentNode.child(row)
@@ -234,12 +256,15 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Inserts rows starting from the specified position.
 
-        :param position: (int) The starting position to insert rows.
-        :param rows: (int) The number of rows to insert.
-        :param parent: (QModelIndex) The parent index.
+        :param position: The starting position to insert rows.
+        :type position: int
+        :param rows: The number of rows to insert.
+        :type rows: int
+        :param parent: The parent index.
+        :type parent: PyQt5.QtCore.QModelIndex
 
-        :return: (bool) True if the rows were successfully inserted, False
-         otherwise.
+        :return: True if the rows were successfully inserted, False otherwise.
+        :rtype: bool
         """
         parentNode = self.getNode(parent)
         self.beginInsertRows(parent, position, position + rows - 1)
@@ -257,13 +282,19 @@ class DictionaryTreeModel(QAbstractItemModel):
 
     def mimeData(self, indexes):
         """
-        Generate MIME data for a drag-and-drop operation.
+        Return MIME data for the specified model indexes.
 
-        :param indexes: (list of QModelIndex) The list of model indexes being
-         dragged.
+        The data associated with each valid index is encoded as bytes and
+        concatenated into a single :class:`QByteArray`, which is stored under
+        the ``"component/name"`` MIME type.
 
-        :return: (QMimeData) A QMimeData object containing serialized node
-         information.
+
+        :param indexes: The model indexes to include in the MIME data.
+        :type indexes: list[PyQt5.QtCore.QModelIndex]
+
+        :return: MIME data containing the encoded data associated with the
+         specified indexes.
+        :rtype: PyQt5.QtCore.QMimeData
         """
         mimedata = QMimeData()
         encoded_data = QByteArray()
@@ -282,7 +313,8 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Returns the supported MIME types.
 
-        :return: (list of str) A list of supported MIME types.
+        :return: A list of supported MIME types.
+        :rtype: list[str]
         """
         return ["component/name"]
 
@@ -290,10 +322,11 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Returns the parent index for the given index.
 
-        :param index: (QModelIndex) The index of the item.
+        :param index: The index of the item.
+        :type index: PyQt5.QtCore.QModelIndex
 
-        :return: (QModelIndex) The parent index, or an invalid index if not
-         available.
+        :return: The parent index, or an invalid index if not available.
+        :rtype: PyQt5.QtCore.QModelIndex
         """
         node = self.getNode(index)
         parentNode = node.parent()
@@ -307,12 +340,15 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Removes rows starting from the specified position to position+rows.
 
-        :param position: (int) The starting position to remove rows.
-        :param rows: (int) The number of rows to remove.
-        :param parent: (QModelIndex) The parent index.
+        :param position: The starting position to remove rows.
+        :type position: int
+        :param rows: The number of rows to remove.
+        :type rows: int
+        :param parent: The parent index.
+        :type parent: PyQt5.QtCore.QModelIndex
 
-        :return: (bool) True if all rows were successfully removed, False
-         otherwise.
+        :return: True if all rows were successfully removed, False otherwise.
+        :rtype: bool
         """
         parentNode = self.getNode(parent)
         self.beginRemoveRows(parent, position, position + rows - 1)
@@ -331,9 +367,11 @@ class DictionaryTreeModel(QAbstractItemModel):
         Returns the number of rows, which corresponds to the number of
         children.
 
-        :param parent: (QModelIndex) The parent index.
+        :param parent: The parent index.
+        :type parent: PyQt5.QtCore.QModelIndex
 
-        :return: (int) The number of rows.
+        :return: The number of rows.
+        :rtype: int
         """
         parentNode = (
             self.getNode(parent) if parent.isValid() else self._rootNode
@@ -344,12 +382,15 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Updates the data when the user makes changes.
 
-        :param index: (QModelIndex) The index of the item.
+        :param index: The index of the item.
+        :type index: PyQt5.QtCore.QModelIndex
         :param value: The new value to set.
-        :param role: (Qt.ItemDataRole) The role of the data to set.
+        :type value: str
+        :param role: The role of the data to set.
+        :type role: Qt.ItemDataRole
 
-        :return: (bool) True if the data was successfully set, False
-         otherwise.
+        :return: True if the data was successfully set, False otherwise.
+        :rtype: bool
         """
 
         if index.isValid() and role == Qt.EditRole:
@@ -363,7 +404,8 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Converts the root node to a dictionary.
 
-        :return: (dict) The dictionary representation of the root node.
+        :return: The dictionary representation of the root node.
+        :rtype: dict
         """
         return self._rootNode.to_dict()
 
@@ -376,9 +418,7 @@ class InstallProcesses(QDialog):
     containing packages, then install them into Mia.
 
     Contains:
-
         Methods:
-
             - _add_package: Add a package and its modules to the process tree.
             - _change_pattern_in_folder: Replace pattern in all Python files
               within a folder.
@@ -395,7 +435,6 @@ class InstallProcesses(QDialog):
             - install: Installs the selected file/folder on Populse_mia.
 
     Signals:
-
         - process_installed: Signal emitted when a process is successfully
           installed.
     """
@@ -407,8 +446,10 @@ class InstallProcesses(QDialog):
         Initialize the installation dialog.
 
         :param main_window: The main application window.
-        :param folder: (bool) If True, install from folder; if False, install
-         from zip file.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
+        :param folder: If True, install from folder; if False, install from zip
+         file.
+        :type folder: bool
         """
         super().__init__(parent=main_window)
         self.main_window = main_window
@@ -448,10 +489,13 @@ class InstallProcesses(QDialog):
         """
         Add a package and its modules to the process tree.
 
-        :param proc_dic: (dict) The process tree dictionary to update.
-        :param module_name: (str) Name of the module to add.
+        :param proc_dic: The process tree dictionary to update.
+        :type proc_dic: dict
+        :param module_name: Name of the module to add.
+        :type module_name: str
 
-        :return: (dict) The updated process tree dictionary.
+        :return: The updated process tree dictionary.
+        :rtype: dict
         """
 
         if not module_name:
@@ -526,9 +570,12 @@ class InstallProcesses(QDialog):
         """
         Replace pattern in all Python files within a folder.
 
-        :param path: (str) Directory path to process.
-        :param old_pattern: (str) Pattern to search for.
-        :param new_pattern: (str) Pattern to replace with.
+        :param path: Directory path to process.
+        :type path: str
+        :param old_pattern: Pattern to search for.
+        :type old_pattern: str
+        :param new_pattern: Pattern to replace with.
+        :type new_pattern: str
         """
 
         for root, _, files in os.walk(path):
@@ -557,9 +604,12 @@ class InstallProcesses(QDialog):
         """
         Install a new package.
 
-        :param filename: (str) Path to zip file or directory.
-        :param package_name: (str) Name of the package to install.
-        :param processes_path: (str) Target directory for installation.
+        :param filename: Path to zip file or directory.
+        :type filename: str
+        :param package_name: Name of the package to install.
+        :type package_name: str
+        :param processes_path: Target directory for installation.
+        :type processes_path: str
         """
 
         if is_zipfile(filename):
@@ -581,9 +631,11 @@ class InstallProcesses(QDialog):
         """
         Load the process configuration from YAML.
 
-        :param config_path: (str) Path to the configuration file.
+        :param config_path: Path to the configuration file.
+        :type config_path: str
 
-        :return: (dict) The loaded configuration or empty dict if error.
+        :return: The loaded configuration or empty dict if error.
+        :rtype: dict
         """
 
         try:
@@ -614,14 +666,19 @@ class InstallProcesses(QDialog):
         """
         Roll back changes in case of installation failure.
 
-        :param config_path: (str) Path to configuration file.
-        :param original_config: (dict) Original configuration to restore.
-        :param processes_path: (str) Path to processes directory.
-        :param package_names: (list) Names of packages that were being
-         installed.
-        :param mia_processes_not_found: (bool) Flag indicating if Mia processes
-         backup was made.
-        :param tmp_folder4MIA: (str) Path to Mia processes backup.
+        :param config_path: Path to configuration file.
+        :type config_path: str
+        :param original_config: Original configuration to restore.
+        :type original_config: dict
+        :param processes_path: Path to processes directory.
+        :type processes_path: str
+        :param package_names: Names of packages that were being installed.
+        :type package_names: list
+        :param mia_processes_not_found: Flag indicating if Mia processes backup
+         was made.
+        :type mia_processes_not_found: bool
+        :param tmp_folder4MIA: Path to Mia processes backup.
+        :type tmp_folder4MIA: str
         """
         if original_config is None:
             original_config = {}
@@ -654,8 +711,10 @@ class InstallProcesses(QDialog):
         """
         Display an error message box.
 
-        :param message: (str) Message to display.
-        :param critical: (bool) If True, display a critical message box.
+        :param message: Message to display.
+        :type message: str
+        :param critical: If True, display a critical message box.
+        :type critical: bool
         """
         msg = QMessageBox()
 
@@ -675,7 +734,8 @@ class InstallProcesses(QDialog):
         """
         Update status message in the main window.
 
-        :param message: (str) Status message to display.
+        :param message: Status message to display.
+        :type message: str
         """
 
         try:
@@ -689,11 +749,15 @@ class InstallProcesses(QDialog):
         """
         Update an existing package.
 
-        :param filename: (str) Path to zip file or directory.
-        :param package_name: (str) Name of the package to update.
-        :param processes_path: (str) Target directory for installation.
+        :param filename: Path to zip file or directory.
+        :type filename: str
+        :param package_name: Name of the package to update.
+        :type package_name: str
+        :param processes_path: Target directory for installation.
+        :type processes_path: str
 
-        :return: (str) The new package name (with timestamp).
+        :return: The new package name (with timestamp).
+        :rtype: str
         """
         # Create timestamped name for the new version
         date = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -733,9 +797,11 @@ class InstallProcesses(QDialog):
         """
         Validate the input file or directory.
 
-        :param filename: (str) Path to the file or directory.
+        :param filename: Path to the file or directory.
+        :type filename: str
 
-        :return: (bool) True if valid, False otherwise
+        :return: True if valid, False otherwise
+        :rtype: bool
         """
 
         if not os.path.exists(filename):
@@ -754,8 +820,9 @@ class InstallProcesses(QDialog):
         """
         Open a file dialog to select the package source.
 
-        :param folder: (bool) If True, opens a directory selection dialog; If
-         False, opens a zip file selection dialog.
+        :param folder: If True, opens a directory selection dialog; If False,
+         opens a zip file selection dialog.
+        :type folder: bool
         """
 
         if folder:
@@ -978,9 +1045,7 @@ class Node:
     where each node can have a name, value, parent, and multiple children.
 
     Contains:
-
         Methods:
-
             - __repr__: Define what should be printed by the class.
             - _recurse_dict: Recursively build a dictionary representation of
               the node hierarchy.
@@ -1008,9 +1073,13 @@ class Node:
         """
         Initialize a new Node instance.
 
-        :param name: (str) The name of the node.
+        :param name: The name of the node.
+        :type name: str
         :param parent: The parent node. If provided, this node is automatically
-         added as a child to the parent. Defaults to None.
+         added to the parent's list of children. Defaults to None.
+        :type parent:
+         populse_mia.user_interface.pipeline_manager.process_library.Node |
+         None
         """
 
         if parent is not None:
@@ -1025,7 +1094,8 @@ class Node:
         """
         Return a string representation of the node hierarchy.
 
-        :return: (str) A formatted string showing the node hierarchy.
+        :return: A formatted string showing the node hierarchy.
+        :rtype: str
         """
         return self.log()
 
@@ -1033,7 +1103,8 @@ class Node:
         """
         Recursively build a dictionary representation of the node hierarchy.
 
-        :param d: (dict) The dictionary to populate with the node hierarchy.
+        :param d: The dictionary to populate with the node hierarchy.
+        :type d: dict
         """
         d[self.name] = {} if self._children else self.value
 
@@ -1045,6 +1116,8 @@ class Node:
         Add a child node to this node.
 
         :param child: The child node to add.
+        :type child:
+         populse_mia.user_interface.pipeline_manager.process_library.Node
         """
         self._children.append(child)
 
@@ -1052,7 +1125,8 @@ class Node:
         """
         Get attributes of this node as a dictionary.
 
-        :return: (dict) A dictionary of property names and their values.
+        :return: A dictionary of property names and their values.
+        :rtype: dict
         """
         classes = self.__class__.__mro__
         keyvalued = {}
@@ -1070,9 +1144,12 @@ class Node:
         """
         Get a child node by its index.
 
-        :param row: (int) The index of the child node in the children list.
+        :param row: The index of the child node in the children list.
+        :type row: int
 
         :return: The child node at the specified index.
+        :rtype:
+         populse_mia.user_interface.pipeline_manager.process_library.Node
         """
         return self._children[row]
 
@@ -1080,7 +1157,8 @@ class Node:
         """
         Get the number of children of this node.
 
-        :return: (int) The number of child nodes.
+        :return: The number of child nodes.
+        :rtype: int
         """
         return len(self._children)
 
@@ -1088,10 +1166,12 @@ class Node:
         """
         Get data about this node based on the column parameter.
 
-        :param column: (int) 0 for the fully qualified name (including parent
-         names), 1 for the value of this node.
+        :param column: 0 for the fully qualified name (including parent names),
+         1 for the value of this node.
+        :type column: int
 
-        :return: (str) The requested data (either string path or node value).
+        :return: The requested data (either string path or node value).
+        :rtype: str
         """
 
         if column == 0:
@@ -1112,10 +1192,14 @@ class Node:
         """
         Insert a child node at a specific position.
 
-        :param position: (int) The position at which to insert the child.
+        :param position: The position at which to insert the child.
+        :type position: int
         :param child: The child node to insert.
+        :type child:
+         populse_mia.user_interface.pipeline_manager.process_library.Node
 
-        :return: (bool) True if insertion was successful, False otherwise.
+        :return: True if insertion was successful, False otherwise.
+        :rtype: bool
         """
 
         if position < 0 or position > len(self._children):
@@ -1129,9 +1213,11 @@ class Node:
         """
         Generate a formatted string representation of the node hierarchy.
 
-        :param tabLevel: (int) The current indentation level. Defaults to -1.
+        :param tabLevel: The current indentation level. Defaults to -1.
+        :type tabLevel: int
 
-        :return: (str) A formatted string showing the node hierarchy.
+        :return: A formatted string showing the node hierarchy.
+        :rtype: str
         """
         tabLevel += 1
         indent = "    " * tabLevel
@@ -1147,7 +1233,8 @@ class Node:
         """
         Get the name of this node.
 
-        :return: (str) The name of the node.
+        :return: The name of the node.
+        :rtype: str
         """
         return self._name
 
@@ -1156,7 +1243,8 @@ class Node:
         """
         Set the name of this node.
 
-        :param value: (str) The new name for the node.
+        :param value: The new name for the node.
+        :type value: str
         """
         self._name = value
 
@@ -1165,7 +1253,9 @@ class Node:
         Get the parent of this node.
 
         :return: The parent node or None if this is a root node.
-
+        :rtype:
+         populse_mia.user_interface.pipeline_manager.process_library.Node |
+         None
         """
         return self._parent
 
@@ -1173,10 +1263,14 @@ class Node:
         """
         Remove a child node at the specified position.
 
-        :param position: (int) The position of the child to remove.
+        :param position: The position of the child to remove.
+        :type position: int
         :param child: The child node to remove.
+        :type child:
+         populse_mia.user_interface.pipeline_manager.process_library.Node
 
-        :return: (bool) True if removal was successful, False otherwise.
+        :return: True if removal was successful, False otherwise.
+        :rtype: bool
         """
 
         if position < 0 or position > len(self._children):
@@ -1193,6 +1287,7 @@ class Node:
         This method is a placeholder that always returns None.
 
         :return: None.
+        :rtype: None
         """
         return None
 
@@ -1200,8 +1295,9 @@ class Node:
         """
         Get the index of this node in its parent's children list.
 
-        :return: (int) The index of this node in its parent's children list,
-         or None if this node has no parent.
+        :return: The index of this node in its parent's children list, or None
+         if this node has no parent.
+        :rtype: int | None
         """
 
         if self._parent is not None:
@@ -1213,8 +1309,10 @@ class Node:
         """
         Set the name or value of this node based on the column parameter.
 
-        :param column: (int) 0 to set the name, 1 to set the value.
+        :param column: 0 to set the name, 1 to set the value.
+        :type column: int
         :param value: The new name or value to set.
+        :type value: str
         """
 
         if column == 0:
@@ -1227,9 +1325,11 @@ class Node:
         """
         Convert the node hierarchy to a dictionary.
 
-        :param d: (dict) A dictionary to populate. Defaults to empty dict.
+        :param d: A dictionary to populate. Defaults to None.
+        :type d: dict | None
 
-        :return: (dict) A dictionary representation of the node hierarchy.
+        :return: A dictionary representation of the node hierarchy.
+        :rtype: dict
         """
 
         if d is None:
@@ -1244,7 +1344,8 @@ class Node:
         """
         Convert the node hierarchy to a list.
 
-        :return: (list) A list representation of the node hierarchy.
+        :return: A list representation of the node hierarchy.
+        :rtype: list
         """
         output = []
 
@@ -1264,6 +1365,7 @@ class Node:
         Get the value of this node.
 
         :return: The value of the node.
+        :rtype: str
         """
         return self._value
 
@@ -1273,6 +1375,7 @@ class Node:
         Set the value of this node.
 
         :param value: The new value for the node.
+        :type value: str
         """
         self._value = value
 
@@ -1286,9 +1389,7 @@ class PackageLibrary(QTreeWidget):
     reflects the hierarchical organization of packages and their modules.
 
     Contains:
-
         Methods:
-
             - fill_item: fills the items of the tree recursively.
             - generate_tree: generates the package tree.
             - recursive_checks: checks/unchecks all child items.
@@ -1303,8 +1404,10 @@ class PackageLibrary(QTreeWidget):
         """
         Initialize the PackageLibrary widget.
 
-        :param package_tree: (dict) Hierarchical representation of packages.
-        :param paths: (list) System paths for importing the packages.
+        :param package_tree: Hierarchical representation of packages.
+        :type package_tree: dict
+        :param paths: System paths for importing the packages.
+        :type paths: list
         """
         super().__init__()
         self.itemChanged.connect(self.update_checks)
@@ -1321,9 +1424,10 @@ class PackageLibrary(QTreeWidget):
         Traverses the package tree and creates corresponding QTreeWidgetItems
         with appropriate check states.
 
-        :param item: (QTreeWidgetItem) Current tree item to populate.
-        :param value: (dict, list, or str) Value to populate the item with.
-
+        :param item: Current tree item to populate.
+        :type item: PyQt5.QtWidgets.QTreeWidgetItem
+        :param value: Value to populate the item with.
+        :type value: dict | list | str
         """
         item.setExpanded(True)
 
@@ -1390,8 +1494,8 @@ class PackageLibrary(QTreeWidget):
         When a parent item is checked/unchecked, all its children
         inherit the same check state.
 
-        :param parent: (QTreeWidgetItem) Parent item whose check state is
-         propagated.
+        :param parent: Parent item whose check state is propagated.
+        :type parent: PyQt5.QtWidgets.QTreeWidgetItem
         """
         check_state = parent.checkState(0)
 
@@ -1410,8 +1514,8 @@ class PackageLibrary(QTreeWidget):
         child item is unchecked, its parent is unchecked only if all siblings
         are also unchecked.
 
-        :param child: (QTreeWidgetItem) Child item whose check state affects
-         parents.
+        :param child: Child item whose check state affects parents.
+        :type child: PyQt5.QtWidgets.QTreeWidgetItem
         """
         check_state = child.checkState(0)
 
@@ -1439,15 +1543,17 @@ class PackageLibrary(QTreeWidget):
 
     def set_module_view(self, item, state):
         """
-        Update the module's enabled/disabled status in the package tree.
+        Update the enabled/disabled state of a module in the package tree.
 
-        Updates the underlying package_tree data structure when an item's
-        check state changes in the UI.
+        Updates the underlying ``package_tree`` data structure according to the
+        check state of the module's tree item. ``Qt.Checked`` has a value of 2,
+        while ``Qt.Unchecked`` has a value of 0.
 
-        :param item: (QTreeWidgetItem) Tree item corresponding to a module.
-        :param state: (Qt.CheckState) New check state: Qt.Checked or
-         Qt.Unchecked. (Qt.Checked == 2. So if val == 2 -> checkbox is checked,
-         and if val == 0 -> checkbox is not checked)
+        :param item: Tree item corresponding to a module.
+        :type item: PyQt5.QtWidgets.QTreeWidgetItem
+        :param state: New check state of the module, either ``Qt.Checked`` (2)
+         or ``Qt.Unchecked`` (0).
+        :type state: PyQt5.QtCore.Qt.CheckState
         """
         val = "process_enabled" if state == Qt.Checked else "process_disabled"
 
@@ -1485,8 +1591,10 @@ class PackageLibrary(QTreeWidget):
         When an item's check state changes, this method ensures the change is
         properly propagated to children and parent items.
 
-        :param item: (QTreeWidgetItem) Item whose check state changed.
-        :param column: (int) Column index of the change (should be 0).
+        :param item: Item whose check state changed.
+        :type item: PyQt5.QtWidgets.QTreeWidgetItem
+        :param column: Column index of the change (should be 0).
+        :type column: int
         """
 
         # Checked state is stored on column 0
@@ -1515,9 +1623,7 @@ class PackageLibraryDialog(QDialog):
     the package tree, and saving configurations.
 
     Contains:
-
         Methods:
-
             - _create_button: Create a standardized button.
             - _create_install_buttons: Create buttons for installing processes.
             - _create_line_edit: Create and configure the line edit.
@@ -1554,7 +1660,6 @@ class PackageLibraryDialog(QDialog):
               attributes.
 
     Signals:
-
         - signal_save: Signal emitted when configuration is saved.
 
     """
@@ -1566,7 +1671,11 @@ class PackageLibraryDialog(QDialog):
         Initialize the PackageLibraryDialog.
 
         :param mia_main_window: Reference to the main application window.
-        :param parent: (QWidget) Parent widget for the dialog.
+        :type mia_main_window:
+         populse_mia.user_interface.main_window.MainWindow
+        :param parent: Parent widget for the dialog.
+        :type parent:
+         populse_mia.user_interface.main_window.MainWindow | None
         """
         super().__init__(parent)
         self.main_window = mia_main_window
@@ -1574,12 +1683,18 @@ class PackageLibraryDialog(QDialog):
         self._setup_ui()
 
     def _create_button(self, text, callback):
-        """Create a standardized button.
+        """Create and configure a push button.
 
-        :param text: (str) Button text.
-        :param callback: (a callable) Function to call when button is clicked.
+        The button is configured not to be the dialog's default button and not
+        to become the default button automatically.
 
-        :return: (QPushButton) Configured button.
+        :param text: Text displayed on the button.
+        :type text: str
+        :param callback: Callback invoked when the button is clicked.
+        :type callback: callable
+
+        :return: Configured push button.
+        :rtype: PyQt5.QtWidgets.QPushButton
         """
         btn = QPushButton(text, default=False, autoDefault=False)
         btn.clicked.connect(callback)
@@ -1589,7 +1704,8 @@ class PackageLibraryDialog(QDialog):
         """
         Create buttons for installing processes.
 
-        :return: (QHBoxLayout) Layout with install process buttons.
+        :return: Layout with install process buttons.
+        :rtype: PyQt5.QtWidgets.QHBoxLayout
         """
         layout = QHBoxLayout()
         layout.addWidget(QLabel("Install processes from:"))
@@ -1608,7 +1724,8 @@ class PackageLibraryDialog(QDialog):
         """
         Create and configure the line edit.
 
-        :return: (QLineEdit) Configured line edit for package input.
+        :return: Configured line edit for package input.
+        :rtype: PyQt5.QtWidgets.QLineEdit
         """
         line_edit = QLineEdit()
         line_edit.setPlaceholderText(
@@ -1620,11 +1737,15 @@ class PackageLibraryDialog(QDialog):
         """
         Create a group box for a list with reset functionality.
 
-        :param title: (str) Group box title.
-        :param list_widget: (QListWidget) List widget to add to group.
-        :param reset_callback: (callable) Callback for reset button.
+        :param title: Group box title.
+        :type title: str
+        :param list_widget: List widget to add to group.
+        :type list_widget: PyQt5.QtWidgets.QListWidget
+        :param reset_callback: Callback for reset button.
+        :type reset_callback: callable
 
-        :return: (QGroupBox) Configured group box with list and reset button.
+        :return: Configured group box with list and reset button.
+        :rtype: PyQt5.QtWidgets.QGroupBox
         """
         group = QGroupBox(title)
         layout = QHBoxLayout()
@@ -1640,7 +1761,7 @@ class PackageLibraryDialog(QDialog):
         Create a list widget with extended selection mode.
 
         :return: Configured list widget.
-        :rtype: QListWidget
+        :rtype: PyQt5.QtWidgets.QListWidget
         """
         list_widget = QListWidget()
         list_widget.setSelectionMode(QAbstractItemView.ExtendedSelection)
@@ -1652,12 +1773,16 @@ class PackageLibraryDialog(QDialog):
         """
         Create the main layout for the dialog.
 
-        :param install_layout: (QHBoxLayout) Layout for install buttons.
-        :param management_layout: (QHBoxLayout) Layout for package management
+        :param install_layout: Layout for install buttons.
+        :type install_layout: PyQt5.QtWidgets.QHBoxLayout
+        :param management_layout: Layout for package management
          buttons.
-        :param user_mode: (bool) Whether the application is in user mode.
+        :type management_layout: PyQt5.QtWidgets.QHBoxLayout
+        :param user_mode: Whether the application is in user mode.
+        :type user_mode: bool
 
-        :return: (QHBoxLayout) Main layout of the dialog.
+        :return: Main layout of the dialog.
+        :rtype: PyQt5.QtWidgets.QHBoxLayout
         """
         # Create package library and vertical layout
         self.package_library = PackageLibrary(self.packages, self.paths)
@@ -1713,9 +1838,11 @@ class PackageLibraryDialog(QDialog):
         """
         Create buttons for package management.
 
-        :param user_mode: (bool) Whether the application is in user mode.
+        :param user_mode: Whether the application is in user mode.
+        :type user_mode: bool
 
-        :return: (QHBoxLayout) Layout with package management buttons.
+        :return: Layout with package management buttons.
+        :rtype: PyQt5.QtWidgets.QHBoxLayout
         """
         layout = QHBoxLayout()
         add_btn = self._create_button(
@@ -1739,7 +1866,8 @@ class PackageLibraryDialog(QDialog):
         """
         Create layout for save and cancel buttons.
 
-        :return: (QHBoxLayout) Layout with save and cancel buttons.
+        :return: Layout with save and cancel buttons.
+        :rtype: PyQt5.QtWidgets.QHBoxLayout
         """
         layout = QHBoxLayout()
         layout.addStretch(1)
@@ -1753,7 +1881,8 @@ class PackageLibraryDialog(QDialog):
         """
         Create and configure the status label.
 
-        :return: (QLabel) Configured status label.
+        :return: Configured status label.
+        :rtype: PyQt5.QtWidgets.QLabel
         """
         label = QLabel()
         label.setText("")
@@ -1816,20 +1945,24 @@ class PackageLibraryDialog(QDialog):
         their classes to the package tree. It provides flexible options for
         package initialization and error handling.
 
-        :param module_name: (str) Fully qualified name of the module to add.
+        :param module_name: Fully qualified name of the module to add.
          Example: 'myproject.processors'
-        :param class_name: (str) Specific class name to focus on during package
+        :type module_name: str
+        :param class_name: Specific class name to focus on during package
          addition. If provided, only this class or its parent packages will be
          processed.
-        :param show_error: (bool) Controls error reporting behavior. If True,
-         displays error messages in a QMessageBox. If False, collects errors
-         silently. Defaults to False.
-        :param init_package_tree: (bool) If True, reinitializes the entire
-         package tree before adding the module. Defaults to False.
+        :type class_name: str | None
+        :param show_error: Controls error reporting behavior. If True, displays
+         error messages in a QMessageBox. If False, collects errors silently.
+         Defaults to False.
+        :type show_error: bool
+        :param init_package_tree: If True, reinitializes the entire package
+         tree before adding the module. Defaults to False.
+        :type init_package_tree: bool
 
-        :return: (List[str] | str) A list of error messages encountered during
-         package addition, or "No package selected!" if no module name is
-         provided.
+        :return: A list of error messages encountered during package addition,
+         or "No package selected!" if no module name is provided.
+        :rtype: list[str] | str
         """
 
         if init_package_tree:
@@ -1949,10 +2082,12 @@ class PackageLibraryDialog(QDialog):
         on the provided package name. It supports adding packages with or
         without file extensions, and handles various import scenarios.
 
-        :param package_name: (str | False) Name of the package to add. If False
-         (default), uses the text from the line edit widget.
-        :param update_view: (bool) Whether to update the package list view.
-         Defaults to True.
+        :param package_name: Name of the package to add. If False (default),
+         uses the text from the line edit widget.
+        :type package_name: str | bool
+        :param update_view: Whether to update the package list view. Defaults
+         to True.
+        :type update_view: bool
         """
 
         # Use line edit text if no package name provided
@@ -2115,18 +2250,23 @@ class PackageLibraryDialog(QDialog):
         updates the `__init__.py` file, and deletes the package directory and
         files if they are empty.
 
-        :param index: (int) Recursive index for navigating modules. Defaults
-         to 1.
-        :param to_delete: (str) The package/brick to delete (e.g.,
-         'test.Test'). Defaults to None.
-        :param remove: (bool) Whether to remove the brick from the package
-         tree. Defaults to True.
-        :param loop: (bool) Whether to delete silently without confirmation.
-         Defaults to False.
-        :param from_pipeline_manager: (bool) Whether deletion is initiated
-         from pipeline manager. Defaults to False.
+        :param index: Recursive index for navigating modules. Defaults to 1.
+        :type index: int
+        :param to_delete: The package / brick to delete (e.g., 'test.Test').
+         Defaults to None.
+        :type to_delete: str | None
+        :param remove: Whether to remove the brick from the package tree.
+         Defaults to True.
+        :type remove: bool
+        :param loop: Whether to delete silently without confirmation. Defaults
+         to False.
+        :type loop: bool
+        :param from_pipeline_manager: Whether deletion is initiated from
+         pipeline manager. Defaults to False.
+        :type from_pipeline_manager: bool
 
-        :return: (list[str]) A list of deleted packages/bricks (classes).
+        :return: A list of deleted packages/bricks (classes).
+        :rtype: list[str]
         """
         deleted_packages = []
         self.packages = self.package_library.package_tree
@@ -2482,10 +2622,12 @@ class PackageLibraryDialog(QDialog):
         """
         Delete a package from the line edit's text.
 
-        :param package_name: (str) The name of the package to delete. Defaults
-         to the text in the line edit.
-        :param update_view: (bool) Whether to update the QListWidget after
-         deletion. Defaults to True.
+        :param package_name: The name of the package to delete. Defaults to the
+         text in the line edit.
+        :type package_name: str
+        :param update_view: Whether to update the QListWidget after deletion.
+         Defaults to True.
+        :type update_view: bool
         """
         old_status = self.status_label.text()
         package_name = package_name or self.line_edit.text()
@@ -2531,8 +2673,9 @@ class PackageLibraryDialog(QDialog):
         """
         Display the install processes pop-up.
 
-        :param from_folder: (bool) Whether the installation is from a folder.
-         Defaults to False.
+        :param from_folder: Whether the installation is from a folder. Defaults
+         to False.
+        :type from_folder: bool
         """
         self.pop_up_install_processes = InstallProcesses(
             self, folder=from_folder
@@ -2545,10 +2688,15 @@ class PackageLibraryDialog(QDialog):
     @staticmethod
     def load_config():
         """
-        Loads and returns the configuration from 'process_config.yml'.
+        Load the process configuration from ``process_config.yml``.
 
-        :return: (dict | {}) The configuration dictionary if successfully
-         loaded, otherwise None in case of an error.
+        The configuration file is searched for in the ``properties`` directory
+        of the configured properties path. If the file cannot be read or
+        parsed, an empty dictionary is returned and a warning is logged.
+
+        :return: The loaded configuration dictionary, or an empty dictionary if
+         the configuration cannot be loaded.
+        :rtype: dict
         """
         config = Config()
         config_path = os.path.join(
@@ -2631,11 +2779,13 @@ class PackageLibraryDialog(QDialog):
         library. If the package is not found, a warning message is displayed.
         The package tree is updated after a successful removal.
 
-        :param package: (str) The fully qualified module name (e.g.,
+        :param package: The fully qualified module name (e.g.,
          'nipype.interfaces.spm').
+        :type package: str
 
-        :return: (bool) True if the package was successfully removed, False
-         if the package was not found or no package was provided.
+        :return: True if the package was successfully removed, False if the
+         package was not found or no package was provided.
+        :rtype: bool
         """
 
         if not package:
@@ -2695,12 +2845,15 @@ class PackageLibraryDialog(QDialog):
         Removes the specified package from the package tree and updates the
         view accordingly.
 
-        :param package_name: (str) The name of the package to remove. If not
+        :param package_name: The name of the package to remove. If not
          provided, the package name is taken from the line edit.
-        :param update_view: (bool) Whether to update the QListWidget view after
+        :type package_name: str
+        :param update_view: Whether to update the QListWidget view after
          removal. Defaults to True.
-        :param tree_remove: (bool) Whether to remove the package from the tree.
+        :type update_view: bool
+        :param tree_remove: Whether to remove the package from the tree.
          Defaults to True.
+        :type tree_remove: bool
         """
         old_status = self.status_label.text()
         package_name = package_name or self.line_edit.text()
@@ -2747,10 +2900,11 @@ class PackageLibraryDialog(QDialog):
         """
         Resets a previous package addition or removal action.
 
-        :param itemlist: (QListWidget) The list widget containing items to
-         reset.
-        :param add: (bool) If True, resets an addition by removing the package
-         if it exists in the configuration. If False, re-adds the package.
+        :param itemlist: The list widget containing items to reset.
+        :type itemlist: PyQt5.QtWidgets.QListWidget
+        :param add: If True, resets an addition by removing the package if it
+         exists in the configuration. If False, re-adds the package.
+        :type add: bool
         """
 
         for item in itemlist.selectedItems():
@@ -2785,8 +2939,9 @@ class PackageLibraryDialog(QDialog):
         tree and writes it to the configuration file. Optionally, it can close
         the dialog after saving.
 
-        :param close: (bool) If True, closes the dialog after saving. Defaults
-         to True.
+        :param close: If True, closes the dialog after saving. Defaults to
+         True.
+        :type close: bool
         """
         config = Config()
         self.process_config = self.process_config or {}
@@ -2874,16 +3029,13 @@ class ProcessLibrary(QTreeView):
     A tree view to display available Capsul's processes.
 
     Contains:
-
         Methods:
-
             - keyPressEvent: Event when the delete key is pressed.
             - load_dictionary: Loads a dictionary to the tree.
             - mousePressEvent: Event when the mouse is pressed.
             - to_dict: Returns a dictionary from the current tree.
 
     Signals:
-
         - item_library_clicked: Signal emitted when an item in the library is
           clicked.
     """
@@ -2894,8 +3046,12 @@ class ProcessLibrary(QTreeView):
         """
         Initialize the ProcessLibrary class.
 
-        :param d: (dict) Dictionary corresponding to the tree.
-        :param pkg_lib: An instance of the PackageLibraryDialog class.
+        :param d: Dictionary corresponding to the tree.
+        :type d: dict
+        :param pkg_lib: Package library dialog associated with this process
+         library.
+        :type pkg_lib: PackageLibraryDialog
+
         """
         super().__init__()
         self.load_dictionary(d)
@@ -2908,7 +3064,8 @@ class ProcessLibrary(QTreeView):
         If the Delete key is pressed and the user is not in user mode, the
         selected package(s) will be deleted from the package library.
 
-        :param event: (QKeyEvent) The key event triggering this handler.
+        :param event: The key event triggering this handler.
+        :type event: PyQt5.QtGui.QKeyEvent
         """
         config = Config()
 
@@ -2933,8 +3090,9 @@ class ProcessLibrary(QTreeView):
         """
         Load a dictionary into the tree.
 
-        :param d :(dict) Dictionary to load. See the packages attribute in the
+        :param d: Dictionary to load. See the packages attribute in the
          ProcessLibraryWidget class.
+        :type d: dict
         """
         self.dictionary = d
         self._nodes = node_structure_from_dict(d)
@@ -2950,7 +3108,8 @@ class ProcessLibrary(QTreeView):
         pressed, a context menu is displayed, allowing the user to remove or
         delete a package.
 
-        :param event: (QMouseEvent) The mouse event triggering this handler.
+        :param event: The mouse event triggering this handler.
+        :type event: PyQt5.QtGui.QMouseEvent
         """
 
         idx = self.indexAt(event.pos())
@@ -2998,6 +3157,7 @@ class ProcessLibrary(QTreeView):
         Return a dictionary representation of the current tree.
 
         :return: The dictionary of the tree.
+        :rtype: dict
         """
         return self._model.to_dict()
 
@@ -3007,9 +3167,7 @@ class ProcessLibraryWidget(QWidget):
     Widget that manages the available Capsul's processes in the software.
 
     Contains:
-
         Methods:
-
             - _configure_process_library: Configure the process library
               settings.
             - _setup_layout: Setup the layout for the widget.
@@ -3030,6 +3188,7 @@ class ProcessLibraryWidget(QWidget):
         Initialize the ProcessLibraryWidget.
 
         :param main_window: The current main window.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__(parent=main_window)
         self.setWindowTitle("Process Library")
@@ -3081,6 +3240,7 @@ class ProcessLibraryWidget(QWidget):
         dictionary.
         .
         :return: The configuration as a dictionary.
+        :rtype: dict
         """
         config = Config()
         config_path = os.path.join(
@@ -3153,15 +3313,19 @@ class ProcessLibraryWidget(QWidget):
 
 def import_file(full_name, path):
     """
-    Import a Python module from a specified file path.
+    Import a Python module from a file without registering it in
+    ``sys.modules``.
 
-    This function dynamically imports a module from a given file path and
-    returns the module object. It does not modify `sys.modules`.
+    Creates a module specification from the specified file, creates the
+    corresponding module object, and executes the module using its loader.
 
-    :param full_name: (str) The name of the module to import.
-    :param path: (str) The file path of the module.
+    :param full_name: Name to assign to the imported module.
+    :type full_name: str
+    :param path: Path to the Python file to import.
+    :type path: str
 
     :return: The imported module.
+    :rtype: types.ModuleType
     """
     spec = util.spec_from_file_location(full_name, path)
     module = util.module_from_spec(spec)
@@ -3177,11 +3341,18 @@ def node_structure_from_dict(datadict, parent=None, root_node=None):
     for a TreeModel. It processes nodes based on specific conditions and
     recursively builds the tree.
 
-    :param datadict: (dict) The dictionary to convert into a node structure.
+    :param datadict: The dictionary to convert into a node structure.
+    :type datadict: dict
     :param parent: The parent node of the current node. Defaults to None.
+    :type parent:
+     populse_mia.user_interface.pipeline_manager.process_library.Node | None
     :param root_node: The root node of the tree. Defaults to None.
+    :type root_node:
+     populse_mia.user_interface.pipeline_manager.process_library.Node | None
 
     :return: The root node of the constructed tree.
+    :rtype:
+     populse_mia.user_interface.pipeline_manager.process_library.Node | None
     """
 
     if parent is None:
