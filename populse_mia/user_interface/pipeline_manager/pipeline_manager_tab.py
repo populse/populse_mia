@@ -187,13 +187,11 @@ def protected_logging():
 
         # Restore configs but merge handlers/filters
         for name, config in loggers_backup.items():
-
             logger = (
                 logging.getLogger()
                 if name == "root"
                 else logging.getLogger(name)
             )
-
             # Merge handlers: keep existing, re-add missing originals
             existing_handlers = {id(h): h for h in logger.handlers}
 
@@ -221,9 +219,7 @@ class PipelineManagerTab(QWidget):
     Widget that handles the Pipeline Manager tab.
 
     Contains:
-
         Methods:
-
             - _register_node_io_in_database: Register node input and output
               values in the database.
             - _set_anim_frame: Callback that updates the pipeline status action
@@ -290,7 +286,6 @@ class PipelineManagerTab(QWidget):
               depending of the chosen mode.
 
     Signals:
-
         - item_library_clicked: Emitted when an item is selected in the process
           library. The signal carries the identifier or name of the selected
           library item as a string.
@@ -309,11 +304,14 @@ class PipelineManagerTab(QWidget):
         tables to manage complex data analysis workflows.
 
         :param project: The current project instance containing database and
-         configuration
-        :param scan_list: List of selected database files to process. If None
-         or empty, defaults to all documents in the current collection
+         configuration.
+        :type project: populse_mia.data_manager.project.Project
+        :param scan_list: List of selected database files to process. If empty,
+         defaults to all documents in the current collection.
+        :type scan_list: list[str]
         :param main_window: Main application window instance for UI
          integration.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__()
         # Initialize core attributes
@@ -485,12 +483,15 @@ class PipelineManagerTab(QWidget):
 
         :param job: Job object containing parameter values and unique
          identifier (UUID).
+        :type job: soma_workflow.client_types.Job
         :param node: Node instance (Process, Pipeline, or custom node) to
          register.
-        :param pipeline_name: (str, optional) Name of the containing pipeline,
-         if any.
-        :param history_id: (str, optional) Database history entry identifier.
-         Defaults to an empty string.
+        :type node: object
+        :param pipeline_name: Name of the containing pipeline, if any.
+        :type pipeline_name: str
+        :param history_id: Database history entry identifier. Defaults to an
+         empty string.
+        :type history_id: str
 
         Note:
             Pipeline and PipelineNode instances are skipped as only leaf
@@ -508,16 +509,23 @@ class PipelineManagerTab(QWidget):
 
         def _serialize_for_json(item):
             """
-            Serialize objects to JSON-compatible format.
+            Convert supported objects to JSON-compatible representations.
 
-            Handles special types like Undefined values, temporary paths,
-            datetime objects, and sets for safe JSON storage.
+            This function handles special values that are not directly
+            supported by
+            :func:`json.dumps`, including :data:`Undefined`, temporary paths,
+            :class:`datetime.datetime` objects, and sets.
 
-            :param item: The object to be serialized.
+            :param item: The object to convert.
+            :type item: Any
 
-            :return: JSON-serializable representation of the item.
+            :return: A JSON-compatible representation of ``item``. Undefined
+             values are represented by ``"<undefined>"``, temporary paths by
+             ``"<temp>"``, datetime objects by their string representation, and
+             sets by lists.
+            :rtype: str or list
 
-            :raises TypeError: If item type cannot be serialized.
+            :raises TypeError: If ``item`` is not one of the supported types.
             """
 
             # Handle special cases
@@ -573,6 +581,7 @@ class PipelineManagerTab(QWidget):
             Update values dictionary with job parameters.
 
             :param values_dict: Dictionary of input or output values to update.
+            :type values_dict: dict
             """
 
             for key in values_dict:
@@ -608,6 +617,7 @@ class PipelineManagerTab(QWidget):
             Serialize all values in a dictionary for JSON compatibility.
 
             :param data_dict: Dictionary with values to serialize.
+            :type data_dict: dict
             """
             serialized = {}
 
@@ -698,9 +708,12 @@ class PipelineManagerTab(QWidget):
         Determine if a plug should be registered in the database.
 
         :param process: Process instance.
-        :param plug_name: (str) Name of the plug to check.
+        :type process: object
+        :param plug_name: Name of the plug to check.
+        :type plug_name: str
 
         :return: True if plug should be registered, False otherwise.
+        :rtype: bool
         """
 
         if plug_name not in process.traits():
@@ -730,23 +743,32 @@ class PipelineManagerTab(QWidget):
         database, managing inheritance of metadata tags from input files, and
         resolving ambiguities when multiple parent files exist.
 
-        :param p_value: The plug value - either a single file path (str) or
+        :param p_value: The plug value. Either a single file path (str) or
          list of file paths. Can also be special values like "<undefined>" or
          "Undefined".
-        :param brick_id: (str) UUID of the brick in the database.
-        :param history_id: (str) UUID of the processing history in the
-         database.
-        :param node_name: (str) Name of the processing node.
-        :param plug_name: (str) Name of the specific plug/parameter.
-        :param full_name: (str) Full hierarchical name including parent bricks.
+        :type p_value: str | list[str]
+        :param brick_id: UUID of the brick in the database.
+        :type brick_id: str
+        :param history_id: UUID of the processing history in the database.
+        :type history_id: str
+        :param node_name: Name of the processing node.
+        :type node_name: str
+        :param plug_name: Name of the specific plug/parameter.
+        :type plug_name: str
+        :param full_name: Full hierarchical name including parent bricks.
          Equals node_name if no parent exists.
-        :param job: (Job) Job object containing the plug, may have inheritance
+        :type full_name: str
+        :param job: Job object containing the plug, may have inheritance
          dictionaries.
-        :param trait: (Trait) Handler for the plug trait or sub-trait for list
+        :type job: soma_workflow.client_types.Job
+        :param trait: Handler for the plug trait or sub-trait for list
          elements. Used to validate value types (file vs non-file).
-        :param inputs: (dict) Input parameter values for the process/node.
-        :param attributes: (dict) Completion engine attributes to be applied
-         to all outputs.
+        :type trait: traits.ctrait.CTrait
+        :param inputs: Input parameter values for the process/node.
+        :type inputs: dict
+        :param attributes: Completion engine attributes to be applied to all
+         outputs.
+        :type attributes: dict
 
         Note:
             - Recursively processes list values by calling itself on each
@@ -1197,7 +1219,7 @@ class PipelineManagerTab(QWidget):
         :return: A tuple containing the names of the plugs marked for iteration
          and the names of the plugs connected to the database. Returns ``None``
          if the user cancels the dialog.
-        :rtype: Optional[Tuple[List[str], List[str]]]
+        :rtype: tuple[list[str], list[str]] | None
 
         Contains:
             Inner functions:
@@ -1230,7 +1252,9 @@ class PipelineManagerTab(QWidget):
             database filter based on its trait type.
 
             :param process: The process or pipeline containing the plug.
-            :param plug: (str) The name of the plug to check.
+            :type process: object
+            :param plug: The name of the plug to check.
+            :type plug: str
 
             :return: True if the plug is compatible with a database
              filter, False otherwise.
@@ -1252,10 +1276,12 @@ class PipelineManagerTab(QWidget):
             When iteration is disabled, automatically disable database
             connection since database connection requires iteration.
 
-            :param param_buttons: (list) List of parameter button
-             configurations.
-            :param param_idx: (int) Index of the plug in the parameter list.
-            :param checked: (bool) The current state of the iteration checkbox.
+            :param param_buttons: List of parameter button configurations.
+            :type param_buttons: list[list]
+            :param param_idx: Index of the plug in the parameter list.
+            :type param_idx: int
+            :param checked: The current state of the iteration checkbox.
+            :type checked: bool
             """
 
             db_checkbox = param_buttons[param_idx][2]
@@ -1272,10 +1298,12 @@ class PipelineManagerTab(QWidget):
             When database connection is enabled, automatically enable iteration
             since database connection requires iteration.
 
-            :param param_buttons: (list) List of parameter button
-             configurations.
-            :param param_idx: (int) Index of the plug in the parameter list.
-            :param checked: (bool) The current state of the database checkbox.
+            :param param_buttons: List of parameter button configurations.
+            :type param_buttons: list[list]
+            :param param_idx: Index of the plug in the parameter list.
+            :type param_idx: int
+            :param checked: The current state of the database checkbox.
+            :type checked: bool
             """
 
             if checked:
@@ -1285,23 +1313,22 @@ class PipelineManagerTab(QWidget):
             tuple[Qt.QDialog, Qt.QGridLayout, list[list]]
         ):
             """
-            Create and configure the main dialog window for pipeline
-            configuration.
+            Create and configure the pipeline iteration configuration dialog.
 
-            This function builds a dialog with:
-                - A scrollable parameter configuration section inside a group
+            The dialog contains:
+                - A scrollable parameter configuration section within a group
                   box.
-                - A grid layout for parameter input/output controls.
-                - Standard OK/Cancel dialog buttons.
+                - A grid layout for parameter input and output controls.
+                - Standard OK and Cancel buttons.
 
-            :return: (Tuple[Qt.QDialog, Qt.QGridLayout, List[List]])
-                A tuple containing:
-                    - dialog (Qt.QDialog): The configured pipeline
-                      configuration dialog.
-                    - param_grid (Qt.QGridLayout): The grid layout used to
-                      arrange parameter widgets.
-                    - param_buttons (List[List]): Two lists (inputs and
-                      outputs) for storing parameter-related button widgets.
+            :return: A tuple containing:
+                - dialog: The configured pipeline iteration configuration
+                  dialog.
+                - param_grid: The grid layout used to arrange parameter
+                  widgets.
+                - param_buttons: Two lists for storing parameter-related
+                  buttons, corresponding to inputs and outputs.
+            :rtype: tuple[Qt.QDialog, Qt.QGridLayout, list[list]]
             """
             dialog = Qt.QDialog()
             dialog.setWindowTitle("Pipeline Iteration Configuration")
@@ -1365,17 +1392,20 @@ class PipelineManagerTab(QWidget):
             positions them in the provided grid layout, and stores references
             to the controls in `param_buttons` for later retrieval.
 
-            :param grid: (Qt.QGridLayout) The layout where parameter controls
-             are added.
-            :param plugs: (list[str]) The list of plug names to create controls
-             for.
-            :param param_type: (int) Indicator for the plug type:
+            :param grid: The layout where parameter controls are added.
+            :type grid: Qt.QGridLayout
+            :param plugs: The list of plug names to create controls for.
+            :type plugs: list[str]
+            :param param_type: Indicator for the plug type:
                 - 0: inputs
                 - 1: outputs
-            :param param_buttons: (list[list]) A nested list that stores
-             references to the created controls, organized by plug type.
-            :param has_database_option: (bool) Whether to include a database
-             checkbox next to each plug.
+            :type param_type: int
+            :param param_buttons: A nested list that stores references to the
+             created controls, organized by plug type.
+            :type param_buttons: list[list]
+            :param has_database_option: Whether to include a database checkbox
+             next to each plug.
+            :type has_database_option: bool
             """
             filtered_plugs = [
                 plug for plug in plugs if plug not in FORBIDDEN_PLUGS
@@ -1429,22 +1459,23 @@ class PipelineManagerTab(QWidget):
             param_buttons: list[list],
         ) -> tuple[list[str], list[str]]:
             """
-            Extract the final plug configuration from the dialog controls.
+            Extract the selected plug configuration from the dialog.
 
-            This function inspects the checkboxes stored in `param_buttons` to
-            determine which plugs are selected for iteration and which are
-            linked to the database option.
+            The function examines the iteration and database checkboxes for
+            each input and output plug and returns the names of the plugs for
+            which each option is enabled.
 
-            :param param_buttons: (list[list]) A nested list of plug
-             configurations, where each entry is of the form:
-                [plug_name (str), iter_checkbox (Qt.QCheckBox),
-                db_checkbox (Optional[Qt.QCheckBox])].
+            :param param_buttons: Two groups of plug configurations. The first
+             group contains input plugs and the second contains output plugs.
+             Each configuration has the form:
+             [plug_name (str), iter_checkbox (Qt.QCheckBox),
+             db_checkbox (Optional[Qt.QCheckBox])].
+            :type param_buttons: list[list]
 
-            :return: (tuple[list[str], list[str]]): A tuple containing:
-                - iterated_plugs (list[str]): Names of plugs selected for
-                  iteration.
-                - database_plugs (list[str]): Names of plugs with the database
-                  option enabled.
+            :return: A tuple containing the names of the plugs selected for
+             iteration and the names of the plugs with the database option
+             enabled, respectively.
+            :rtype: tuple[list[str], list[str]]
             """
             all_controls = param_buttons[0] + param_buttons[1]
 
@@ -1511,8 +1542,8 @@ class PipelineManagerTab(QWidget):
         The method handles both single processes and full pipelines, converting
         single processes into single-node pipelines when necessary.
 
-        :return: (Pipeline or None) The new iteration pipeline if successful,
-         None if aborted.
+        :return: The new iteration pipeline if successful, None if aborted.
+        :rtype: capsul.pipeline.pipeline.Pipeline | None
 
         :raises ValueError: If Input_Filter process cannot be found in the
          library.
@@ -1677,11 +1708,13 @@ class PipelineManagerTab(QWidget):
         configuration engine to select configurations that match the
         requirements.
 
-        :param environment: (str) The target environment for checking
-         configurations. Defaults to "global".
+        :param environment: The target environment for checking configurations.
+         Defaults to "global".
+        :type environment: str
 
-        :return: (dict) A dictionary mapping each pipeline node to its
-         selected configuration.
+        :return: A dictionary mapping each pipeline node to its selected
+         configuration.
+        :rtype: dict
         """
 
         return {
@@ -1725,6 +1758,7 @@ class PipelineManagerTab(QWidget):
             self.main_window.data_browser.table_data.update_table
         )
 
+    # FIXME: Is this method still used? If not, it should be removed.
     def complete_pipeline_parameters(self, pipeline=None):
         """
         Complete pipeline parameters using Capsul's completion engine.
@@ -1734,8 +1768,9 @@ class PipelineManagerTab(QWidget):
         These attributes can be retrieved from an associated database. If no
         pipeline is specified, the current pipeline or process is used.
 
-        :param pipeline: (Pipeline) The pipeline object to be completed. If
-         not provided, the method retrieves the current pipeline or process.
+        :param pipeline: The pipeline object to be completed. If not provided,
+         the method retrieves the current pipeline or process.
+        :type pipeline: capsul.pipeline.pipeline.Pipeline
 
         Note:
             The completion process relies on Capsul's ProcessCompletionEngine
@@ -1770,6 +1805,7 @@ class PipelineManagerTab(QWidget):
               new_node_name, old_node_name]
             - For "plug_value": ["plug_value", node_name, old_value,
               plug_name, plug_type, new_value]]
+        :type signal_list: list
         """
 
         if not signal_list:
@@ -1853,7 +1889,9 @@ class PipelineManagerTab(QWidget):
         context.
 
         :param node_name: The name/identifier of the selected node.
+        :type node_name: str
         :param process: The process instance associated with the selected node.
+        :type process: object
         """
         current_pipeline = self.pipelineEditorTabs.get_current_pipeline()
         self.nodeController.display_parameters(
@@ -1982,8 +2020,9 @@ class PipelineManagerTab(QWidget):
         pipeline editor tabs and configures it using the Mia configuration
         settings.
 
-        :return: (CapsulEngine) A configured Capsul engine instance ready for
-         pipeline execution, with settings applied from the Mia config object.
+        :return: A configured Capsul engine instance ready for pipeline
+         execution, with settings applied from the Mia config object.
+        :rtype: capsul.engine.CapsulEngine
         """
         return self.pipelineEditorTabs.get_capsul_engine()
 
@@ -1996,11 +2035,13 @@ class PipelineManagerTab(QWidget):
         wrapper. This simplifies GUI workflows where single processes can act
         as pipelines.
 
-        :param pipeline: (Pipeline) Optional pipeline to evaluate. If None,
-         uses the currently selected pipeline from the editor GUI.
+        :param pipeline: Optional pipeline to evaluate. If None, uses the
+         currently selected pipeline from the editor GUI.
+        :type pipeline: capsul.pipeline.pipeline.Pipeline | None
 
-        :return: (Pipeline | Process) The process node if pipeline contains a
-         single unconnected process, otherwise the pipeline itself.
+        :return: The process node if pipeline contains a single unconnected
+         process, otherwise the pipeline itself.
+        :rtype: capsul.pipeline.pipeline.Pipeline | object
         """
 
         if pipeline is None:
@@ -2030,9 +2071,10 @@ class PipelineManagerTab(QWidget):
         Checks each node in the pipeline for missing mandatory parameters,
         accounting for workflow job parameter overrides and temporary values.
 
-        :return: (list[str]) Parameter names that are missing, formatted as
-         either 'parameter_name' for pipeline root or 'node.parameter_name' for
-         other nodes.
+        :return: Parameter names that are missing, formatted as either
+         'parameter_name' for pipeline root or 'node.parameter_name' for other
+         nodes.
+        :rtype: list[str]
 
         Note:
             Parameters with non-null values in the workflow job dictionary
