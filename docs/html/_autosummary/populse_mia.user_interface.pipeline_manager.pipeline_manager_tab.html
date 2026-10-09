@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+da5ace3e documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+02f94ee5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=13d1b248"></script>
+    <script src="../_static/documentation_options.js?v=414df962"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+da5ace3e documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+02f94ee5 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -45,7 +45,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PipelineManagerTab</span></code></a>(project, scan_list, ...)</p></td>
 <td><p>Widget that handles the Pipeline Manager tab.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunProgress</span></code></a>(pipeline_manager[, settings])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunProgress</span></code></a>(pipeline_manager)</p></td>
 <td><p>A Qt widget for displaying and managing pipeline execution progress.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunWorker</span></code></a>(pipeline_manager)</p></td>
@@ -88,11 +88,9 @@ original configurations are restored.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.</span></span><span class="sig-name descname"><span class="pre">PipelineManagerTab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QWidget</span></code></a></p>
 <p>Widget that handles the Pipeline Manager tab.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_register_node_io_in_database: Register node input and output
 values in the database.</p></li>
 <li><p>_set_anim_frame: Callback that updates the pipeline status action
@@ -158,16 +156,16 @@ initialize / run / save actions according to the pipeline state.</p></li>
 <li><p>update_user_mode: Update the visibility of widgets / actions
 depending of the chosen mode.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>item_library_clicked: Emitted when an item is selected in the process
 library. The signal carries the identifier or name of the selected
 library item as a string.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#PipelineManagerTab.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.__init__" title="Link to this definition">¶</a></dt>
@@ -179,11 +177,11 @@ tables to manage complex data analysis workflows.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The current project instance containing database and
-configuration</p></li>
-<li><p><strong>scan_list</strong> – List of selected database files to process. If None
-or empty, defaults to all documents in the current collection</p></li>
-<li><p><strong>main_window</strong> – Main application window instance for UI
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project instance containing database and
+configuration.</p></li>
+<li><p><strong>scan_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of selected database files to process. If empty,
+defaults to all documents in the current collection.</p></li>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – Main application window instance for UI
 integration.</p></li>
 </ul>
 </dd>
@@ -202,14 +200,13 @@ recorded correctly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>job</strong> – Job object containing parameter values and unique
+<li><p><strong>job</strong> (<em>soma_workflow.client_types.Job</em>) – Job object containing parameter values and unique
 identifier (UUID).</p></li>
-<li><p><strong>node</strong> – Node instance (Process, Pipeline, or custom node) to
+<li><p><strong>node</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – Node instance (Process, Pipeline, or custom node) to
 register.</p></li>
-<li><p><strong>pipeline_name</strong> – (str, optional) Name of the containing pipeline,
-if any.</p></li>
-<li><p><strong>history_id</strong> – (str, optional) Database history entry identifier.
-Defaults to an empty string.</p></li>
+<li><p><strong>pipeline_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the containing pipeline, if any.</p></li>
+<li><p><strong>history_id</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Database history entry identifier. Defaults to an
+empty string.</p></li>
 </ul>
 </dd>
 </dl>
@@ -256,12 +253,15 @@ to automatically update the icon as the animation progresses.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process</strong> – Process instance.</p></li>
-<li><p><strong>plug_name</strong> – (str) Name of the plug to check.</p></li>
+<li><p><strong>process</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – Process instance.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the plug to check.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if plug should be registered, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -276,23 +276,22 @@ resolving ambiguities when multiple parent files exist.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>p_value</strong> – The plug value - either a single file path (str) or
+<li><p><strong>p_value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – The plug value. Either a single file path (str) or
 list of file paths. Can also be special values like “&lt;undefined&gt;” or
 “Undefined”.</p></li>
-<li><p><strong>brick_id</strong> – (str) UUID of the brick in the database.</p></li>
-<li><p><strong>history_id</strong> – (str) UUID of the processing history in the
-database.</p></li>
-<li><p><strong>node_name</strong> – (str) Name of the processing node.</p></li>
-<li><p><strong>plug_name</strong> – (str) Name of the specific plug/parameter.</p></li>
-<li><p><strong>full_name</strong> – (str) Full hierarchical name including parent bricks.
+<li><p><strong>brick_id</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – UUID of the brick in the database.</p></li>
+<li><p><strong>history_id</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – UUID of the processing history in the database.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the processing node.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the specific plug/parameter.</p></li>
+<li><p><strong>full_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Full hierarchical name including parent bricks.
 Equals node_name if no parent exists.</p></li>
-<li><p><strong>job</strong> – (Job) Job object containing the plug, may have inheritance
+<li><p><strong>job</strong> (<em>soma_workflow.client_types.Job</em>) – Job object containing the plug, may have inheritance
 dictionaries.</p></li>
-<li><p><strong>trait</strong> – (Trait) Handler for the plug trait or sub-trait for list
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.enthought.com/traits/traits_api_reference/ctrait.html#traits.ctrait.CTrait" title="(in traits v7.1)"><em>traits.ctrait.CTrait</em></a>) – Handler for the plug trait or sub-trait for list
 elements. Used to validate value types (file vs non-file).</p></li>
-<li><p><strong>inputs</strong> – (dict) Input parameter values for the process/node.</p></li>
-<li><p><strong>attributes</strong> – (dict) Completion engine attributes to be applied
-to all outputs.</p></li>
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Input parameter values for the process/node.</p></li>
+<li><p><strong>attributes</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Completion engine attributes to be applied to all
+outputs.</p></li>
 </ul>
 </dd>
 </dl>
@@ -361,7 +360,7 @@ and the names of the plugs connected to the database. Returns <code class="docut
 if the user cancels the dialog.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Optional[Tuple[List[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>], List[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]]]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>], <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]] | None</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -407,11 +406,13 @@ nested lists.</p></li>
 single processes into single-node pipelines when necessary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(Pipeline or None) The new iteration pipeline if successful,
-None if aborted.</p>
+<dd class="field-odd"><p>The new iteration pipeline if successful, None if aborted.</p>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If Input_Filter process cannot be found in the
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>capsul.pipeline.pipeline.Pipeline | None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If Input_Filter process cannot be found in the
 library.</p>
 </dd>
 </dl>
@@ -438,12 +439,15 @@ configuration engine to select configurations that match the
 requirements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>environment</strong> – (str) The target environment for checking
-configurations. Defaults to “global”.</p>
+<dd class="field-odd"><p><strong>environment</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The target environment for checking configurations.
+Defaults to “global”.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) A dictionary mapping each pipeline node to its
-selected configuration.</p>
+<dd class="field-even"><p>A dictionary mapping each pipeline node to its selected
+configuration.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -479,8 +483,8 @@ These attributes can be retrieved from an associated database. If no
 pipeline is specified, the current pipeline or process is used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pipeline</strong> – (Pipeline) The pipeline object to be completed. If
-not provided, the method retrieves the current pipeline or process.</p>
+<dd class="field-odd"><p><strong>pipeline</strong> (<em>capsul.pipeline.pipeline.Pipeline</em>) – The pipeline object to be completed. If not provided,
+the method retrieves the current pipeline or process.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -508,7 +512,7 @@ changes to avoid cluttering the undo history.</p></li>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>signal_list</strong> – <p>A list containing change information with the
+<dd class="field-odd"><p><strong>signal_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – <p>A list containing change information with the
 first element being the change type (“node_name” or “plug_value”),
 followed by context-specific data:</p>
 <blockquote>
@@ -535,8 +539,8 @@ context.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – The name/identifier of the selected node.</p></li>
-<li><p><strong>process</strong> – The process instance associated with the selected node.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name/identifier of the selected node.</p></li>
+<li><p><strong>process</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – The process instance associated with the selected node.</p></li>
 </ul>
 </dd>
 </dl>
@@ -602,8 +606,11 @@ pipeline editor tabs and configures it using the Mia configuration
 settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(CapsulEngine) A configured Capsul engine instance ready for
-pipeline execution, with settings applied from the Mia config object.</p>
+<dd class="field-odd"><p>A configured Capsul engine instance ready for pipeline
+execution, with settings applied from the Mia config object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>capsul.engine.CapsulEngine</p>
 </dd>
 </dl>
 </dd></dl>
@@ -618,12 +625,15 @@ wrapper. This simplifies GUI workflows where single processes can act
 as pipelines.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pipeline</strong> – (Pipeline) Optional pipeline to evaluate. If None,
-uses the currently selected pipeline from the editor GUI.</p>
+<dd class="field-odd"><p><strong>pipeline</strong> (<em>capsul.pipeline.pipeline.Pipeline</em><em> | </em><em>None</em>) – Optional pipeline to evaluate. If None, uses the
+currently selected pipeline from the editor GUI.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(Pipeline | Process) The process node if pipeline contains a
-single unconnected process, otherwise the pipeline itself.</p>
+<dd class="field-even"><p>The process node if pipeline contains a single unconnected
+process, otherwise the pipeline itself.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>capsul.pipeline.pipeline.Pipeline | <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)">object</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -636,9 +646,12 @@ single unconnected process, otherwise the pipeline itself.</p>
 accounting for workflow job parameter overrides and temporary values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list[str]) Parameter names that are missing, formatted as
-either ‘parameter_name’ for pipeline root or ‘node.parameter_name’ for
-other nodes.</p>
+<dd class="field-odd"><p>Parameter names that are missing, formatted as either
+‘parameter_name’ for pipeline root or ‘node.parameter_name’ for other
+nodes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -694,29 +707,33 @@ warnings and updating the status bar with error messages.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pipeline</strong> – (Pipeline, Process) The pipeline or process instance
-to initialize. If None, the main pipeline is retrieved.</p></li>
-<li><p><strong>pipeline_name</strong> – (str) The name of the parent pipeline, if
-applicable.</p></li>
+<li><p><strong>pipeline</strong> (<em>capsul.pipeline.pipeline.Pipeline</em><em> |
+</em><em>capsul.pipeline.process.Process</em><em> |
+</em><em>None</em>) – The pipeline or process instance to initialize. If
+None, the main pipeline is retrieved.</p></li>
+<li><p><strong>pipeline_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the parent pipeline, if applicable.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the pipeline was successfully initialized,
-False otherwise.</p>
+<dd class="field-even"><p>True if the pipeline was successfully initialized, False
+otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_calculate_duration: Calculate the elapsed time since <cite>t0</cite>,
 rounded to the nearest significant digit.</p></li>
 <li><p>_get_node_name: Extracts a node’s name, preferring
 <code class="docutils literal notranslate"><span class="pre">context_name</span></code> if available.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -762,7 +779,7 @@ runs which have not been postprocessed yet.</p>
 be thread-safe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pipeline</strong> – (Pipeline) The pipeline to postprocess. If not
+<dd class="field-odd"><p><strong>pipeline</strong> (<em>capsul.pipeline.pipeline.Pipeline</em><em> | </em><em>None</em>) – (Pipeline) The pipeline to postprocess. If not
 provided, the method will use <cite>self.last_run_pipeline</cite> or fetch the
 currently selected pipeline from the pipeline editor.</p>
 </dd>
@@ -802,9 +819,9 @@ within the project directory, the attributes are associated with both
 the <em>current</em> and <em>initial</em> collections.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pipeline</strong> – (Pipeline) The pipeline whose completion attributes
-should be registered. The pipeline must provide a completion engine
-capable of exporting its attributes.</p>
+<dd class="field-odd"><p><strong>pipeline</strong> (<em>capsul.pipeline.pipeline.Pipeline</em>) – The pipeline whose completion attributes should be
+registered. The pipeline must provide a completion engine capable of
+exporting its attributes.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -867,9 +884,8 @@ protected directory.</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>skip_overwrite_warning</strong> – (bool) If True, skip the overwrite
-confirmation dialog when saving to an existing file. Defaults to
-False.</p>
+<dd class="field-odd"><p><strong>skip_overwrite_warning</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, skip the overwrite confirmation
+dialog when saving to an existing file. Defaults to False.</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -969,10 +985,10 @@ are found).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>job</strong> – Job execution object containing param_dict (parameter
+<li><p><strong>job</strong> (<em>soma_workflow.client_types.Job</em>) – Job execution object containing param_dict (parameter
 name-&gt;value mapping) and inheritance_dict (will be updated by this
 method).</p></li>
-<li><p><strong>node</strong> – Process node being evaluated (ProcessNode or Process
+<li><p><strong>node</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – Process node being evaluated (ProcessNode or Process
 object). Used to determine inheritance rules via context_name or name
 attribute.</p></li>
 </ul>
@@ -1004,7 +1020,7 @@ associated process nodes to the node list, ensuring no duplicates.
 Only jobs with a ‘process’ attribute are considered.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>brick</strong> – Reserved for future use. Currently unused parameter that
+<dd class="field-odd"><p><strong>brick</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – Reserved for future use. Currently unused parameter that
 could be used for filtering or extending functionality.</p>
 </dd>
 </dl>
@@ -1032,7 +1048,7 @@ filename.</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> – Path to the pipeline file that has been saved.</p>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the pipeline file that has been saved.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1052,7 +1068,7 @@ application state. It also updates the node controller’s visible tags
 from the project database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – The current project instance containing application
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project instance containing application
 data and database connections.</p>
 </dd>
 </dl>
@@ -1075,9 +1091,9 @@ iteration node and reverts to the original scan list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>iteration_list</strong> – Current list of scans in the iteration table
+<li><p><strong>iteration_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Current list of scans in the iteration table
 (unused in current implementation).</p></li>
-<li><p><strong>all_iterations_list</strong> – Complete list of all iteration scan lists.</p></li>
+<li><p><strong>all_iterations_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>]</em>) – Complete list of all iteration scan lists.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1112,8 +1128,8 @@ iterated.</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>index</strong> – (int) Index of the specific editor to check. If -1
-(default), uses the currently active editor.</p>
+<dd class="field-odd"><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the specific editor to check. If -1 (default),
+uses the currently active editor.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1144,7 +1160,7 @@ controller components.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.</span></span><span class="sig-name descname"><span class="pre">RunProgress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#RunProgress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.</span></span><span class="sig-name descname"><span class="pre">RunProgress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#RunProgress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QWidget</span></code></a></p>
 <p>A Qt widget for displaying and managing pipeline execution progress.</p>
 <p>This widget provides a visual progress indicator and manages the lifecycle
@@ -1152,11 +1168,9 @@ of pipeline execution through a worker thread. It handles user feedback,
 error reporting, and resource cleanup.</p>
 <p>The widget integrates with a PipelineManagerTab to control pipeline
 execution, providing real-time feedback and graceful error handling.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_determine_completion_message: Analyze execution results and
 determine appropriate user message.</p></li>
 <li><p>_setup_ui: Set up the user interface for the widget.</p></li>
@@ -1169,8 +1183,10 @@ process.</p></li>
 <li><p>stop_execution: Stops the execution of the pipeline by signaling
 the worker to interrupt.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -1193,17 +1209,13 @@ progress.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#RunProgress.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#RunProgress.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the RunProgress widget with a progress bar and worker
 thread.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pipeline_manager</strong> – (PipelineManagerTab) A <cite>PipelineManagerTab</cite>
-instance responsible for managing the pipeline.</p></li>
-<li><p><strong>settings</strong> – (dict) A dictionary of settings to customize pipeline
-iteration, default is None.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>pipeline_manager</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab"><em>PipelineManagerTab</em></a>) – A <cite>PipelineManagerTab</cite> instance responsible
+for managing the pipeline.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1216,6 +1228,9 @@ iteration, default is None.</p></li>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dictionary containing message box configuration with keys:
 ‘icon’, ‘title’, and ‘text’.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1236,9 +1251,9 @@ then assigned to the widget.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>icon</strong> – (QMessageBox.Icon) Message box icon type.</p></li>
-<li><p><strong>title</strong> – (str) Dialog window title.</p></li>
-<li><p><strong>text</strong> – (str) Message content to display.</p></li>
+<li><p><strong>icon</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmessagebox.html#Icon-enum" title="(in Qt5 v5.15)"><em>Icon</em></a>) – Icon to display in the message box.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Dialog window title.</p></li>
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Message content to display.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1295,26 +1310,26 @@ its run.</p>
 <p>This class runs a pipeline or process using a separate thread to avoid
 blocking the GUI. Execution can be interrupted at any time by setting
 the <code class="xref py py-attr docutils literal notranslate"><span class="pre">interrupt_request</span></code> flag while holding <code class="xref py py-attr docutils literal notranslate"><span class="pre">lock</span></code>.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_check_interrupt: Check whether an interrupt has been requested.</p></li>
 <li><p>_disable_nipype_copy: Recursively check and disable the copy
 flag for Nipype processes in the pipeline.</p></li>
 <li><p>run: Run the pipeline in a background thread.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#RunWorker.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the worker thread for pipeline execution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pipeline_manager</strong> – (PipelineManager) The manager responsible for
-configuring, running, and monitoring the pipeline execution.</p>
+<dd class="field-odd"><p><strong>pipeline_manager</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab"><em>PipelineManagerTab</em></a>) – The manager responsible for configuring,
+running, and monitoring the pipeline execution.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1327,10 +1342,13 @@ configuring, running, and monitoring the pipeline execution.</p>
 execution engine.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>engine</strong> – (CapsulEngine) Execution engine to interrupt if running.</p>
+<dd class="field-odd"><p><strong>engine</strong> (<em>capsul.engine.CapsulEngine</em><em> | </em><em>None</em>) – Execution engine to interrupt if running.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if an interrupt was requested, False otherwise.</p>
+<dd class="field-even"><p>True if an interrupt was requested, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1345,7 +1363,7 @@ contain a NipypeProcess. If it does, it sets the <cite>activate_copy</cite> flag
 to <cite>False</cite>. The recursion handles nested pipelines.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>proc</strong> – A Pipeline or NipypeProcess instance.</p>
+<dd class="field-odd"><p><strong>proc</strong> (<em>capsul.pipeline.pipeline.Pipeline</em>) – A Pipeline or NipypeProcess instance.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1377,17 +1395,15 @@ unavailable).</p></li>
 <li><p>Provides a toggleable Soma-Workflow monitoring section.</p></li>
 </ul>
 </dd>
-</dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>toggle_soma_workflow: Show or hide the Soma-Workflow monitoring
 widget.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.StatusWidget.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_manager_tab.html#StatusWidget.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.StatusWidget.__init__" title="Link to this definition">¶</a></dt>
@@ -1398,7 +1414,7 @@ monitoring. The log is automatically populated from the pipeline
 manager’s last recorded run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pipeline_manager</strong> – The pipeline manager instance containing.</p>
+<dd class="field-odd"><p><strong>pipeline_manager</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab"><em>PipelineManagerTab</em></a>) – The pipeline manager instance containing.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1411,7 +1427,7 @@ manager’s last recorded run.</p>
 below the status section.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>checked</strong> – (bool) Whether the monitoring panel is enabled.</p>
+<dd class="field-odd"><p><strong>checked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the monitoring panel is enabled.</p>
 </dd>
 </dl>
 </dd></dl>

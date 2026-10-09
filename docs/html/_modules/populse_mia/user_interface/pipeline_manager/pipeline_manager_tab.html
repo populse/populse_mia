@@ -4,373 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+da5ace3e documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+02f94ee5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=13d1b248"></script>
+    <script src="../../../../_static/documentation_options.js?v=414df962"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
-
-const initStyles = () => {
-    const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
-    document.head.appendChild(defaultStyle);
-
-    const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
-    document.head.appendChild(fullscreenStyle);
-}
-
-// Detect if page has dark background
-const isDarkTheme = () => {
-    // We use a set of heuristics:
-    // 1. Check for common dark mode classes or attributes
-    // 2. Check computed background color brightness
-    if (document.documentElement.classList.contains('dark') ||
-        document.documentElement.getAttribute('data-theme') === 'dark' ||
-        document.body.classList.contains('dark') ||
-        document.body.getAttribute('data-theme') === 'dark') {
-        // console.log("Dark theme detected via class/attribute");
-        return true;
-    }
-    if (document.documentElement.classList.contains('light') ||
-        document.documentElement.getAttribute('data-theme') === 'light' ||
-        document.body.classList.contains('light') ||
-        document.body.getAttribute('data-theme') === 'light') {
-        // console.log("Light theme detected via class/attribute");
-        return false;
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // console.log("Dark theme detected via prefers-color-scheme");
-        return true;
-    }
-    const bgColor = window.getComputedStyle(document.body).backgroundColor;
-    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
-    if (match) {
-        const r = parseInt(match[1]);
-        const g = parseInt(match[2]);
-        const b = parseInt(match[3]);
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        // console.log("Background color brightness:", brightness);
-        return brightness < 128;
-    }
-    // console.log("No dark or light theme detected, defaulting to light theme");
-    return false;
-};
-
-let darkTheme = isDarkTheme();
-let modal = null;
-let modalContent = null;
-let previousScrollOffset = [window.scrollX, window.scrollY];
-let _lazyObserver = null;
-let _renderQueue = Promise.resolve();
-let closeModal = () => {};
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal?.classList.contains('active')) {
-        closeModal();
-    }
-});
-
-// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
-// so this is safe to call both for the initial batch and for diagrams that
-// render lazily once they become visible.
-const addZoomToSvgs = (svgs) => {
-    svgs.each(function() {
-        if (this.getAttribute('data-zoom-applied') === 'true') return;
-        var svg = d3.select(this);
-        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
-        var inner = svg.select("g");
-        var zoom = d3.zoom().on("zoom", function(event) {
-            inner.attr("transform", event.transform);
-        });
-        svg.call(zoom);
-        this.setAttribute('data-zoom-applied', 'true');
-    });
-};
-
-const runMermaid = async (rerun) => {
-    console.log("Running mermaid diagrams, rerun =", rerun);
-    // clear all existing mermaid charts
-    let all_mermaids = document.querySelectorAll(".mermaid");
-
-    if (rerun) {
-        // Disconnect any previous lazy rendering observer
-        if (_lazyObserver) {
-            _lazyObserver.disconnect();
-            _lazyObserver = null;
-        }
-
-        all_mermaids.forEach((el) => {
-            el.removeAttribute('data-mermaid-deferred');
-            el.removeAttribute('data-mermaid-render-failed');
-            if(!el.hasAttribute("data-original-code")) {
-                // store original code
-                // console.log(`Storing original code for first run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-            if(el.getAttribute("data-processed") === "true") {
-                // remove and restore original
-                el.removeAttribute("data-processed");
-                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
-                el.innerHTML = el.getAttribute('data-original-code');
-            } else {
-                // store original code
-                // console.log(`Storing original code for re-run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-        });
-
-        // Separate visible and hidden elements. Mermaid's layout engine measures
-        // text dimensions via the DOM, which fails for elements hidden by a parent
-        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
-        // producing broken SVGs. Render visible elements now, defer hidden ones.
-        const visible = [];
-        const hidden = [];
-        all_mermaids.forEach((el) => {
-            // offsetParent is null for display:none ancestors.
-            // getClientRects().length > 0 catches position:fixed elements
-            // (which also have null offsetParent but are still visible).
-            if (el.offsetParent !== null || el.getClientRects().length > 0) {
-                visible.push(el);
-            } else {
-                hidden.push(el);
-                el.setAttribute('data-mermaid-deferred', 'true');
-            }
-        });
-
-        if (visible.length > 0) {
-            try {
-                await mermaid.run({ nodes: visible });
-            } catch (e) {
-                console.error("Mermaid rendering failed:", e);
-            }
-        }
-
-        // Lazily render hidden elements when they become visible.
-        // Uses a promise chain (_renderQueue) to serialize rendering,
-        // since IntersectionObserver may report multiple entries at once
-        // and mermaid.run() is not safe to call concurrently.
-        if (hidden.length > 0) {
-            if (typeof IntersectionObserver === 'undefined') {
-                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
-            } else {
-                _renderQueue = Promise.resolve();
-                _lazyObserver = new IntersectionObserver((entries) => {
-                    for (const entry of entries) {
-                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
-                            _lazyObserver.unobserve(entry.target);
-                            const el = entry.target;
-                            _renderQueue = _renderQueue.then(async () => {
-                                try {
-                                    await mermaid.run({ nodes: [el] });
-                                    el.removeAttribute('data-mermaid-deferred');
-                                    // Apply zoom to the now-rendered diagram, matching
-                                    // the decoration visible diagrams receive.
-                                    if (false) {
-                                        addZoomToSvgs(d3.selectAll("").select(function() {
-                                            return this.querySelector("svg");
-                                        }));
-                                    }
-                                } catch (e) {
-                                    console.error("Mermaid deferred rendering failed:", e);
-                                    el.removeAttribute('data-mermaid-deferred');
-                                    el.setAttribute('data-mermaid-render-failed', 'true');
-                                }
-                            });
-                        }
-                    }
-                });
-                hidden.forEach((el) => _lazyObserver.observe(el));
-            }
-        }
-    }
-
-    all_mermaids = document.querySelectorAll(".mermaid");
-    // Exclude deferred (hidden) and render-failed elements from completion checks
-    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
-    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
-
-    if (false) {
-        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
-        if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("").select(function() {
-                return this.querySelector("svg");
-            });
-            // Wait until every active (visible) diagram has rendered. Deferred
-            // diagrams are excluded, so a fixed d3_node_count that counts a
-            // hidden diagram no longer loops forever waiting for its SVG.
-            if(mermaids_active.length !== mermaids_processed.length) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            }
-            addZoomToSvgs(svgs);
-        }
-    } else if(mermaids_active.length !== mermaids_processed.length) {
-        // Wait for mermaid to process all diagrams
-        setTimeout(() => runMermaid(false), 200);
-        return;
-    }
-
-    // Stop here if not adding fullscreen capability
-    if (!true) return;
-
-    if (modal !== null ) {
-        // Destroy existing modal
-        modal.remove();
-        modal = null;
-        modalContent = null;
-    }
-
-    modal = document.createElement('div');
-    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
-    modal.innerHTML = `
-        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
-        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
-    `;
-    document.body.appendChild(modal);
-
-    modalContent = modal.querySelector('.mermaid-container-fullscreen');
-    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
-
-    closeModal = () => {
-        modal.classList.remove('active');
-        modalContent.innerHTML = '';
-        document.body.style.overflow = ''
-        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
-        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
-            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
-            // Already processed, adjust button class if needed
-            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
-            if (existingBtn) {
-                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-            }
-            return;
-        }
-
-        const container = document.createElement('div');
-        container.className = 'mermaid-container';
-        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
-        container.appendChild(mermaidDiv);
-
-        const fullscreenBtn = document.createElement('button');
-        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = "\u26f6";
-        fullscreenBtn.style.opacity = "50%";
-
-        // Calculate dynamic position based on diagram's margin and padding
-        const diagramStyle = window.getComputedStyle(mermaidDiv);
-        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
-        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
-        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
-        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
-        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
-        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
-
-        fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scrollX, window.scrollY];
-            const clone = mermaidDiv.cloneNode(true);
-            modalContent.innerHTML = '';
-            modalContent.appendChild(clone);
-
-            const svg = clone.querySelector('svg');
-            if (svg) {
-                svg.removeAttribute('width');
-                svg.removeAttribute('height');
-                svg.style.width = '100%';
-                svg.style.height = 'auto';
-                svg.style.maxWidth = '100%';
-                svg.style.display = 'block';
-
-                if (false) {
-                    setTimeout(() => {
-                        const g = svg.querySelector('g');
-                        if (g) {
-                            var svgD3 = d3.select(svg);
-                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
-                            var inner = svgD3.select("g");
-                            var zoom = d3.zoom().on("zoom", function(event) {
-                                inner.attr("transform", event.transform);
-                            });
-                            svgD3.call(zoom);
-                        }
-                    }, 100);
-                }
-            }
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-        container.appendChild(fullscreenBtn);
-    });
-};
-
-
-
-const load = async () => {
-    initStyles();
-
-
-    await runMermaid(true);
-
-    const reRunIfThemeChanges = async () => {
-        const newDarkTheme = isDarkTheme();
-        if (newDarkTheme !== darkTheme) {
-            darkTheme = newDarkTheme;
-            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
-            await mermaid.initialize(
-                {...{"startOnLoad": false},
-                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
-                }
-            );
-            await runMermaid(true);
-        }
-    };
-
-    // Update theme classes when theme changes
-    const themeObserver = new MutationObserver(reRunIfThemeChanges);
-    themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-    themeObserver.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-};
-
-
-
-
-
-console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
-mermaid.initialize(
-    {...{"startOnLoad": false},
-    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
-    }
-);
-
-window.addEventListener("load", load);
-window.runMermaid = runMermaid;</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+da5ace3e documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+02f94ee5 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -398,32 +44,32 @@ window.runMermaid = runMermaid;</script>
 
 <span class="c1"># isort: off</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
 
 <span class="c1"># isort: on</span>
 
 <span class="c1"># soma_workflow import</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">soma_workflow.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">swc</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">soma_workflow.constants</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">swconstants</span>
+<span class="kn">import</span> <span class="nn">soma_workflow.client</span> <span class="k">as</span> <span class="nn">swc</span>
+<span class="kn">import</span> <span class="nn">soma_workflow.constants</span> <span class="k">as</span> <span class="nn">swconstants</span>
 
 <span class="c1"># capsul import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">NipypeProcess</span><span class="p">,</span>
     <span class="n">Pipeline</span><span class="p">,</span>
     <span class="n">PipelineNode</span><span class="p">,</span>
@@ -431,18 +77,18 @@ window.runMermaid = runMermaid;</script>
     <span class="n">ProcessNode</span><span class="p">,</span>
     <span class="n">get_process_instance</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.attributes.completion_engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessCompletionEngine</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkflowExecutionError</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline_tools</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.pipeline_workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">workflow_from_pipeline</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.process_iteration</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessIteration</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.backends.qt_compat</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtWidgets</span>
+<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="kn">import</span> <span class="n">ProcessCompletionEngine</span>
+<span class="kn">from</span> <span class="nn">capsul.engine</span> <span class="kn">import</span> <span class="n">WorkflowExecutionError</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline</span> <span class="kn">import</span> <span class="n">pipeline_tools</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_workflow</span> <span class="kn">import</span> <span class="n">workflow_from_pipeline</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline.process_iteration</span> <span class="kn">import</span> <span class="n">ProcessIteration</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.qt_compat</span> <span class="kn">import</span> <span class="n">QtWidgets</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">pyqtSignal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QMovie</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">pyqtSignal</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QMovie</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">QAction</span><span class="p">,</span>
     <span class="n">QApplication</span><span class="p">,</span>
     <span class="n">QHBoxLayout</span><span class="p">,</span>
@@ -456,17 +102,17 @@ window.runMermaid = runMermaid;</script>
 <span class="p">)</span>
 
 <span class="c1"># soma_import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soma.controller.trait_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_file_trait</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qtThread</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtThreadCall</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soma_workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">configuration</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soma_workflow.gui.workflowGui</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">soma.controller.trait_utils</span> <span class="kn">import</span> <span class="n">is_file_trait</span>
+<span class="kn">from</span> <span class="nn">soma.qt_gui.qtThread</span> <span class="kn">import</span> <span class="n">QtThreadCall</span>
+<span class="kn">from</span> <span class="nn">soma_workflow</span> <span class="kn">import</span> <span class="n">configuration</span>
+<span class="kn">from</span> <span class="nn">soma_workflow.gui.workflowGui</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ApplicationModel</span><span class="p">,</span>
     <span class="n">ConnectionDialog</span><span class="p">,</span>
     <span class="n">MainWindow</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BRICK_EXEC</span><span class="p">,</span>
     <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
     <span class="n">BRICK_INIT</span><span class="p">,</span>
@@ -490,23 +136,23 @@ window.runMermaid = runMermaid;</script>
     <span class="n">TYPE_TXT</span><span class="p">,</span>
     <span class="n">TYPE_UNKNOWN</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.iteration_table</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.iteration_table</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">IterationTable</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.node_controller</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">CapsulNodeController</span><span class="p">,</span>
     <span class="n">NodeController</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">PipelineEditorTabs</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ProcessLibraryWidget</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessMIA</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="n">PopUpInheritanceDict</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_auto_inheritance</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="kn">import</span> <span class="n">ProcessMIA</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="n">PopUpInheritanceDict</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">update_auto_inheritance</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;protected_logging&quot;</span><span class="p">,</span>
@@ -522,7 +168,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="protected_logging">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.protected_logging">[docs]</a>
 <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">protected_logging</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">protected_logging</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Context manager that preserves logging configuration across soma-workflow</span>
 <span class="sd">    interference.</span>
@@ -575,13 +221,11 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Restore configs but merge handlers/filters</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">loggers_backup</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
             <span class="n">logger</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;root&quot;</span>
                 <span class="k">else</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="p">)</span>
-
             <span class="c1"># Merge handlers: keep existing, re-add missing originals</span>
             <span class="n">existing_handlers</span> <span class="o">=</span> <span class="p">{</span><span class="nb">id</span><span class="p">(</span><span class="n">h</span><span class="p">):</span> <span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">}</span>
 
@@ -607,14 +251,12 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PipelineManagerTab</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">PipelineManagerTab</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget that handles the Pipeline Manager tab.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _register_node_io_in_database: Register node input and output</span>
 <span class="sd">              values in the database.</span>
 <span class="sd">            - _set_anim_frame: Callback that updates the pipeline status action</span>
@@ -681,7 +323,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              depending of the chosen mode.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - item_library_clicked: Emitted when an item is selected in the process</span>
 <span class="sd">          library. The signal carries the identifier or name of the selected</span>
 <span class="sd">          library item as a string.</span>
@@ -692,7 +333,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the Pipeline Manager tab.</span>
 
@@ -702,11 +343,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        tables to manage complex data analysis workflows.</span>
 
 <span class="sd">        :param project: The current project instance containing database and</span>
-<span class="sd">         configuration</span>
-<span class="sd">        :param scan_list: List of selected database files to process. If None</span>
-<span class="sd">         or empty, defaults to all documents in the current collection</span>
+<span class="sd">         configuration.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
+<span class="sd">        :param scan_list: List of selected database files to process. If empty,</span>
+<span class="sd">         defaults to all documents in the current collection.</span>
+<span class="sd">        :type scan_list: list[str]</span>
 <span class="sd">        :param main_window: Main application window instance for UI</span>
 <span class="sd">         integration.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># Initialize core attributes</span>
@@ -867,7 +511,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab._register_node_io_in_database">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab._register_node_io_in_database">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_register_node_io_in_database</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_register_node_io_in_database</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">history_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -881,12 +525,15 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param job: Job object containing parameter values and unique</span>
 <span class="sd">         identifier (UUID).</span>
+<span class="sd">        :type job: soma_workflow.client_types.Job</span>
 <span class="sd">        :param node: Node instance (Process, Pipeline, or custom node) to</span>
 <span class="sd">         register.</span>
-<span class="sd">        :param pipeline_name: (str, optional) Name of the containing pipeline,</span>
-<span class="sd">         if any.</span>
-<span class="sd">        :param history_id: (str, optional) Database history entry identifier.</span>
-<span class="sd">         Defaults to an empty string.</span>
+<span class="sd">        :type node: object</span>
+<span class="sd">        :param pipeline_name: Name of the containing pipeline, if any.</span>
+<span class="sd">        :type pipeline_name: str</span>
+<span class="sd">        :param history_id: Database history entry identifier. Defaults to an</span>
+<span class="sd">         empty string.</span>
+<span class="sd">        :type history_id: str</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Pipeline and PipelineNode instances are skipped as only leaf</span>
@@ -902,18 +549,25 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                  for JSON compatibility.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_serialize_for_json</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_serialize_for_json</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Serialize objects to JSON-compatible format.</span>
+<span class="sd">            Convert supported objects to JSON-compatible representations.</span>
 
-<span class="sd">            Handles special types like Undefined values, temporary paths,</span>
-<span class="sd">            datetime objects, and sets for safe JSON storage.</span>
+<span class="sd">            This function handles special values that are not directly</span>
+<span class="sd">            supported by</span>
+<span class="sd">            :func:`json.dumps`, including :data:`Undefined`, temporary paths,</span>
+<span class="sd">            :class:`datetime.datetime` objects, and sets.</span>
 
-<span class="sd">            :param item: The object to be serialized.</span>
+<span class="sd">            :param item: The object to convert.</span>
+<span class="sd">            :type item: Any</span>
 
-<span class="sd">            :return: JSON-serializable representation of the item.</span>
+<span class="sd">            :return: A JSON-compatible representation of ``item``. Undefined</span>
+<span class="sd">             values are represented by ``&quot;&lt;undefined&gt;&quot;``, temporary paths by</span>
+<span class="sd">             ``&quot;&lt;temp&gt;&quot;``, datetime objects by their string representation, and</span>
+<span class="sd">             sets by lists.</span>
+<span class="sd">            :rtype: str or list</span>
 
-<span class="sd">            :raises TypeError: If item type cannot be serialized.</span>
+<span class="sd">            :raises TypeError: If ``item`` is not one of the supported types.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="c1"># Handle special cases</span>
@@ -964,11 +618,12 @@ window.runMermaid = runMermaid;</script>
             <span class="p">}</span>
 
         <span class="c1"># Update I/O values from job parameters</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">_update_values_from_job</span><span class="p">(</span><span class="n">values_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">_update_values_from_job</span><span class="p">(</span><span class="n">values_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Update values dictionary with job parameters.</span>
 
 <span class="sd">            :param values_dict: Dictionary of input or output values to update.</span>
+<span class="sd">            :type values_dict: dict</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">values_dict</span><span class="p">:</span>
@@ -999,11 +654,12 @@ window.runMermaid = runMermaid;</script>
             <span class="n">attributes</span> <span class="o">=</span> <span class="n">completion</span><span class="o">.</span><span class="n">get_attribute_values</span><span class="p">()</span><span class="o">.</span><span class="n">export_to_dict</span><span class="p">()</span>
 
         <span class="c1"># Serialize I/O values for database storage</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">_serialize_dict_values</span><span class="p">(</span><span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">_serialize_dict_values</span><span class="p">(</span><span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Serialize all values in a dictionary for JSON compatibility.</span>
 
 <span class="sd">            :param data_dict: Dictionary with values to serialize.</span>
+<span class="sd">            :type data_dict: dict</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">serialized</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -1076,7 +732,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab._set_anim_frame">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab._set_anim_frame">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_set_anim_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_set_anim_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the pipeline status action icon with the current animation</span>
 <span class="sd">        frame.</span>
@@ -1095,14 +751,17 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab._should_register_plug">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab._should_register_plug">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_should_register_plug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_should_register_plug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if a plug should be registered in the database.</span>
 
 <span class="sd">        :param process: Process instance.</span>
-<span class="sd">        :param plug_name: (str) Name of the plug to check.</span>
+<span class="sd">        :type process: object</span>
+<span class="sd">        :param plug_name: Name of the plug to check.</span>
+<span class="sd">        :type plug_name: str</span>
 
 <span class="sd">        :return: True if plug should be registered, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">plug_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">process</span><span class="o">.</span><span class="n">traits</span><span class="p">():</span>
@@ -1115,7 +774,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.add_plug_value_to_database">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.add_plug_value_to_database">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_plug_value_to_database</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">add_plug_value_to_database</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">p_value</span><span class="p">,</span>
         <span class="n">brick_id</span><span class="p">,</span>
@@ -1135,23 +794,32 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        database, managing inheritance of metadata tags from input files, and</span>
 <span class="sd">        resolving ambiguities when multiple parent files exist.</span>
 
-<span class="sd">        :param p_value: The plug value - either a single file path (str) or</span>
+<span class="sd">        :param p_value: The plug value. Either a single file path (str) or</span>
 <span class="sd">         list of file paths. Can also be special values like &quot;&lt;undefined&gt;&quot; or</span>
 <span class="sd">         &quot;Undefined&quot;.</span>
-<span class="sd">        :param brick_id: (str) UUID of the brick in the database.</span>
-<span class="sd">        :param history_id: (str) UUID of the processing history in the</span>
-<span class="sd">         database.</span>
-<span class="sd">        :param node_name: (str) Name of the processing node.</span>
-<span class="sd">        :param plug_name: (str) Name of the specific plug/parameter.</span>
-<span class="sd">        :param full_name: (str) Full hierarchical name including parent bricks.</span>
+<span class="sd">        :type p_value: str | list[str]</span>
+<span class="sd">        :param brick_id: UUID of the brick in the database.</span>
+<span class="sd">        :type brick_id: str</span>
+<span class="sd">        :param history_id: UUID of the processing history in the database.</span>
+<span class="sd">        :type history_id: str</span>
+<span class="sd">        :param node_name: Name of the processing node.</span>
+<span class="sd">        :type node_name: str</span>
+<span class="sd">        :param plug_name: Name of the specific plug/parameter.</span>
+<span class="sd">        :type plug_name: str</span>
+<span class="sd">        :param full_name: Full hierarchical name including parent bricks.</span>
 <span class="sd">         Equals node_name if no parent exists.</span>
-<span class="sd">        :param job: (Job) Job object containing the plug, may have inheritance</span>
+<span class="sd">        :type full_name: str</span>
+<span class="sd">        :param job: Job object containing the plug, may have inheritance</span>
 <span class="sd">         dictionaries.</span>
-<span class="sd">        :param trait: (Trait) Handler for the plug trait or sub-trait for list</span>
+<span class="sd">        :type job: soma_workflow.client_types.Job</span>
+<span class="sd">        :param trait: Handler for the plug trait or sub-trait for list</span>
 <span class="sd">         elements. Used to validate value types (file vs non-file).</span>
-<span class="sd">        :param inputs: (dict) Input parameter values for the process/node.</span>
-<span class="sd">        :param attributes: (dict) Completion engine attributes to be applied</span>
-<span class="sd">         to all outputs.</span>
+<span class="sd">        :type trait: traits.ctrait.CTrait</span>
+<span class="sd">        :param inputs: Input parameter values for the process/node.</span>
+<span class="sd">        :type inputs: dict</span>
+<span class="sd">        :param attributes: Completion engine attributes to be applied to all</span>
+<span class="sd">         outputs.</span>
+<span class="sd">        :type attributes: dict</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - Recursively processes list values by calling itself on each</span>
@@ -1572,7 +1240,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.ask_iterated_pipeline_plugs">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.ask_iterated_pipeline_plugs">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">ask_iterated_pipeline_plugs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ask_iterated_pipeline_plugs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a configuration dialog for pipeline plug iteration and database</span>
 <span class="sd">        connections.</span>
@@ -1605,7 +1273,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :return: A tuple containing the names of the plugs marked for iteration</span>
 <span class="sd">         and the names of the plugs connected to the database. Returns ``None``</span>
 <span class="sd">         if the user cancels the dialog.</span>
-<span class="sd">        :rtype: Optional[Tuple[List[str], List[str]]]</span>
+<span class="sd">        :rtype: tuple[list[str], list[str]] | None</span>
 
 <span class="sd">        Contains:</span>
 <span class="sd">            Inner functions:</span>
@@ -1630,7 +1298,7 @@ window.runMermaid = runMermaid;</script>
             <span class="s2">&quot;visible_groups&quot;</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">is_database_compatible</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">plug</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">is_database_compatible</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">plug</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Check if a pipeline plug is compatible with a database filter.</span>
 
@@ -1638,7 +1306,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            database filter based on its trait type.</span>
 
 <span class="sd">            :param process: The process or pipeline containing the plug.</span>
-<span class="sd">            :param plug: (str) The name of the plug to check.</span>
+<span class="sd">            :type process: object</span>
+<span class="sd">            :param plug: The name of the plug to check.</span>
+<span class="sd">            :type plug: str</span>
 
 <span class="sd">            :return: True if the plug is compatible with a database</span>
 <span class="sd">             filter, False otherwise.</span>
@@ -1651,7 +1321,7 @@ window.runMermaid = runMermaid;</script>
             <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">on_iteration_toggled</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">on_iteration_toggled</span><span class="p">(</span>
             <span class="n">param_buttons</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span> <span class="n">param_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">checked</span><span class="p">:</span> <span class="nb">bool</span>
         <span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1660,10 +1330,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            When iteration is disabled, automatically disable database</span>
 <span class="sd">            connection since database connection requires iteration.</span>
 
-<span class="sd">            :param param_buttons: (list) List of parameter button</span>
-<span class="sd">             configurations.</span>
-<span class="sd">            :param param_idx: (int) Index of the plug in the parameter list.</span>
-<span class="sd">            :param checked: (bool) The current state of the iteration checkbox.</span>
+<span class="sd">            :param param_buttons: List of parameter button configurations.</span>
+<span class="sd">            :type param_buttons: list[list]</span>
+<span class="sd">            :param param_idx: Index of the plug in the parameter list.</span>
+<span class="sd">            :type param_idx: int</span>
+<span class="sd">            :param checked: The current state of the iteration checkbox.</span>
+<span class="sd">            :type checked: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="n">db_checkbox</span> <span class="o">=</span> <span class="n">param_buttons</span><span class="p">[</span><span class="n">param_idx</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
@@ -1671,7 +1343,7 @@ window.runMermaid = runMermaid;</script>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">checked</span> <span class="ow">and</span> <span class="n">db_checkbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">db_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">on_database_toggled</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">on_database_toggled</span><span class="p">(</span>
             <span class="n">param_buttons</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span> <span class="n">param_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">checked</span><span class="p">:</span> <span class="nb">bool</span>
         <span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1680,36 +1352,37 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            When database connection is enabled, automatically enable iteration</span>
 <span class="sd">            since database connection requires iteration.</span>
 
-<span class="sd">            :param param_buttons: (list) List of parameter button</span>
-<span class="sd">             configurations.</span>
-<span class="sd">            :param param_idx: (int) Index of the plug in the parameter list.</span>
-<span class="sd">            :param checked: (bool) The current state of the database checkbox.</span>
+<span class="sd">            :param param_buttons: List of parameter button configurations.</span>
+<span class="sd">            :type param_buttons: list[list]</span>
+<span class="sd">            :param param_idx: Index of the plug in the parameter list.</span>
+<span class="sd">            :type param_idx: int</span>
+<span class="sd">            :param checked: The current state of the database checkbox.</span>
+<span class="sd">            :type checked: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">if</span> <span class="n">checked</span><span class="p">:</span>
                 <span class="n">param_buttons</span><span class="p">[</span><span class="n">param_idx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">create_dialog_layout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="k">def</span> <span class="nf">create_dialog_layout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">(</span>
             <span class="nb">tuple</span><span class="p">[</span><span class="n">Qt</span><span class="o">.</span><span class="n">QDialog</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QGridLayout</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]]</span>
         <span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Create and configure the main dialog window for pipeline</span>
-<span class="sd">            configuration.</span>
+<span class="sd">            Create and configure the pipeline iteration configuration dialog.</span>
 
-<span class="sd">            This function builds a dialog with:</span>
-<span class="sd">                - A scrollable parameter configuration section inside a group</span>
+<span class="sd">            The dialog contains:</span>
+<span class="sd">                - A scrollable parameter configuration section within a group</span>
 <span class="sd">                  box.</span>
-<span class="sd">                - A grid layout for parameter input/output controls.</span>
-<span class="sd">                - Standard OK/Cancel dialog buttons.</span>
+<span class="sd">                - A grid layout for parameter input and output controls.</span>
+<span class="sd">                - Standard OK and Cancel buttons.</span>
 
-<span class="sd">            :return: (Tuple[Qt.QDialog, Qt.QGridLayout, List[List]])</span>
-<span class="sd">                A tuple containing:</span>
-<span class="sd">                    - dialog (Qt.QDialog): The configured pipeline</span>
-<span class="sd">                      configuration dialog.</span>
-<span class="sd">                    - param_grid (Qt.QGridLayout): The grid layout used to</span>
-<span class="sd">                      arrange parameter widgets.</span>
-<span class="sd">                    - param_buttons (List[List]): Two lists (inputs and</span>
-<span class="sd">                      outputs) for storing parameter-related button widgets.</span>
+<span class="sd">            :return: A tuple containing:</span>
+<span class="sd">                - dialog: The configured pipeline iteration configuration</span>
+<span class="sd">                  dialog.</span>
+<span class="sd">                - param_grid: The grid layout used to arrange parameter</span>
+<span class="sd">                  widgets.</span>
+<span class="sd">                - param_buttons: Two lists for storing parameter-related</span>
+<span class="sd">                  buttons, corresponding to inputs and outputs.</span>
+<span class="sd">            :rtype: tuple[Qt.QDialog, Qt.QGridLayout, list[list]]</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">dialog</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QDialog</span><span class="p">()</span>
             <span class="n">dialog</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Pipeline Iteration Configuration&quot;</span><span class="p">)</span>
@@ -1758,7 +1431,7 @@ window.runMermaid = runMermaid;</script>
             <span class="c1"># [[], []]: param_buttons for [inputs, outputs]</span>
             <span class="k">return</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="p">[[],</span> <span class="p">[]]</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">add_parameter_controls</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">add_parameter_controls</span><span class="p">(</span>
             <span class="n">grid</span><span class="p">:</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QGridLayout</span><span class="p">,</span>
             <span class="n">plugs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
             <span class="n">param_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -1773,17 +1446,20 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            positions them in the provided grid layout, and stores references</span>
 <span class="sd">            to the controls in `param_buttons` for later retrieval.</span>
 
-<span class="sd">            :param grid: (Qt.QGridLayout) The layout where parameter controls</span>
-<span class="sd">             are added.</span>
-<span class="sd">            :param plugs: (list[str]) The list of plug names to create controls</span>
-<span class="sd">             for.</span>
-<span class="sd">            :param param_type: (int) Indicator for the plug type:</span>
+<span class="sd">            :param grid: The layout where parameter controls are added.</span>
+<span class="sd">            :type grid: Qt.QGridLayout</span>
+<span class="sd">            :param plugs: The list of plug names to create controls for.</span>
+<span class="sd">            :type plugs: list[str]</span>
+<span class="sd">            :param param_type: Indicator for the plug type:</span>
 <span class="sd">                - 0: inputs</span>
 <span class="sd">                - 1: outputs</span>
-<span class="sd">            :param param_buttons: (list[list]) A nested list that stores</span>
-<span class="sd">             references to the created controls, organized by plug type.</span>
-<span class="sd">            :param has_database_option: (bool) Whether to include a database</span>
-<span class="sd">             checkbox next to each plug.</span>
+<span class="sd">            :type param_type: int</span>
+<span class="sd">            :param param_buttons: A nested list that stores references to the</span>
+<span class="sd">             created controls, organized by plug type.</span>
+<span class="sd">            :type param_buttons: list[list]</span>
+<span class="sd">            :param has_database_option: Whether to include a database checkbox</span>
+<span class="sd">             next to each plug.</span>
+<span class="sd">            :type has_database_option: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">filtered_plugs</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">plug</span> <span class="k">for</span> <span class="n">plug</span> <span class="ow">in</span> <span class="n">plugs</span> <span class="k">if</span> <span class="n">plug</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">FORBIDDEN_PLUGS</span>
@@ -1833,26 +1509,27 @@ window.runMermaid = runMermaid;</script>
                     <span class="p">[</span><span class="n">plug_name</span><span class="p">,</span> <span class="n">iter_checkbox</span><span class="p">,</span> <span class="n">db_checkbox</span><span class="p">]</span>
                 <span class="p">)</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">extract_results</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">extract_results</span><span class="p">(</span>
             <span class="n">param_buttons</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Extract the final plug configuration from the dialog controls.</span>
+<span class="sd">            Extract the selected plug configuration from the dialog.</span>
 
-<span class="sd">            This function inspects the checkboxes stored in `param_buttons` to</span>
-<span class="sd">            determine which plugs are selected for iteration and which are</span>
-<span class="sd">            linked to the database option.</span>
+<span class="sd">            The function examines the iteration and database checkboxes for</span>
+<span class="sd">            each input and output plug and returns the names of the plugs for</span>
+<span class="sd">            which each option is enabled.</span>
 
-<span class="sd">            :param param_buttons: (list[list]) A nested list of plug</span>
-<span class="sd">             configurations, where each entry is of the form:</span>
-<span class="sd">                [plug_name (str), iter_checkbox (Qt.QCheckBox),</span>
-<span class="sd">                db_checkbox (Optional[Qt.QCheckBox])].</span>
+<span class="sd">            :param param_buttons: Two groups of plug configurations. The first</span>
+<span class="sd">             group contains input plugs and the second contains output plugs.</span>
+<span class="sd">             Each configuration has the form:</span>
+<span class="sd">             [plug_name (str), iter_checkbox (Qt.QCheckBox),</span>
+<span class="sd">             db_checkbox (Optional[Qt.QCheckBox])].</span>
+<span class="sd">            :type param_buttons: list[list]</span>
 
-<span class="sd">            :return: (tuple[list[str], list[str]]): A tuple containing:</span>
-<span class="sd">                - iterated_plugs (list[str]): Names of plugs selected for</span>
-<span class="sd">                  iteration.</span>
-<span class="sd">                - database_plugs (list[str]): Names of plugs with the database</span>
-<span class="sd">                  option enabled.</span>
+<span class="sd">            :return: A tuple containing the names of the plugs selected for</span>
+<span class="sd">             iteration and the names of the plugs with the database option</span>
+<span class="sd">             enabled, respectively.</span>
+<span class="sd">            :rtype: tuple[list[str], list[str]]</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">all_controls</span> <span class="o">=</span> <span class="n">param_buttons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">param_buttons</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
@@ -1903,7 +1580,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.build_iterated_pipeline">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.build_iterated_pipeline">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">build_iterated_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">build_iterated_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Build an iteration pipeline wrapper around the current pipeline.</span>
 
@@ -1922,8 +1599,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        The method handles both single processes and full pipelines, converting</span>
 <span class="sd">        single processes into single-node pipelines when necessary.</span>
 
-<span class="sd">        :return: (Pipeline or None) The new iteration pipeline if successful,</span>
-<span class="sd">         None if aborted.</span>
+<span class="sd">        :return: The new iteration pipeline if successful, None if aborted.</span>
+<span class="sd">        :rtype: capsul.pipeline.pipeline.Pipeline | None</span>
 
 <span class="sd">        :raises ValueError: If Input_Filter process cannot be found in the</span>
 <span class="sd">         library.</span>
@@ -2080,7 +1757,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.check_requirements">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.check_requirements">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">check_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check and return the configuration of a pipeline based on its</span>
 <span class="sd">        requirements.</span>
@@ -2091,11 +1768,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        configuration engine to select configurations that match the</span>
 <span class="sd">        requirements.</span>
 
-<span class="sd">        :param environment: (str) The target environment for checking</span>
-<span class="sd">         configurations. Defaults to &quot;global&quot;.</span>
+<span class="sd">        :param environment: The target environment for checking configurations.</span>
+<span class="sd">         Defaults to &quot;global&quot;.</span>
+<span class="sd">        :type environment: str</span>
 
-<span class="sd">        :return: (dict) A dictionary mapping each pipeline node to its</span>
-<span class="sd">         selected configuration.</span>
+<span class="sd">        :return: A dictionary mapping each pipeline node to its selected</span>
+<span class="sd">         configuration.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="p">{</span>
@@ -2111,7 +1790,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.cleanup_older_init">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.cleanup_older_init">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_older_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cleanup_older_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up data browser state and remove orphaned files.</span>
 
@@ -2143,9 +1822,10 @@ window.runMermaid = runMermaid;</script>
         <span class="p">)</span></div>
 
 
+    <span class="c1"># FIXME: Is this method still used? If not, it should be removed.</span>
 <div class="viewcode-block" id="PipelineManagerTab.complete_pipeline_parameters">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.complete_pipeline_parameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">complete_pipeline_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">complete_pipeline_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Complete pipeline parameters using Capsul&#39;s completion engine.</span>
 
@@ -2154,8 +1834,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        These attributes can be retrieved from an associated database. If no</span>
 <span class="sd">        pipeline is specified, the current pipeline or process is used.</span>
 
-<span class="sd">        :param pipeline: (Pipeline) The pipeline object to be completed. If</span>
-<span class="sd">         not provided, the method retrieves the current pipeline or process.</span>
+<span class="sd">        :param pipeline: The pipeline object to be completed. If not provided,</span>
+<span class="sd">         the method retrieves the current pipeline or process.</span>
+<span class="sd">        :type pipeline: capsul.pipeline.pipeline.Pipeline</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            The completion process relies on Capsul&#39;s ProcessCompletionEngine</span>
@@ -2171,7 +1852,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.controller_value_changed">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.controller_value_changed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">controller_value_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_list</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">controller_value_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update history when a node or plug value changes.</span>
 
@@ -2193,6 +1874,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              new_node_name, old_node_name]</span>
 <span class="sd">            - For &quot;plug_value&quot;: [&quot;plug_value&quot;, node_name, old_value,</span>
 <span class="sd">              plug_name, plug_type, new_value]]</span>
+<span class="sd">        :type signal_list: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">signal_list</span><span class="p">:</span>
@@ -2269,7 +1951,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.displayNodeParameters">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.displayNodeParameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">displayNodeParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">displayNodeParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the node controller interface for the specified node.</span>
 
@@ -2279,7 +1961,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        context.</span>
 
 <span class="sd">        :param node_name: The name/identifier of the selected node.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param process: The process instance associated with the selected node.</span>
+<span class="sd">        :type process: object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">display_parameters</span><span class="p">(</span>
@@ -2290,7 +1974,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.finish_execution">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.finish_execution">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">finish_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">finish_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle pipeline execution completion and update UI state.</span>
 
@@ -2377,7 +2061,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.garbage_collect">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.garbage_collect">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">garbage_collect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">garbage_collect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up obsolete data and maintain database consistency.</span>
 
@@ -2409,7 +2093,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.get_capsul_engine">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.get_capsul_engine">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_capsul_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_capsul_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve and configure a Capsul engine from the pipeline editor.</span>
 
@@ -2417,15 +2101,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        pipeline editor tabs and configures it using the Mia configuration</span>
 <span class="sd">        settings.</span>
 
-<span class="sd">        :return: (CapsulEngine) A configured Capsul engine instance ready for</span>
-<span class="sd">         pipeline execution, with settings applied from the Mia config object.</span>
+<span class="sd">        :return: A configured Capsul engine instance ready for pipeline</span>
+<span class="sd">         execution, with settings applied from the Mia config object.</span>
+<span class="sd">        :rtype: capsul.engine.CapsulEngine</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.get_pipeline_or_process">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.get_pipeline_or_process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_pipeline_or_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_pipeline_or_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the pipeline or its single unconnected process node.</span>
 
@@ -2434,11 +2119,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        wrapper. This simplifies GUI workflows where single processes can act</span>
 <span class="sd">        as pipelines.</span>
 
-<span class="sd">        :param pipeline: (Pipeline) Optional pipeline to evaluate. If None,</span>
-<span class="sd">         uses the currently selected pipeline from the editor GUI.</span>
+<span class="sd">        :param pipeline: Optional pipeline to evaluate. If None, uses the</span>
+<span class="sd">         currently selected pipeline from the editor GUI.</span>
+<span class="sd">        :type pipeline: capsul.pipeline.pipeline.Pipeline | None</span>
 
-<span class="sd">        :return: (Pipeline | Process) The process node if pipeline contains a</span>
-<span class="sd">         single unconnected process, otherwise the pipeline itself.</span>
+<span class="sd">        :return: The process node if pipeline contains a single unconnected</span>
+<span class="sd">         process, otherwise the pipeline itself.</span>
+<span class="sd">        :rtype: capsul.pipeline.pipeline.Pipeline | object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">pipeline</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2464,16 +2151,17 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.get_missing_mandatory_parameters">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.get_missing_mandatory_parameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_missing_mandatory_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_missing_mandatory_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find missing mandatory parameters across all pipeline nodes.</span>
 
 <span class="sd">        Checks each node in the pipeline for missing mandatory parameters,</span>
 <span class="sd">        accounting for workflow job parameter overrides and temporary values.</span>
 
-<span class="sd">        :return: (list[str]) Parameter names that are missing, formatted as</span>
-<span class="sd">         either &#39;parameter_name&#39; for pipeline root or &#39;node.parameter_name&#39; for</span>
-<span class="sd">         other nodes.</span>
+<span class="sd">        :return: Parameter names that are missing, formatted as either</span>
+<span class="sd">         &#39;parameter_name&#39; for pipeline root or &#39;node.parameter_name&#39; for other</span>
+<span class="sd">         nodes.</span>
+<span class="sd">        :rtype: list[str]</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Parameters with non-null values in the workflow job dictionary</span>
@@ -2528,7 +2216,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.initialize">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.initialize">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the pipeline after cleaning up any previous initialization.</span>
 
@@ -2620,7 +2308,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.init_pipeline">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.init_pipeline">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">init_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">init_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the current pipeline in the pipeline editor.</span>
 
@@ -2632,25 +2320,28 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Records initialization results in the project database.</span>
 <span class="sd">            - Updates the status bar and displays warnings when needed.</span>
 
-<span class="sd">        :param pipeline: (Pipeline, Process) The pipeline or process instance</span>
-<span class="sd">         to initialize. If None, the main pipeline is retrieved.</span>
-<span class="sd">        :param pipeline_name: (str) The name of the parent pipeline, if</span>
-<span class="sd">         applicable.</span>
+<span class="sd">        :param pipeline: The pipeline or process instance to initialize. If</span>
+<span class="sd">         None, the main pipeline is retrieved.</span>
+<span class="sd">        :type pipeline:</span>
+<span class="sd">         capsul.pipeline.pipeline.Pipeline |</span>
+<span class="sd">         capsul.pipeline.process.Process |</span>
+<span class="sd">         None</span>
+<span class="sd">        :param pipeline_name: The name of the parent pipeline, if applicable.</span>
+<span class="sd">        :type pipeline_name: str</span>
 
-<span class="sd">        :return: (bool) True if the pipeline was successfully initialized,</span>
-<span class="sd">         False otherwise.</span>
+<span class="sd">        :return: True if the pipeline was successfully initialized, False</span>
+<span class="sd">         otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _calculate_duration: Calculate the elapsed time since `t0`,</span>
 <span class="sd">                  rounded to the nearest significant digit.</span>
 <span class="sd">                - _get_node_name: Extracts a node&#39;s name, preferring</span>
 <span class="sd">                  ``context_name`` if available.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_duration</span><span class="p">(</span><span class="n">t0</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">_calculate_duration</span><span class="p">(</span><span class="n">t0</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Calculate the elapsed time since `t0`.</span>
 
@@ -2660,6 +2351,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">            :param t0: The starting time.</span>
 <span class="sd">            :type t0: float</span>
+
 <span class="sd">            :return: The elapsed duration since `t0`, rounded according to</span>
 <span class="sd">             the magnitude of its fractional part.</span>
 <span class="sd">            :rtype: float</span>
@@ -2674,7 +2366,7 @@ window.runMermaid = runMermaid;</script>
 
             <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">decimals</span><span class="p">)</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_get_node_name</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">_get_node_name</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Extracts a node&#39;s name, preferring ``context_name`` if available.</span>
 
@@ -2684,8 +2376,11 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">            :param node: The node object, expected to have at least a ``name``</span>
 <span class="sd">             attribute, and optionally a ``context_name`` attribute.</span>
-<span class="sd">            :return: (str) The extracted node name with any leading</span>
-<span class="sd">             ``&quot;Pipeline.&quot;`` prefix removed.</span>
+<span class="sd">            :type node: object</span>
+
+<span class="sd">            :return: The extracted node name with any leading ``&quot;Pipeline.&quot;``</span>
+<span class="sd">             prefix removed.</span>
+<span class="sd">            :rtype: str</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">node_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s2">&quot;context_name&quot;</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
@@ -3270,7 +2965,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.layout_view">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.layout_view">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the layout and toolbar for the pipeline manager tab.</span>
 
@@ -3342,7 +3037,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.loadParameters">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.loadParameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">loadParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">loadParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load pipeline parameters into the current pipeline of the editor.</span>
 
@@ -3355,7 +3050,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.loadPipeline">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.loadPipeline">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">loadPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">loadPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a pipeline into the pipeline editor.</span>
 
@@ -3366,7 +3061,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.postprocess_pipeline_execution">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.postprocess_pipeline_execution">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">postprocess_pipeline_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">postprocess_pipeline_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Operations to be performed after a run has been completed.</span>
 
@@ -3390,6 +3085,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param pipeline: (Pipeline) The pipeline to postprocess. If not</span>
 <span class="sd">         provided, the method will use `self.last_run_pipeline` or fetch the</span>
 <span class="sd">         currently selected pipeline from the pipeline editor.</span>
+<span class="sd">        :type pipeline: capsul.pipeline.pipeline.Pipeline | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># TODO:</span>
         <span class="c1"># Question 1: do we have to postprocess failed runs (pipelines which</span>
@@ -3451,7 +3147,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.redo">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.redo">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Redo the last undone action on the current pipeline editor.</span>
 
@@ -3549,7 +3245,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.register_completion_attributes">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.register_completion_attributes">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">register_completion_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">register_completion_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Register completion attributes for a given pipeline in the project</span>
 <span class="sd">        database.</span>
@@ -3561,9 +3257,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        within the project directory, the attributes are associated with both</span>
 <span class="sd">        the *current* and *initial* collections.</span>
 
-<span class="sd">        :param pipeline: (Pipeline) The pipeline whose completion attributes</span>
-<span class="sd">         should be registered. The pipeline must provide a completion engine</span>
-<span class="sd">         capable of exporting its attributes.</span>
+<span class="sd">        :param pipeline: The pipeline whose completion attributes should be</span>
+<span class="sd">         registered. The pipeline must provide a completion engine capable of</span>
+<span class="sd">         exporting its attributes.</span>
+<span class="sd">        :type pipeline: capsul.pipeline.pipeline.Pipeline</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">completion</span> <span class="o">=</span> <span class="n">ProcessCompletionEngine</span><span class="o">.</span><span class="n">get_completion_engine</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
 
@@ -3623,7 +3320,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.remove_progress">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.remove_progress">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">remove_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove and clean up the progress widget.</span>
 
@@ -3653,7 +3350,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.runPipeline">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.runPipeline">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">runPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">runPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the current pipeline in the pipeline editor.</span>
 
@@ -3807,7 +3504,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.saveParameters">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.saveParameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">saveParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">saveParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the parameters of the currently active pipeline in the pipeline</span>
 <span class="sd">        editor.</span>
@@ -3817,7 +3514,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.savePipeline">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipeline">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">savePipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_overwrite_warning</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">savePipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_overwrite_warning</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current pipeline in the pipeline editor.</span>
 
@@ -3829,9 +3526,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            3. Save as new file when no filename exists or file is in</span>
 <span class="sd">               protected directory.</span>
 
-<span class="sd">        :param skip_overwrite_warning: (bool) If True, skip the overwrite</span>
-<span class="sd">         confirmation dialog when saving to an existing file. Defaults to</span>
-<span class="sd">         False.</span>
+<span class="sd">        :param skip_overwrite_warning: If True, skip the overwrite confirmation</span>
+<span class="sd">         dialog when saving to an existing file. Defaults to False.</span>
+<span class="sd">        :type skip_overwrite_warning: bool</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Updates the main window status bar with save operation messages.</span>
@@ -3915,7 +3612,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.save_pipeline_as">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.save_pipeline_as">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_pipeline_as</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save_pipeline_as</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current pipeline under a new name via &#39;Save As&#39; dialog.</span>
 
@@ -3953,7 +3650,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.show_status">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.show_status">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">show_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">show_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the execution status window with runtime information.</span>
 
@@ -3969,7 +3666,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.stop_execution">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.stop_execution">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interrupt pipeline execution gracefully.</span>
 
@@ -3984,7 +3681,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.undo">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.undo">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Undo the last action performed on the current pipeline editor.</span>
 
@@ -4141,7 +3838,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.update_inheritance">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_inheritance">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the inheritance dictionary for a process node in a pipeline</span>
 <span class="sd">        execution.</span>
@@ -4161,9 +3858,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param job: Job execution object containing param_dict (parameter</span>
 <span class="sd">         name-&gt;value mapping) and inheritance_dict (will be updated by this</span>
 <span class="sd">         method).</span>
+<span class="sd">        :type job: soma_workflow.client_types.Job</span>
 <span class="sd">        :param node: Process node being evaluated (ProcessNode or Process</span>
 <span class="sd">         object). Used to determine inheritance rules via context_name or name</span>
 <span class="sd">         attribute.</span>
+<span class="sd">        :type node: object</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            For Pipeline nodes, the method strips the &quot;Pipeline.&quot; prefix from</span>
@@ -4186,7 +3885,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">node_inheritance_history</span><span class="p">:</span>
 
-            <span class="k">def</span><span class="w"> </span><span class="nf">get_param_values</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">get_param_values</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                Extract string values from a parameter value.</span>
 
@@ -4236,7 +3935,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.update_node_list">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_node_list">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_node_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brick</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_node_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brick</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the node list with unique nodes from workflow jobs.</span>
 
@@ -4246,6 +3945,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param brick: Reserved for future use. Currently unused parameter that</span>
 <span class="sd">         could be used for filtering or extending functionality.</span>
+<span class="sd">        :type brick: object</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            This method modifies self.node_list in-place by extending it with</span>
@@ -4270,7 +3970,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.updateProcessLibrary">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.updateProcessLibrary">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">updateProcessLibrary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">updateProcessLibrary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the library of processes when a pipeline is saved.</span>
 
@@ -4282,6 +3982,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            4. Adds the module to the process library.</span>
 
 <span class="sd">        :param filename: Path to the pipeline file that has been saved.</span>
+<span class="sd">        :type filename: str</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Only processes saved in the User_processes directory are added to</span>
@@ -4368,7 +4069,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.update_project">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_project">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the project reference across all relevant components.</span>
 
@@ -4379,6 +4080,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param project: The current project instance containing application</span>
 <span class="sd">         data and database connections.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            This method has the side effect of setting ProcessMIA.project as a</span>
@@ -4404,7 +4106,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.update_scans_list">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_scans_list">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_scans_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration_list</span><span class="p">,</span> <span class="n">all_iterations_list</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_scans_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration_list</span><span class="p">,</span> <span class="n">all_iterations_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the user-selected list of scans based on iteration settings.</span>
 
@@ -4416,7 +4118,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param iteration_list: Current list of scans in the iteration table</span>
 <span class="sd">         (unused in current implementation).</span>
+<span class="sd">        :type iteration_list: list</span>
 <span class="sd">        :param all_iterations_list: Complete list of all iteration scan lists.</span>
+<span class="sd">        :type all_iterations_list: list[list[str]]</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Updates UI button states.</span>
@@ -4521,7 +4225,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.update_user_buttons_states">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_buttons_states">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_user_buttons_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_user_buttons_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the visibility and state of pipeline-related UI actions.</span>
 
@@ -4535,8 +4239,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Save Pipeline &amp; Save As: Enabled only when pipeline is not</span>
 <span class="sd">              iterated.</span>
 
-<span class="sd">        :param index: (int) Index of the specific editor to check. If -1</span>
-<span class="sd">         (default), uses the currently active editor.</span>
+<span class="sd">        :param index: Index of the specific editor to check. If -1 (default),</span>
+<span class="sd">         uses the currently active editor.</span>
+<span class="sd">        :type index: int</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            If the specified editor doesn&#39;t exist or has no scene, the</span>
@@ -4563,7 +4268,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="PipelineManagerTab.update_user_mode">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_mode">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update widget/action visibility and functionality based on user mode</span>
 <span class="sd">        configuration.</span>
@@ -4601,7 +4306,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunProgress">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">RunProgress</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">RunProgress</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A Qt widget for displaying and managing pipeline execution progress.</span>
 
@@ -4613,9 +4318,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    execution, providing real-time feedback and graceful error handling.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _determine_completion_message: Analyze execution results and</span>
 <span class="sd">              determine appropriate user message.</span>
 <span class="sd">            - _setup_ui: Set up the user interface for the widget.</span>
@@ -4642,15 +4345,14 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunProgress.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the RunProgress widget with a progress bar and worker</span>
 <span class="sd">        thread.</span>
 
-<span class="sd">        :param pipeline_manager: (PipelineManagerTab) A `PipelineManagerTab`</span>
-<span class="sd">         instance responsible for managing the pipeline.</span>
-<span class="sd">        :param settings: (dict) A dictionary of settings to customize pipeline</span>
-<span class="sd">         iteration, default is None.</span>
+<span class="sd">        :param pipeline_manager: A `PipelineManagerTab` instance responsible</span>
+<span class="sd">         for managing the pipeline.</span>
+<span class="sd">        :type pipeline_manager: PipelineManagerTab</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span> <span class="o">=</span> <span class="n">pipeline_manager</span>
@@ -4661,12 +4363,13 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunProgress._determine_completion_message">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress._determine_completion_message">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_determine_completion_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_determine_completion_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Analyze execution results and determine appropriate user message.</span>
 
 <span class="sd">        :return: Dictionary containing message box configuration with keys:</span>
 <span class="sd">         &#39;icon&#39;, &#39;title&#39;, and &#39;text&#39;.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">exec_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -4705,7 +4408,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunProgress._setup_ui">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress._setup_ui">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_setup_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the user interface for the widget.</span>
 
@@ -4724,24 +4427,26 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunProgress._show_completion_message">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress._show_completion_message">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_show_completion_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">icon</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_show_completion_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">icon</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display execution completion message with auto-close timer.</span>
 
-<span class="sd">        :param icon: (QMessageBox.Icon) Message box icon type.</span>
-<span class="sd">        :param title: (str) Dialog window title.</span>
-<span class="sd">        :param text: (str) Message content to display.</span>
+<span class="sd">        :param icon: Icon to display in the message box.</span>
+<span class="sd">        :type icon: PyQt5.QtWidgets.QMessageBox.Icon</span>
+<span class="sd">        :param title: Dialog window title.</span>
+<span class="sd">        :type title: str</span>
+<span class="sd">        :param text: Message content to display.</span>
+<span class="sd">        :type text: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="n">icon</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="c1"># Auto-close timer</span>
-        <span class="n">close_timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">()</span>
-        <span class="n">close_timer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AUTO_CLOSE_DELAY_MS</span><span class="p">,</span> <span class="n">message_box</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
+        <span class="n">QTimer</span><span class="p">()</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AUTO_CLOSE_DELAY_MS</span><span class="p">,</span> <span class="n">message_box</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
         <span class="n">message_box</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="RunProgress.cleanup">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.cleanup">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up resources and prepare for widget destruction.</span>
 
@@ -4759,7 +4464,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunProgress.end_progress">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.end_progress">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">end_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">end_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle completion of pipeline execution and show results.</span>
 
@@ -4777,7 +4482,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunProgress.start">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.start">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the worker thread to begin the pipeline execution process.</span>
 
@@ -4790,7 +4495,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunProgress.stop_execution">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.stop_execution">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the execution of the pipeline by signaling the worker to</span>
 <span class="sd">        interrupt.</span>
@@ -4810,7 +4515,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunWorker">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">RunWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">RunWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Worker thread for executing a pipeline in the background.</span>
 
@@ -4819,9 +4524,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    the :attr:`interrupt_request` flag while holding :attr:`lock`.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _check_interrupt: Check whether an interrupt has been requested.</span>
 <span class="sd">            - _disable_nipype_copy: Recursively check and disable the copy</span>
 <span class="sd">              flag for Nipype processes in the pipeline.</span>
@@ -4830,12 +4533,13 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunWorker.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the worker thread for pipeline execution.</span>
 
-<span class="sd">        :param pipeline_manager: (PipelineManager) The manager responsible for</span>
-<span class="sd">         configuring, running, and monitoring the pipeline execution.</span>
+<span class="sd">        :param pipeline_manager: The manager responsible for configuring,</span>
+<span class="sd">         running, and monitoring the pipeline execution.</span>
+<span class="sd">        :type pipeline_manager: PipelineManagerTab</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span> <span class="o">=</span> <span class="n">pipeline_manager</span>
@@ -4851,16 +4555,18 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunWorker._check_interrupt">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker._check_interrupt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_check_interrupt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_check_interrupt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check whether an interrupt has been requested.</span>
 
 <span class="sd">        If an interrupt is detected, log the event and optionally stop the</span>
 <span class="sd">        execution engine.</span>
 
-<span class="sd">        :param engine: (CapsulEngine) Execution engine to interrupt if running.</span>
+<span class="sd">        :param engine: Execution engine to interrupt if running.</span>
+<span class="sd">        :type engine: capsul.engine.CapsulEngine | None</span>
 
-<span class="sd">        :return: (bool) True if an interrupt was requested, False otherwise.</span>
+<span class="sd">        :return: True if an interrupt was requested, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
@@ -4878,7 +4584,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunWorker._disable_nipype_copy">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker._disable_nipype_copy">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_disable_nipype_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_disable_nipype_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively check and disable the copy flag for Nipype processes in</span>
 <span class="sd">        the pipeline.</span>
@@ -4888,6 +4594,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        to `False`. The recursion handles nested pipelines.</span>
 
 <span class="sd">        :param proc: A Pipeline or NipypeProcess instance.</span>
+<span class="sd">        :type proc: capsul.pipeline.pipeline.Pipeline</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span>
@@ -4914,7 +4621,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="RunWorker.run">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.run">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run the pipeline in a background thread.</span>
 
@@ -5002,7 +4709,7 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="StatusWidget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.StatusWidget">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">StatusWidget</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">StatusWidget</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A widget that displays the current or last pipeline execution status</span>
 <span class="sd">    along with logs and an optional Soma-Workflow monitoring panel.</span>
@@ -5014,16 +4721,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        - Provides a toggleable Soma-Workflow monitoring section.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - toggle_soma_workflow: Show or hide the Soma-Workflow monitoring</span>
 <span class="sd">              widget.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="StatusWidget.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.StatusWidget.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the execution status window for monitoring pipeline runs.</span>
 
@@ -5033,6 +4738,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        manager&#39;s last recorded run.</span>
 
 <span class="sd">        :param pipeline_manager: The pipeline manager instance containing.</span>
+<span class="sd">        :type pipeline_manager: PipelineManagerTab</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span> <span class="o">=</span> <span class="n">pipeline_manager</span>
@@ -5067,14 +4773,15 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="StatusWidget.toggle_soma_workflow">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.StatusWidget.toggle_soma_workflow">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_soma_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">toggle_soma_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Show or hide the Soma-Workflow monitoring widget.</span>
 
 <span class="sd">        If enabled and the widget does not yet exist, it is created and added</span>
 <span class="sd">        below the status section.</span>
 
-<span class="sd">        :param checked: (bool) Whether the monitoring panel is enabled.</span>
+<span class="sd">        :param checked: Whether the monitoring panel is enabled.</span>
+<span class="sd">        :type checked: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">swf_widget</span><span class="p">:</span>
