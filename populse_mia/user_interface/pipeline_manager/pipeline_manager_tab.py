@@ -3589,10 +3589,51 @@ class PipelineManagerTab(QWidget):
             current_editor.del_node(node_name, from_undo=True)
 
         elif action_type == "delete_process":
-            node_name, class_name, links = action_args
-            current_editor.add_named_process(
-                class_name, node_name, from_undo=True, links=links
-            )
+
+            if action_args[0] == "inputs" and isinstance(
+                action_args[1], Pipeline
+            ):
+                plug_infos = action_args[2]
+                multi_export = len(plug_infos) > 1
+                pip_plug_names = []
+
+                for pip_plug, node_plug, optional, _ in plug_infos:
+                    pip_plug_name = pip_plug[1]
+
+                    if multi_export:
+                        pip_plug_names.append(pip_plug_name)
+
+                    current_editor._export_plug(
+                        temp_plug_name=node_plug,
+                        weak_link=False,
+                        optional=optional,
+                        from_undo=True,
+                        pipeline_parameter=pip_plug_name,
+                        multi_export=multi_export,
+                    )
+
+                    # Reconnect original plugs
+                    if pip_plug[0] == "inputs":
+                        source, dest = ("", pip_plug[1]), node_plug
+
+                    else:
+                        source, dest = node_plug[0], ("", pip_plug[1])
+
+                    link = f"{'.'.join(source)}->{'.'.join(dest)}"
+                    current_editor.scene.pipeline.add_link(
+                        link, allow_export=True
+                    )
+                    current_editor.scene.update_pipeline()
+
+                if multi_export:
+                    history = ["export_plugs", pip_plug_names, node_plug[0][0]]
+                    current_editor.redos.append(history)
+
+            else:
+                node_name, class_name, links = action_args
+                current_editor.add_named_process(
+                    class_name, node_name, from_undo=True, links=links
+                )
 
         elif action_type == "export_plugs":
             parameters, node_name = action_args
