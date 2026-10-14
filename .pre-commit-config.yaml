@@ -5,6 +5,7 @@ repos:
     hooks: # general hooks
     -   id: check-added-large-files
     -   id: check-ast
+        language_version: python3.12
     -   id: check-case-conflict
     -   id: check-docstring-first
     -   id: check-json
@@ -13,6 +14,7 @@ repos:
     -   id: check-xml
     -   id: check-yaml
     -   id: debug-statements
+        language_version: python3.12
     -   id: end-of-file-fixer
     -   id: name-tests-test
     -   id: trailing-whitespace
@@ -21,7 +23,7 @@ repos:
     rev: 26.10.1
     hooks: # code formatter
     -   id: black
-        language: python
+        language_version: python3.12
         args: ["--line-length=79"]
 
 -   repo: https://github.com/pycqa/isort
@@ -29,11 +31,13 @@ repos:
     hooks: # imports sorting
     -   id: isort
         name: isort (python)
+        language_version: python3.12
 
 -   repo: https://github.com/econchick/interrogate
     rev: 1.7.0
     hooks: # documentation checker
     -   id: interrogate
+        language_version: python3.12
         args: [--config=pyproject.toml]
         pass_filenames: false
 
@@ -41,13 +45,14 @@ repos:
     rev: 7.4.1
     hooks:
     -   id: flake8
-        name: flake8 under python3
-        language_version: python3
+        name: flake8 under python3.12
+        language_version: python3.12
 
 - repo: https://github.com/asottile/pyupgrade
   rev: v3.22.0
   hooks:
     - id: pyupgrade
+      language_version: python3.12
       args: ["--py39-plus"]  # Ensures compatibility with Python 3.9+
 
 exclude: 'docs/doctrees/.*|docs/html/.*|processes/.*'

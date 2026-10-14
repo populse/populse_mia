@@ -3074,10 +3074,22 @@ class PipelineManagerTab(QWidget):
             editor.del_node(node_name, from_redo=True)
 
         elif action == "export_plugs":
-            plug_name, _ = args
-            editor._remove_plug(
-                plug_names=("inputs", plug_name), from_redo=True
+            plug_names, _ = args
+            # Ensure plug_name is a list for consistent handling
+            plug_names = (
+                [plug_names] if isinstance(plug_names, str) else plug_names
             )
+            # Determine plug types and build removal list
+            plugs_to_remove = []
+
+            for plug_name in plug_names:
+                is_input = (
+                    editor.scene.pipeline.nodes[""].plugs[plug_name].links_to
+                )
+                plug_type = "inputs" if is_input else "outputs"
+                plugs_to_remove.append((plug_type, plug_name))
+
+            editor._remove_plug(plug_names=plugs_to_remove, from_redo=True)
 
         elif action == "remove_plug":
             plug_infos = args[0]
@@ -3590,7 +3602,7 @@ class PipelineManagerTab(QWidget):
 
         elif action_type == "delete_process":
 
-            if action_args[0] == "inputs" and isinstance(
+            if action_args[0] in ("inputs", "outputs") and isinstance(
                 action_args[1], Pipeline
             ):
                 plug_infos = action_args[2]
@@ -3626,7 +3638,7 @@ class PipelineManagerTab(QWidget):
                     current_editor.scene.update_pipeline()
 
                 if multi_export:
-                    history = ["export_plugs", pip_plug_names, node_plug[0][0]]
+                    history = ["export_plugs", pip_plug_names, node_plug[0]]
                     current_editor.redos.append(history)
 
             else:
