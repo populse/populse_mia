@@ -13,15 +13,15 @@ environment:
 
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2026
-      PYTHON: "C:\\Python310-x64"
+      PYTHON: "C:\\Python312-x64"
     #   APPVEYOR_RDP_PASSWORD: 5fh'D*
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2404
-      PYTHON: "$HOME/venv3.10"
+      PYTHON: "/home/appveyor/venv3.12"
     #   APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCinsCtblP8Dlo0IyeE3chxy7Opt1nrrhLWQCUFJBtWr
 
     - APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
-      PYTHON: "~/venv3.10"
+      PYTHON: "/Users/appveyor/venv3.12"
       # APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC0/1vuSzjaU6yHEK7+S0s5PejIAWBQqR6TeTVPue5Obd
 
 install:
@@ -32,102 +32,23 @@ install:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   # - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 
-  - cmd: set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
-  - sh: export PATH=~/venv3.10/bin:~/venv3.10/lib:$PATH
+  # Windows: use the installed Python 3.12
+  - cmd: appveyor AddPath "%PYTHON%"
+  - cmd: appveyor AddPath "%PYTHON%\\Scripts"
+
+  # Linux and macOS: create and use a Python 3.12 virtual environment
+  - sh: |
+      python3.12 -m venv "$PYTHON"
+      appveyor AddPath "$PYTHON/bin"
+
   - sh: if [[ $(uname -s) == Linux ]]; then export QT_LOGGING_RULES='*.debug=false;qt.qpa.*=false'; fi
 
   - cd ..
 
-  - echo "Before upgrade - SQLite version:"
-  - python -c "import sqlite3; print('SQLite version:', sqlite3.sqlite_version)"
-
-  # Following the last image update, it is no longer necessary to update the
-  # SQLite version at this time (populse_db requires a version of SQLite higher
-  # than 3.38.0).
-  # Force recent SQLite version (3.47)
-  # - sh: |
-  #     if [[ $(uname -s) == Linux ]]; then
-  #       echo "     ** Removing older SQLite versions **"
-  #       sudo apt-get remove --purge -y sqlite3 libsqlite3-dev
-  #       sudo apt-get autoremove -y
-  #       sudo apt-get update
-  #       echo "     ** Installing SQLite 3.47 for linux **"
-  #       sudo apt-get install -y build-essential wget
-  #       wget https://www.sqlite.org/2024/sqlite-autoconf-3470100.tar.gz
-  #       tar -xvzf sqlite-autoconf-3470100.tar.gz
-  #       cd sqlite-autoconf-3470100
-  #       ./configure --prefix=/usr/local
-  #       make
-  #       sudo make install
-  #       export PATH=/usr/local/bin:$PATH
-  #       export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-  #       cd ..
-  #     fi
-  # - sh: |
-  #     if [[ $(uname -s) == Darwin ]]; then
-  #       echo "** Installing SQLite 3.47 for macOS **"
-  #       curl -L https://www.sqlite.org/2024/sqlite-autoconf-3470100.tar.gz -o sqlite-autoconf-3470100.tar.gz
-  #       tar -xvzf sqlite-autoconf-3470100.tar.gz
-  #       cd sqlite-autoconf-3470100
-  #       ./configure --prefix=/usr/local
-  #       make
-  #       sudo make install
-  #       export PATH=/usr/local/bin:$PATH
-  #       export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH
-  #       sqlite3 --version
-  #       cd ..
-  #       # Now download and rebuild Python
-  #       echo "** Rebuilding Python with new SQLite **"
-
-  #       # Determine current Python version
-  #       PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')")
-  #       PYTHON_MAJOR_MINOR=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
-
-  #       # Download Python source of the same version
-  #       curl -L https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz -o Python-${PYTHON_VERSION}.tgz
-  #       tar -xzf Python-${PYTHON_VERSION}.tgz
-  #       cd Python-${PYTHON_VERSION}
-
-  #       # Configure with SQLite paths and optimizations
-  #       ./configure --prefix=/usr/local/opt/python-rebuild \
-  #       --with-openssl=/usr/local/opt/openssl \
-  #       --enable-optimizations \
-  #       --with-system-ffi \
-  #       LDFLAGS="-L/usr/local/lib" \
-  #       CPPFLAGS="-I/usr/local/include"
-
-  #       # Build and install Python
-  #       make -j $(sysctl -n hw.ncpu)
-  #       sudo make install
-
-  #       # Update PATH to use the rebuilt Python
-  #       export PATH=/usr/local/opt/python-rebuild/bin:$PATH
-
-  #       # Create symlinks for python3 and pip3
-  #       sudo ln -sf /usr/local/opt/python-rebuild/bin/python${PYTHON_MAJOR_MINOR} /usr/local/bin/python3
-  #       sudo ln -sf /usr/local/opt/python-rebuild/bin/pip${PYTHON_MAJOR_MINOR} /usr/local/bin/pip3
-
-  #       # Verify the SQLite version
-  #       python3 -c "import sqlite3; print(f'Python is now using SQLite version: {sqlite3.sqlite_version}')"
-
-  #       # Remove old venv and create a new one with the rebuilt Python
-  #       echo "** Creating new virtual environment with rebuilt Python **"
-  #       rm -rf ~/venv3.10
-  #       /usr/local/opt/python-rebuild/bin/python3 -m venv ~/venv3.10
-  #       source ~/venv3.10/bin/activate
-
-  #       cd ..
-  #     fi
-  # - cmd: |
-  #     echo "     ** Installing SQLite 3.47 for Windows **"
-  #     mkdir C:\sqlite
-  #     curl -L -o sqlite-tools-win-x64-3470100.zip https://www.sqlite.org/2024/sqlite-tools-win-x64-3470100.zip
-  #     tar -xf sqlite-tools-win-x64-3470100.zip -C C:\sqlite
-  #     set PATH=C:\sqlite;%PATH%
-
-  # - echo "After upgrade - SQLite version:"
-  # - sqlite3 --version
   - python --version
+  - python -c "import sys; assert sys.version_info[:2] == (3, 12), f'Expected Python 3.12, got {sys.version}'"
+  - echo "SQLite version:"
+  - python -c "import sqlite3; print('SQLite version:', sqlite3.sqlite_version)"
   - python -m pip install pip --upgrade
   - python -m pip -V
   - python -m pip install --upgrade setuptools wheel
