@@ -3609,7 +3609,12 @@ class PipelineManagerTab(QWidget):
                 multi_export = len(plug_infos) > 1
                 pip_plug_names = []
 
-                for pip_plug, node_plug, optional, _ in plug_infos:
+                for plug1, plug2, optional, _ in plug_infos:
+                    pip_plug, node_plug = (
+                        (plug1, plug2)
+                        if action_args[0] == "inputs"
+                        else (plug2, plug1)
+                    )
                     pip_plug_name = pip_plug[1]
 
                     if multi_export:
@@ -3629,7 +3634,7 @@ class PipelineManagerTab(QWidget):
                         source, dest = ("", pip_plug[1]), node_plug
 
                     else:
-                        source, dest = node_plug[0], ("", pip_plug[1])
+                        source, dest = node_plug, ("", pip_plug[1])
 
                     link = f"{'.'.join(source)}->{'.'.join(dest)}"
                     current_editor.scene.pipeline.add_link(

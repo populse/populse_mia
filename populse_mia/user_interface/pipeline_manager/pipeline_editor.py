@@ -819,11 +819,12 @@ class PipelineEditor(PipelineDeveloperView):
         links = []
 
         for plug_name, plug in node.plugs.items():
-            connected_links = (
-                plug.links_to
-                if (plug.output or (invert_io and not plug.output))
-                else plug.links_from
-            )
+
+            if plug.output == invert_io:
+                connected_links = plug.links_from
+
+            else:
+                connected_links = plug.links_to
 
             for link in connected_links:
                 (
@@ -844,14 +845,22 @@ class PipelineEditor(PipelineDeveloperView):
                     None,
                 )
 
-                # Build the link structure:
+                # The link structure is:
                 # [
                 #     (src_node, src_plug),
                 #     (dst_node, dst_plug),
                 #     active,
                 #     weak_link
                 # ]
-                if plug.output or (invert_io and not plug.output):
+                if plug.output == invert_io:
+                    link_to_add = [
+                        (linked_node_name, linked_plug_name),
+                        (node_name, plug_name),
+                        active,
+                        weak_link,
+                    ]
+
+                else:
                     link_to_add = [
                         (node_name, plug_name),
                         (linked_node_name, linked_plug_name),
@@ -859,13 +868,12 @@ class PipelineEditor(PipelineDeveloperView):
                         weak_link,
                     ]
 
-                else:
-                    link_to_add = [
-                        (linked_node_name, linked_plug_name),
-                        (node_name, plug_name),
-                        active,
-                        weak_link,
-                    ]
+                if node_name == "inputs" and link_to_add[0][0] != "inputs":
+                    continue
+
+                if node_name == "outputs" and link_to_add[1][0] != "outputs":
+                    continue
+
                 links.append(link_to_add)
 
         # Call parent method to perform the actual deletion
