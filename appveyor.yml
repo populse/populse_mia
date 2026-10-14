@@ -17,11 +17,11 @@ environment:
     #   APPVEYOR_RDP_PASSWORD: 5fh'D*
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2404
-      PYTHON: "/home/appveyor/venv3.12"
+      PYTHON: "$HOME/venv3.12"
     #   APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCinsCtblP8Dlo0IyeE3chxy7Opt1nrrhLWQCUFJBtWr
 
     - APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
-      PYTHON: "/Users/appveyor/venv3.12"
+      PYTHON: "~/venv3.12"
       # APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC0/1vuSzjaU6yHEK7+S0s5PejIAWBQqR6TeTVPue5Obd
 
 install:
@@ -32,14 +32,8 @@ install:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   # - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 
-  # Windows: use the installed Python 3.12
-  - cmd: appveyor AddPath "%PYTHON%"
-  - cmd: appveyor AddPath "%PYTHON%\\Scripts"
-
-  # Linux and macOS: create and use a Python 3.12 virtual environment
-  - sh: |
-      python3.12 -m venv "$PYTHON"
-      appveyor AddPath "$PYTHON/bin"
+  - cmd: set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - sh: export PATH=~/venv3.12/bin:~/venv3.12/lib:$PATH
 
   - sh: if [[ $(uname -s) == Linux ]]; then export QT_LOGGING_RULES='*.debug=false;qt.qpa.*=false'; fi
 
