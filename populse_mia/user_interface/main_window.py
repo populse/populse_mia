@@ -993,6 +993,30 @@ class MainWindow(QMainWindow):
 
             _closing = False
 
+            def eventFilter(self, obj, event):
+                """
+                Safely handle events during widget initialization.
+
+                Ignore events until the pager scroll state has been
+                initialized; otherwise, delegate event processing to the
+                superclass implementation.
+
+                :param obj: The object receiving the event.
+                :type obj: QObject
+                :param event: The event to be processed.
+                :type event: QEvent
+
+                :return: False if the pager scroll state has not yet been
+                 initialized; otherwise, the result returned by the superclass
+                 event filter.
+                :rtype: bool
+                """
+
+                if not hasattr(self, "_pager_scroll_events"):
+                    return False
+
+                return super().eventFilter(obj, event)
+
             def closeEvent(self, event):
                 """
                 Handle widget closure by stopping the kernel cleanly.
