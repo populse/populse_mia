@@ -12456,11 +12456,17 @@ class TestMIAPipelineManagerTab(TestMIACase):
                     len(spy), 1, "Worker did not emit 'finished'"
                 )
 
-            if hasattr(ppl_manager, "progress") and ppl_manager.progress:
-                self.assertIsNone(
-                    ppl_manager.progress.worker,
-                    "Worker was not cleared after execution",
-                )
+            timeout_ms = 1000
+            elapsed_ms = 0
+
+            while ppl_manager.progress is not None and elapsed_ms < timeout_ms:
+                QTest.qWait(10)
+                elapsed_ms += 10
+
+            self.assertIsNone(
+                ppl_manager.progress,
+                "Progress widget was not removed after execution",
+            )
 
         # ---- Test interrupted pipeline run ----
         with (
@@ -12483,11 +12489,17 @@ class TestMIAPipelineManagerTab(TestMIACase):
                     len(spy), 1, "Worker did not emit 'finished'"
                 )
 
-            if hasattr(ppl_manager, "progress") and ppl_manager.progress:
-                self.assertIsNone(
-                    ppl_manager.progress.worker,
-                    "Worker was not cleared after interruption",
-                )
+            timeout_ms = 1000
+            elapsed_ms = 0
+
+            while ppl_manager.progress is not None and elapsed_ms < timeout_ms:
+                QTest.qWait(10)
+                elapsed_ms += 10
+
+            self.assertIsNone(
+                ppl_manager.progress,
+                "Progress widget was not removed after interruption",
+            )
 
     def test_zz_del_pack(self):
         """
