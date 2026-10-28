@@ -120,6 +120,10 @@ install:
   # - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
   # - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
+
+
+
+
 test_script:
   - cmd: python .\\populse_mia\\tests\\run_mia_test.py -v
 
