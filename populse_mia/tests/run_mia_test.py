@@ -35,15 +35,15 @@ Mia's features.
 
 
 
-print("============================================", flush=True)
+# print("============================================", flush=True)
 
-from PyQt5.QtWidgets import QApplication
-print("PyQt5 imported successfully", flush=True)
+# from PyQt5.QtWidgets import QApplication
+# print("PyQt5 imported successfully", flush=True)
 
-import torch
-print("torch imported successfully", flush=True)
+# import torch
+# print("torch imported successfully", flush=True)
 
-print("============================================", flush=True)
+# print("============================================", flush=True)
 
 
 
@@ -5481,11 +5481,17 @@ class TestMIAMainWindow(TestMIACase):
                 app._qt_dialog_diagnostic_timer = timer
 
                 # A fallback if the event loop itself becomes blocked.
-                faulthandler.enable(file=sys.stderr)
+                faulthandler_log = open(
+                    "faulthandler.log",
+                    "w",
+                    encoding="utf-8",
+                )
+
+                faulthandler.enable(file=faulthandler_log)
                 faulthandler.dump_traceback_later(
                     120,
                     repeat=True,
-                    file=sys.stderr,
+                    file=faulthandler_log,
                 )
 
                 print("Qt dialog diagnostics installed", flush=True)
