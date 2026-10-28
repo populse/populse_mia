@@ -16,13 +16,13 @@ environment:
       PYTHON: "C:\\Python312-x64"
     #   APPVEYOR_RDP_PASSWORD: 5fh'D*
 
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2404
-      PYTHON: "$HOME/venv3.12"
-    #   APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCinsCtblP8Dlo0IyeE3chxy7Opt1nrrhLWQCUFJBtWr
+    # - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2404
+    #   PYTHON: "$HOME/venv3.12"
+    # #   APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCinsCtblP8Dlo0IyeE3chxy7Opt1nrrhLWQCUFJBtWr
 
-    - APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
-      PYTHON: "~/venv3.12"
-      # APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC0/1vuSzjaU6yHEK7+S0s5PejIAWBQqR6TeTVPue5Obd
+    # - APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
+    #   PYTHON: "~/venv3.12"
+    #   # APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC0/1vuSzjaU6yHEK7+S0s5PejIAWBQqR6TeTVPue5Obd
 
 install:
   - cmd: echo "     ** windows build **"

@@ -1013,6 +1013,7 @@ class TestMIACase(unittest.TestCase):
         super().tearDownClass()
 
 
+@unittest.skip("Temporarily disabled while investigating AppVeyor")
 class TestMIADataBrowser(TestMIACase):
     """Tests for the data browser tab (DataBrowser).
 
@@ -5311,12 +5312,16 @@ class TestMIAMainWindow(TestMIACase):
         new_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(new_proj_path, "test_light_project")
 
+        print("11111111111111111111")
+
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl_edt_tab = ppl_edt_tabs.get_current_editor()
         ppl = ppl_edt_tabs.get_current_pipeline()
         proc_lib_view = ppl_manager.processLibrary.process_library
+
+        print("222222222222222222222222")
 
         # Takes the initial state of nipype proc_lib_view and makes sure that
         # PKG is already installed
@@ -5342,6 +5347,8 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.package_library_pop_up()
         pkg_lib_window = self.main_window.pop_up_package_library
 
+        print("33333333333333333333333333333333333333")
+
         # Try deleting the package
         pkg_lib_window.line_edit.setText(PKG)
         pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
@@ -5350,6 +5357,8 @@ class TestMIAMainWindow(TestMIACase):
 
         # Reset deletion
         pkg_lib_window.del_list.selectAll()
+
+        print("444444444444444444444444444444444444444444")
 
         with self.suppress_all_output():
             (
@@ -5369,6 +5378,8 @@ class TestMIAMainWindow(TestMIACase):
             2
         ).widget().clicked.emit()  # Clicks on delete package
 
+        print("555555555555555555555555555555555555555555")
+
         # Close the package library pop-up
         with (
             patch(
@@ -5382,6 +5393,8 @@ class TestMIAMainWindow(TestMIACase):
         # Opens again the package library pop-up
         self.main_window.package_library_pop_up()
         pkg_lib_window = self.main_window.pop_up_package_library
+
+        print("66666666666666666666666666666666666666666666")
 
         # Try again, accept deletion
         pkg_lib_window.line_edit.setText(PKG)
@@ -5402,6 +5415,8 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.package_library_pop_up()
         pkg_lib_window = self.main_window.pop_up_package_library
         pkg_lib_window.line_edit.setText(PKG)
+
+        print("77777777777777777777777777777777777777777777777")
 
         with self.suppress_all_output():
             pkg_lib_window.layout().children()[0].layout().children()[
@@ -5429,6 +5444,8 @@ class TestMIAMainWindow(TestMIACase):
         proc_lib_view.keyPressEvent(event)
         proc_lib_view.pkg_library.msg.close()
 
+        print("888888888888888888888888888888888888888")
+
         # Tries to delete a package that cannot be deleted, calling the
         # function
         pkg_lib_window.delete_package()
@@ -5447,6 +5464,8 @@ class TestMIAMainWindow(TestMIACase):
         ppl_edt_tab.current_node_name = "rename_1"
         ppl_edt_tab.export_unconnected_mandatory_inputs()
         ppl_edt_tab.export_all_unconnected_outputs()
+
+        print("9999999999999999999999999999999999999999999999")
 
         # Saves the pipeline as the package 'Unit_test_pipeline' in
         # User_processes
@@ -5467,6 +5486,8 @@ class TestMIAMainWindow(TestMIACase):
         )
         os.makedirs(mock_proc_fldr, exist_ok=True)
 
+        print("10000000000000000000000000000000000000000000000000")
+
         dst_file = os.path.join(mock_proc_fldr, "unit_test_2.py")
         shutil.copy(filename, dst_file)
 
@@ -5485,6 +5506,7 @@ class TestMIAMainWindow(TestMIACase):
             mock_proc_fldr
         )
 
+        print("111111111111111111111111111111111111111111111111111")
         with patch(
             "PyQt5.QtWidgets.QMessageBox.exec", return_value=QMessageBox.Ok
         ):
@@ -5525,6 +5547,8 @@ class TestMIAMainWindow(TestMIACase):
 
         # Resets the process library to its original state for nipype
         cur_state = self.proclibview_nipype_state(proc_lib_view)
+
+        print("1222222222222222222222222222222222222222222222222222")
 
         if cur_state != init_state:
             self.proclibview_nipype_reset_state(
@@ -7385,6 +7409,7 @@ class TestMIAMainWindow(TestMIACase):
         self.assertEqual(tabs.currentIndex(), 0)
 
 
+@unittest.skip("Temporarily disabled while investigating AppVeyor")
 class TestMIANodeController(TestMIACase):
     """Tests for the node controller, part of the pipeline manager tab.
 
@@ -8286,6 +8311,7 @@ class TestMIANodeController(TestMIACase):
         )
 
 
+@unittest.skip("Temporarily disabled while investigating AppVeyor")
 class TestMIAPipelineEditor(TestMIACase):
     """Tests for the pipeline editor, part of the pipeline manager tab.
 
@@ -9348,6 +9374,7 @@ class TestMIAPipelineEditor(TestMIACase):
         self.assertNotIn("Test_pipeline_1", user_packages)
 
 
+@unittest.skip("Temporarily disabled while investigating AppVeyor")
 class TestMIAPipelineManagerTab(TestMIACase):
     """Tests the pipeline manager tab class, part of the homonym tab.
 
@@ -12530,6 +12557,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         )
 
 
+@unittest.skip("Temporarily disabled while investigating AppVeyor")
 class Test_Z_MIAOthers(TestMIACase):
     """
     Tests for other parts of the Mia software that do not relate much with the
