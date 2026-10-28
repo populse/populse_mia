@@ -5354,18 +5354,124 @@ class TestMIAMainWindow(TestMIACase):
 
         print("1111111111111111111111111111111111111111111", flush=True)
 
-        with self.suppress_all_output():
-            (
-                pkg_lib_window.layout()
-                .children()[0]
-                .layout()
-                .itemAt(12)
-                .widget()
-                .layout()
-                .itemAt(1)
-                .widget()
-                .clicked.emit()
-            )  # clicks on Reset
+        # with self.suppress_all_output():
+
+
+        def install_qt_dialog_diagnostics():
+            """Log visible Qt dialogs while a test is running."""
+
+            import faulthandler
+            from PyQt5 import QtCore, QtWidgets
+
+            app = QtWidgets.QApplication.instance()
+
+            if app is None:
+                print("ERROR: QApplication does not exist", flush=True)
+                return
+
+            reported = set()
+
+            def inspect_dialogs():
+                for widget in app.topLevelWidgets():
+                    if not widget.isVisible():
+                        continue
+
+                    if not (
+                        isinstance(widget, QtWidgets.QDialog)
+                        or widget.isModal()
+                    ):
+                        continue
+
+                    # Use the widget itself as the key, avoiding ID reuse.
+                    if widget in reported:
+                        continue
+                    reported.add(widget)
+
+                    print("\n" + "=" * 70, flush=True)
+                    print("VISIBLE QT DIALOG DETECTED", flush=True)
+                    print(
+                        f"Class: {type(widget).__module__}."
+                        f"{type(widget).__name__}",
+                        flush=True,
+                    )
+                    print(
+                        f"Title: {widget.windowTitle()!r}",
+                        flush=True,
+                    )
+                    print(f"Modal: {widget.isModal()}", flush=True)
+
+                    if isinstance(widget, QtWidgets.QMessageBox):
+                        print(f"Text: {widget.text()!r}", flush=True)
+                        print(
+                            f"Informative: "
+                            f"{widget.informativeText()!r}",
+                            flush=True,
+                        )
+                        print(
+                            f"Details: {widget.detailedText()!r}",
+                            flush=True,
+                        )
+
+                    for child in widget.findChildren(QtWidgets.QWidget):
+                        if isinstance(child, QtWidgets.QLabel):
+                            value = child.text()
+                        elif isinstance(
+                            child,
+                            (
+                                QtWidgets.QTextEdit,
+                                QtWidgets.QPlainTextEdit,
+                            ),
+                        ):
+                            value = child.toPlainText()
+                        else:
+                            continue
+
+                        if value:
+                            print(
+                                f"{type(child).__name__}: {value!r}",
+                                flush=True,
+                            )
+
+                    print("=" * 70, flush=True)
+
+            timer = QtCore.QTimer(app)
+            timer.timeout.connect(inspect_dialogs)
+            timer.start(500)
+
+            # Keep the timer alive throughout the test.
+            app._qt_dialog_diagnostic_timer = timer
+
+            # A fallback if the event loop itself becomes blocked.
+            faulthandler.enable(file=sys.stderr)
+            faulthandler.dump_traceback_later(
+                120,
+                repeat=True,
+                file=sys.stderr,
+            )
+
+            print("Qt dialog diagnostics installed", flush=True)
+
+
+
+
+
+
+
+
+        install_qt_dialog_diagnostics()
+
+
+        (
+            pkg_lib_window.layout()
+            .children()[0]
+            .layout()
+            .itemAt(12)
+            .widget()
+            .layout()
+            .itemAt(1)
+            .widget()
+            .clicked.emit()
+        )  # clicks on Reset
 
         print("2222222222222222222222222222222222222222222", flush=True)
 
