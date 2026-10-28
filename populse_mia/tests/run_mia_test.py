@@ -18,6 +18,31 @@ Mia's features.
 
 # isort: off
 
+
+
+print("============================================", flush=True)
+import torch
+
+print(f"torch {torch.__version__} imported successfully", flush=True)
+
+from PyQt5.QtWidgets import QApplication
+
+print("PyQt5 imported successfully", flush=True)
+
+print("============================================", flush=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
 import argon2
 import ast
 import contextlib

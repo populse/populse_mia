@@ -39,6 +39,10 @@ install:
 
   - cd ..
 
+
+  - python -m pip install torch
+
+
   - python --version
   - python -c "import sys; assert sys.version_info[:2] == (3, 12), f'Expected Python 3.12, got {sys.version}'"
   - echo "SQLite version:"
