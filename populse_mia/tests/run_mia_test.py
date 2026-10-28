@@ -20,26 +20,30 @@ Mia's features.
 
 
 
-print("============================================", flush=True)
-import torch
+# print("============================================", flush=True)
+# import torch
 
-print(f"torch {torch.__version__} imported successfully", flush=True)
+# print(f"torch {torch.__version__} imported successfully", flush=True)
+
+# from PyQt5.QtWidgets import QApplication
+
+# print("PyQt5 imported successfully", flush=True)
+
+# print("============================================", flush=True)
+
+
+
+
+
+print("============================================", flush=True)
 
 from PyQt5.QtWidgets import QApplication
-
 print("PyQt5 imported successfully", flush=True)
 
+import torch
+print("torch imported successfully", flush=True)
+
 print("============================================", flush=True)
-
-
-
-
-
-
-
-
-
-
 
 
 
