@@ -1002,9 +1002,9 @@ class MainWindow(QMainWindow):
                 superclass implementation.
 
                 :param obj: The object receiving the event.
-                :type obj: QObject
+                :type obj: PyQt5.QtWidgets.QWidget
                 :param event: The event to be processed.
-                :type event: QEvent
+                :type event: PyQt5.QtCore.QEvent
 
                 :return: False if the pager scroll state has not yet been
                  initialized; otherwise, the result returned by the superclass
