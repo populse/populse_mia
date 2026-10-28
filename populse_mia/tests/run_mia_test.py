@@ -5312,16 +5312,12 @@ class TestMIAMainWindow(TestMIACase):
         new_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(new_proj_path, "test_light_project")
 
-        print("11111111111111111111")
-
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl_edt_tab = ppl_edt_tabs.get_current_editor()
         ppl = ppl_edt_tabs.get_current_pipeline()
         proc_lib_view = ppl_manager.processLibrary.process_library
-
-        print("222222222222222222222222")
 
         # Takes the initial state of nipype proc_lib_view and makes sure that
         # PKG is already installed
@@ -5347,8 +5343,6 @@ class TestMIAMainWindow(TestMIACase):
         self.main_window.package_library_pop_up()
         pkg_lib_window = self.main_window.pop_up_package_library
 
-        print("33333333333333333333333333333333333333")
-
         # Try deleting the package
         pkg_lib_window.line_edit.setText(PKG)
         pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
@@ -5358,7 +5352,7 @@ class TestMIAMainWindow(TestMIACase):
         # Reset deletion
         pkg_lib_window.del_list.selectAll()
 
-        print("444444444444444444444444444444444444444444")
+        print("1111111111111111111111111111111111111111111", flush=True)
 
         with self.suppress_all_output():
             (
@@ -5373,12 +5367,14 @@ class TestMIAMainWindow(TestMIACase):
                 .clicked.emit()
             )  # clicks on Reset
 
+        print("2222222222222222222222222222222222222222222", flush=True)
+
         # Try deletion again, cancel confirmation
         pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             2
         ).widget().clicked.emit()  # Clicks on delete package
 
-        print("555555555555555555555555555555555555555555")
+        print("33333333333333333333333333333333333333333333", flush=True)
 
         # Close the package library pop-up
         with (
