@@ -3640,11 +3640,20 @@ class PipelineManagerTab(QWidget):
                     current_editor.scene.pipeline.add_link(
                         link, allow_export=True
                     )
-                    current_editor.scene.update_pipeline()
 
                 if multi_export:
+                    current_editor.scene.update_pipeline()
                     history = ["export_plugs", pip_plug_names, node_plug[0]]
                     current_editor.redos.append(history)
+                    plug_list_str = (
+                        ", ".join(pip_plug_names)
+                        if pip_plug_names
+                        else "No plugs"
+                    )
+                    self.main_window.statusBar().showMessage(
+                        f"{plug_list_str} plugs has been exported"
+                    )
+                    current_editor.pipeline_modified.emit(current_editor)
 
             else:
                 node_name, class_name, links = action_args
@@ -3662,7 +3671,7 @@ class PipelineManagerTab(QWidget):
             plugs_to_remove = []
 
             for parameter in parameters:
-                is_input = (
+                is_input = bool(
                     current_editor.scene.pipeline.nodes[""]
                     .plugs[parameter]
                     .links_to
@@ -3716,16 +3725,24 @@ class PipelineManagerTab(QWidget):
                         link_string, allow_export=True
                     )
 
-            current_editor.scene.update_pipeline()
-
             # Handle multi-export history
             if is_multi_export:
+                current_editor.scene.update_pipeline()
                 history_entry = [
                     "export_plugs",
                     tot_pip_plug_name,
                     node_plug_name[0][0],
                 ]
-                current_editor.undos.append(history_entry)
+                current_editor.redos.append(history_entry)
+                plug_list_str = (
+                    ", ".join(tot_pip_plug_name)
+                    if tot_pip_plug_name
+                    else "No plugs"
+                )
+                self.main_window.statusBar().showMessage(
+                    f"{plug_list_str} plugs has been exported"
+                )
+                current_editor.pipeline_modified.emit(current_editor)
 
         elif action_type == "update_node_name":
             node, new_node_name, old_node_name = action_args

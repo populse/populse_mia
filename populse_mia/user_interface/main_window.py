@@ -1142,19 +1142,16 @@ class MainWindow(QMainWindow):
 
     def redo(self):
         """Redo the last action made by the user."""
+        tab_name = self.tabs.tabText(self.tabs.currentIndex()).replace(
+            "&", "", 1
+        )
 
-        if (
-            self.tabs.tabText(self.tabs.currentIndex()).replace("&", "", 1)
-            == "Data Browser"
-        ):
+        if tab_name == "Data Browser":
             # In Data Browser
             self.project.redo(self.data_browser.table_data)
             # Action remade in the Database
 
-        elif (
-            self.tabs.tabText(self.tabs.currentIndex()).replace("&", "", 1)
-            == "Pipeline Manager"
-        ):
+        elif tab_name == "Pipeline Manager":
             # In Pipeline Manager
             self.pipeline_manager.redo()
 

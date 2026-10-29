@@ -382,6 +382,10 @@ class PipelineEditor(PipelineDeveloperView):
         """
         # Retrieve the created link from parent implementation
         link = super()._release_grab_link(event, ret=True)
+
+        if link is None or link.split("->")[0] == link.split("->")[1]:
+            return
+
         # Record link creation in history for undo/redo functionality
         self.update_history(
             history_maker=["add_link", link], from_undo=False, from_redo=False
@@ -460,25 +464,25 @@ class PipelineEditor(PipelineDeveloperView):
                 [(node_name, plug_name), connected_plugs, plug.optional]
             )
 
-            # Update history and status bar (unless called from export
-            # operation)
-            if not from_export_plugs and removed_plugs_info:
-                self.update_history(
-                    ["remove_plug", removed_plugs_info], from_undo, from_redo
+        # Update history and status bar (unless called from export
+        # operation)
+        if not from_export_plugs and removed_plugs_info:
+            self.update_history(
+                ["remove_plug", removed_plugs_info], from_undo, from_redo
+            )
+
+            # Display appropriate status message
+            if len(removed_plugs_info) == 1:
+                plug_name = removed_plugs_info[0][0][1]
+                message = f"'{plug_name}' plug has been removed."
+
+            else:
+                plug_names_str = tuple(
+                    info[0][1] for info in removed_plugs_info
                 )
+                message = f"{plug_names_str} plugs have been removed."
 
-                # Display appropriate status message
-                if len(removed_plugs_info) == 1:
-                    plug_name = removed_plugs_info[0][0][1]
-                    message = f"'{plug_name}' plug has been removed."
-
-                else:
-                    plug_names_str = tuple(
-                        info[0][1] for info in removed_plugs_info
-                    )
-                    message = f"{plug_names_str} plugs have been removed."
-
-                self.main_window.statusBar().showMessage(message)
+            self.main_window.statusBar().showMessage(message)
 
     def add_link(
         self,
@@ -997,8 +1001,9 @@ class PipelineEditor(PipelineDeveloperView):
         plug_list_str = (
             ", ".join(exported_plugs) if exported_plugs else "No plugs"
         )
+        plug_str = "plug" if len(exported_plugs) <= 1 else "plugs"
         self.main_window.statusBar().showMessage(
-            f"{plug_list_str} exported from node '{node_name}'."
+            f"{plug_list_str} {plug_str} exported from '{node_name}' node."
         )
 
     def get_current_filename(self):
