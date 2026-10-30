@@ -1,0 +1,182 @@
+name: Populse-MIA unit tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GIT_LFS_SKIP_SMUDGE: 1
+
+  POPULSE_DB_BRANCH: master
+  CAPSUL_BRANCH: master
+  MIA_PROCESSES_BRANCH: master
+  MIA_UT_DATA_BRANCH: main
+
+jobs:
+  tests:
+    name: Tests on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2025
+          - ubuntu-24.04
+          - macos-15-intel
+
+    steps:
+      # 1. Check out the repository being tested.
+      - name: Check out Populse-MIA
+        uses: actions/checkout@v6
+
+      # 2. Set up Python.
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Check Python and SQLite versions
+        shell: bash
+        run: |
+          python --version
+          python -c "import sys; assert sys.version_info[:2] == (3, 12), f'Expected Python 3.12, got {sys.version}'"
+          python -c "import sqlite3; print('SQLite version:', sqlite3.sqlite_version)"
+
+      # 3. Install the preliminary dependencies.
+      - name: Install preliminary dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools wheel
+          python -m pip install --upgrade cython
+          python -m pip install psutil
+          python -m pip install --upgrade pyparsing
+          python -m pip install tomli
+          python -m pip install qtconsole jupyter_core
+
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            python -m pip install pypiwin32
+          fi
+
+      # 4. Check out the development versions of the dependencies.
+      - name: Clone Populse dependencies
+        shell: bash
+        run: |
+          git clone --depth=50 --branch="$POPULSE_DB_BRANCH" \
+            https://github.com/populse/populse_db.git \
+            ../populse_db
+
+          git clone --depth=50 --branch=master \
+            https://github.com/populse/soma-base.git \
+            ../soma-base
+
+          git clone --depth=50 --branch=master \
+            https://github.com/populse/soma-workflow.git \
+            ../soma-workflow
+
+          git clone --depth=50 --branch="$CAPSUL_BRANCH" \
+            https://github.com/populse/capsul.git \
+            ../capsul
+
+          git clone --depth=50 --branch="$MIA_PROCESSES_BRANCH" \
+            https://github.com/populse/mia_processes.git \
+            ../mia_processes
+
+      # 5. Configure SSH access to the private GitLab repository.
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.MIA_UT_DATA_SSH_KEY }}
+
+      - name: Configure GitLab SSH access
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          ssh-keyscan -H gricad-gitlab.univ-grenoble-alpes.fr \
+            >> ~/.ssh/known_hosts
+
+          chmod 644 ~/.ssh/known_hosts
+
+      # 6. Download the unit-test data.
+      - name: Clone unit-test data
+        shell: bash
+        run: |
+          git clone --depth=50 --branch="$MIA_UT_DATA_BRANCH" \
+            git@gricad-gitlab.univ-grenoble-alpes.fr:mia/mia_ut_data.git \
+            mia_ut_data
+
+      # 7. Retrieve the animated GIF required by the tests.
+      - name: Download rotatingBrainVISA.gif
+        shell: bash
+        run: |
+          curl --fail --location --silent --show-error \
+            -o populse_mia/sources_images/rotatingBrainVISA.gif \
+            https://upload.wikimedia.org/wikipedia/commons/9/9c/Rotating_brain_colored.gif
+
+      # 8. Generate and install the project requirements.
+      - name: Generate requirements
+        shell: bash
+        run: |
+          python generate_requirements.py
+
+      - name: Install project requirements
+        shell: bash
+        run: |
+          cd ..
+          python -m pip install -r requirements-all.txt
+
+      # 9. Configure the Linux GUI test environment.
+      - name: Install Linux test tools
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes xvfb
+          python -m pip install "coverage[toml]"
+
+      # 10. Run the unit tests.
+      - name: Run unit tests on Windows
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          python ./populse_mia/tests/run_mia_test.py -v
+
+      - name: Run unit tests on macOS
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          python ./populse_mia/tests/run_mia_test.py -v
+
+      - name: Run unit tests on Linux with coverage
+        if: runner.os == 'Linux'
+        shell: bash
+        env:
+          QT_LOGGING_RULES: "*.debug=false;qt.qpa.*=false"
+        run: |
+          if [ -z "${XDG_RUNTIME_DIR:-}" ]; then
+            export XDG_RUNTIME_DIR="/tmp/runtime-$(id -un)"
+            mkdir -p "$XDG_RUNTIME_DIR"
+            chmod 700 "$XDG_RUNTIME_DIR"
+          fi
+
+          xvfb-run --auto-servernum \
+            python -m coverage run \
+            ./populse_mia/tests/run_mia_test.py -v
+
+          python -m coverage xml -i
+
+      # 11. Upload Linux coverage to Codecov.
+      - name: Upload coverage to Codecov
+        if: always() && runner.os == 'Linux'
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
