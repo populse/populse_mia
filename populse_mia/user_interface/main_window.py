@@ -221,15 +221,15 @@ class MainWindow(QMainWindow):
         """
         Check if files in database have been modified since first import.
         """
+        logger.info("Verify scans...")
 
         if self.project is None:
             return
 
         QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-        logger.info("Verify scans...")
         t0 = time.time()
         problem_list = data_loader.verify_scans(self.project)
-        logger.info("Check time: %.3f s", time.time() - t0)
+        logger.info("Duration of the database check: %.3f s", time.time() - t0)
         QApplication.restoreOverrideCursor()
 
         # Message if invalid files
@@ -246,6 +246,9 @@ class MainWindow(QMainWindow):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.buttonClicked.connect(msg.close)
             msg.exec()
+
+        else:
+            logger.info("No issues were detected in the database.")
 
     def check_unsaved_modifications(self):
         """
@@ -870,10 +873,9 @@ class MainWindow(QMainWindow):
                 project_name = action.data()
                 entire_path = os.path.abspath(project_name)
                 path, name = os.path.split(entire_path)
-                relative_path = os.path.relpath(project_name)
-                self.switch_project(relative_path, name)
-                # We switch the project
+                self.switch_project(entire_path, name)
 
+                # We switch the project
                 with self.project.database.data() as database_data:
                     field_names = database_data.get_field_names(
                         COLLECTION_CURRENT
@@ -1246,10 +1248,9 @@ class MainWindow(QMainWindow):
             if self.exPopup.validate:
                 old_folder_rel = self.project.folder
                 old_folder = os.path.abspath(old_folder_rel)
-                as_folder_rel = self.exPopup.relative_path
-                as_folder = os.path.abspath(as_folder_rel)
+                as_folder = self.exPopup.abs_path
 
-                if as_folder_rel == old_folder_rel:
+                if as_folder == old_folder:
                     self.project.saveModifications()
                     return True
 
@@ -1266,18 +1267,18 @@ class MainWindow(QMainWindow):
                 if not self.test:
                     self.saved_projects_list = (
                         self.saved_projects
-                    ).addSavedProject(as_folder_rel)
+                    ).addSavedProject(as_folder)
 
                 self.update_recent_projects_actions()
 
-                if os.path.exists(as_folder_rel):
+                if os.path.exists(as_folder):
                     # Prevent by a careful message
                     # see PopUpSaveProjectAs/return_value
                     # in admin mode only
-                    shutil.rmtree(as_folder_rel)
+                    shutil.rmtree(as_folder)
 
-                if not os.path.exists(as_folder_rel):
-                    os.makedirs(as_folder_rel)
+                if not os.path.exists(as_folder):
+                    os.makedirs(as_folder)
                     os.mkdir(data_path)
                     os.mkdir(raw_data_path)
                     os.mkdir(downloaded_data_path)
@@ -1370,13 +1371,13 @@ class MainWindow(QMainWindow):
                     )
 
                 # project updated everywhere
-                self.project = Project(as_folder_rel, False)
-                self.project.setName(os.path.basename(as_folder_rel))
+                self.project = Project(as_folder, False)
+                self.project.setName(os.path.basename(as_folder))
                 self.project.setDate(
                     datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 )
                 self.project.saveModifications()
-                self.update_project(as_folder_rel, call_update_table=False)
+                self.update_project(as_folder, call_update_table=False)
                 # project updated everywhere
 
                 # If some files have been set in the pipeline editors,
@@ -1514,7 +1515,7 @@ class MainWindow(QMainWindow):
         # /!\ file_path and path are the same param
 
         # Switching project only if it's a different one
-        if file_path == self.project.folder:
+        if file_path == os.path.abspath(self.project.folder):
             return False
 
         # If the file exists

@@ -1137,7 +1137,7 @@ def verify_scans(project):
     with project.database.data() as database_data:
 
         for scan in database_data.get_document_names(COLLECTION_CURRENT):
-            file_path = os.path.relpath(os.path.join(project.folder, scan))
+            file_path = os.path.abspath(os.path.join(project.folder, scan))
 
             if os.path.exists(file_path):
 
@@ -1150,7 +1150,7 @@ def verify_scans(project):
                 except Exception:
                     logger.exception(
                         "Error reading file: '%s'",
-                        os.path.abspath(file_path),
+                        file_path,
                     )
                     actual_md5 = None
 
@@ -1162,6 +1162,7 @@ def verify_scans(project):
 
                 if initial_checksum and actual_md5 != initial_checksum:
                     modified_scans.append(scan)
+
             else:
                 # Add missing file directly to the list
                 modified_scans.append(scan)

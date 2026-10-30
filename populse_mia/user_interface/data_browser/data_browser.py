@@ -475,12 +475,11 @@ class DataBrowser(QWidget):
                 if full_name.endswith(".nii"):
 
                     if not Path(full_name).is_file():
-                        full_name = os.path.relpath(
+                        full_name = os.path.abspath(
                             os.path.join(self.project.folder, full_name)
                         )
-
                     else:
-                        full_name = os.path.join(os.sep, full_name)
+                        full_name = os.path.abspath(full_name)
 
                     if full_name not in full_names:
                         full_names.append(full_name)
