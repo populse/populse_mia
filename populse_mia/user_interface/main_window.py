@@ -873,10 +873,9 @@ class MainWindow(QMainWindow):
                 project_name = action.data()
                 entire_path = os.path.abspath(project_name)
                 path, name = os.path.split(entire_path)
-                relative_path = os.path.relpath(project_name)
-                self.switch_project(relative_path, name)
-                # We switch the project
+                self.switch_project(entire_path, name)
 
+                # We switch the project
                 with self.project.database.data() as database_data:
                     field_names = database_data.get_field_names(
                         COLLECTION_CURRENT
@@ -1517,7 +1516,7 @@ class MainWindow(QMainWindow):
         # /!\ file_path and path are the same param
 
         # Switching project only if it's a different one
-        if file_path == self.project.folder:
+        if file_path == os.path.abspath(self.project.folder):
             return False
 
         # If the file exists
