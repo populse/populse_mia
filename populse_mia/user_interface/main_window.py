@@ -1248,10 +1248,9 @@ class MainWindow(QMainWindow):
             if self.exPopup.validate:
                 old_folder_rel = self.project.folder
                 old_folder = os.path.abspath(old_folder_rel)
-                as_folder_rel = self.exPopup.relative_path
-                as_folder = os.path.abspath(as_folder_rel)
+                as_folder = self.exPopup.abs_path
 
-                if as_folder_rel == old_folder_rel:
+                if as_folder == old_folder:
                     self.project.saveModifications()
                     return True
 
@@ -1268,18 +1267,18 @@ class MainWindow(QMainWindow):
                 if not self.test:
                     self.saved_projects_list = (
                         self.saved_projects
-                    ).addSavedProject(as_folder_rel)
+                    ).addSavedProject(as_folder)
 
                 self.update_recent_projects_actions()
 
-                if os.path.exists(as_folder_rel):
+                if os.path.exists(as_folder):
                     # Prevent by a careful message
                     # see PopUpSaveProjectAs/return_value
                     # in admin mode only
-                    shutil.rmtree(as_folder_rel)
+                    shutil.rmtree(as_folder)
 
-                if not os.path.exists(as_folder_rel):
-                    os.makedirs(as_folder_rel)
+                if not os.path.exists(as_folder):
+                    os.makedirs(as_folder)
                     os.mkdir(data_path)
                     os.mkdir(raw_data_path)
                     os.mkdir(downloaded_data_path)
@@ -1372,13 +1371,13 @@ class MainWindow(QMainWindow):
                     )
 
                 # project updated everywhere
-                self.project = Project(as_folder_rel, False)
-                self.project.setName(os.path.basename(as_folder_rel))
+                self.project = Project(as_folder, False)
+                self.project.setName(os.path.basename(as_folder))
                 self.project.setDate(
                     datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 )
                 self.project.saveModifications()
-                self.update_project(as_folder_rel, call_update_table=False)
+                self.update_project(as_folder, call_update_table=False)
                 # project updated everywhere
 
                 # If some files have been set in the pipeline editors,

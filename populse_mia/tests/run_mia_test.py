@@ -422,17 +422,6 @@ class TestMIACase(unittest.TestCase):
          found.
         :raises ValueError: If the specified tag is not found in the list.
         """
-
-        ############################
-        print(
-            "DEBUG add_visualized_tag:",
-            "widget id =",
-            id(widget),
-            "dialog =",
-            getattr(widget, "dialog", None),
-        )
-        ############################
-
         start_time = time.time()
         timeout_secs = timeout / 1000
 
@@ -7840,17 +7829,11 @@ class TestMIANodeController(TestMIACase):
         self.assertTrue(input_filter.table_data.isColumnHidden(tag_col_idx))
 
         # Add "AcquisitionDate" as a visualized tag
-        # with patch.object(
-        #     QDialog, "exec", side_effect=lambda: (QTest.qWait(300), True)
-        # ):
-        #     QTimer.singleShot(
-        #         100,
-        #         lambda: self.add_visualized_tag(
-        #             input_filter, "AcquisitionDate", timeout=5000
-        #         ),
-        #     )
-        #     input_filter.update_tags()
         def mock_exec():
+            """
+            Simulate dialog execution by selecting AcquisitionDate and
+            accepting.
+            """
             self.add_visualized_tag(
                 input_filter, "AcquisitionDate", timeout=5000
             )

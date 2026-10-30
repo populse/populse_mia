@@ -5310,11 +5310,11 @@ class PopUpSaveProjectAs(QDialog):
         # Set path attributes
         self.path, self.name = os.path.split(entire_path)
         self.total_path = entire_path
-        self.relative_path = os.path.relpath(entire_path)
-        self.relative_subpath = os.path.relpath(self.path)
+        self.abs_path = os.path.abspath(entire_path)
+        self.abs_subpath = os.path.abspath(self.path)
 
         # Handle project name conflicts
-        if not os.path.exists(self.relative_path):
+        if not os.path.exists(entire_path):
             self.signal_saved_project.emit()
             self.validate = True
             self.close()

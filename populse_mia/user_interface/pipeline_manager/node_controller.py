@@ -1009,9 +1009,6 @@ class FilterWidget(QWidget):
 
         # Create and configure dialog
         self.dialog = QDialog()
-        ###############################
-        print("DEBUG update_tags: dialog created", id(self.dialog))
-        ###############################
         self.dialog.setMinimumSize(600, 600)
         # Set up dialog content
         visualized_tags = PopUpVisualizedTags(self.project, self.visible_tags)
@@ -1056,10 +1053,6 @@ class FilterWidget(QWidget):
                 fields.addItems(new_visibilities)
                 fields.model().sort(0)
                 fields.addItem("All visualized tags")
-
-        ################################
-        print("DEBUG update_tags: cleaning dialog", id(self.dialog))
-        #################################
 
         # Clean up the dialog reference at the end
         if hasattr(self, "dialog") and self.dialog:

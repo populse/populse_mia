@@ -2378,16 +2378,16 @@ class Project:
             # Handle results
             if old_path is None:
                 logger.warning(
-                    "Updating the paths in the database when renaming the "
-                    "project: No changes in the HISTORY and BRICK "
-                    "collections are made because the output_directory has "
-                    "not been found. The renamed project may be corrupted...!"
+                    "Updating paths in the database while copying a "
+                    "project: No changes were made to the HISTORY and BRICK "
+                    "collections because the output_directory was not found. "
+                    "The copied project may be corrupted...!"
                 )
 
             else:
                 logger.info(
-                    "Updating database paths when renaming the project: "
-                    "changing %s to %s...",
+                    "Updating database paths when copying a project: "
+                    "Copying from %s to %s...",
                     old_path,
                     current_project_path,
                 )
