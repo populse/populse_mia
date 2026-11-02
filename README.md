@@ -2,8 +2,7 @@
 	<img src="https://github.com/populse/populse_mia/blob/master/populse_mia/sources_images/Logo_populse_mia_HR.jpeg" alt="populse_mia logo" height="220" width="300">
 </p>
 
-[//]: [![](https://travis-ci.com/populse/populse_mia.svg?branch=master)](https://app.travis-ci.com/github/populse/populse_mia)
-[![Build status](https://img.shields.io/appveyor/build/populse/populse-mia/master.svg)](https://ci.appveyor.com/project/populse/populse-mia/branch/master)
+[![Populse-MIA unit tests](https://github.com/populse/populse_mia/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/populse/populse_mia/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/populse/populse_mia/branch/master/graph/badge.svg?token=40NTt0KVVV)](https://codecov.io/gh/populse/populse_mia)
 [![](https://img.shields.io/badge/license-CeCILL-blue.svg)](https://github.com/populse/populse_mia/blob/master/LICENSE)
 [![](https://img.shields.io/pypi/v/populse_mia.svg)](https://pypi.org/project/populse-mia/)
