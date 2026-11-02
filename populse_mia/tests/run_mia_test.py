@@ -3164,19 +3164,19 @@ class TestMIADataBrowser(TestMIACase):
             # --- Mock project pop-ups ---
 
             # Common mock configuration
-            def mock_popup(relative_path):
+            def mock_popup(abs_path):
                 """
                 Create a MagicMock instance simulating a PopUpNewProject
                 dialog.
 
-                :param relative_path: The relative path to set as the selected
+                :param abs_path: The absolute path to set as the selected
                  file and filename in the popup.
-                type relative_path: str
+                type abs_path: str
 
                 :return: (MagicMock) A mocked PopUpNewProject instance with
                  predefined behaviors:
 
-                    - `relative_path` attribute set to the given path.
+                    - `abs_path` attribute set to the given path.
                     - `selectedFiles()` returns a list containing the relative
                       path.
                     - `get_filename()` returns the relative path.
@@ -3185,9 +3185,9 @@ class TestMIADataBrowser(TestMIACase):
                 :rtype: MagicMock
                 """
                 popup = MagicMock(spec=PopUpNewProject)
-                popup.relative_path = relative_path
-                popup.selectedFiles.return_value = [relative_path]
-                popup.get_filename.return_value = relative_path
+                popup.abs_path = abs_path
+                popup.selectedFiles.return_value = [abs_path]
+                popup.get_filename.return_value = abs_path
                 popup.exec_.return_value = True
                 return popup
 
@@ -5799,9 +5799,9 @@ class TestMIAMainWindow(TestMIACase):
         config.set_projects_save_path(project_root)
 
         # Append project to saved/opened lists for increase coverage
-        rel_proj_path = os.path.relpath(test_proj_path)
-        self.main_window.saved_projects.pathsList.append(rel_proj_path)
-        config.set_opened_projects([rel_proj_path])
+        abs_proj_path = os.path.abspath(test_proj_path)
+        self.main_window.saved_projects.pathsList.append(abs_proj_path)
+        config.set_opened_projects([abs_proj_path])
 
         with (
             patch.object(PopUpDeleteProject, "exec", lambda self_: None),

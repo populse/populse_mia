@@ -215,7 +215,7 @@ class CountTable(QDialog):
         label.setObjectName(color)
         # Load and scale icon
         pixmap_path = os.path.join(sources_images_dir, image_name)
-        pixmap = QPixmap(os.path.relpath(pixmap_path))
+        pixmap = QPixmap(os.path.abspath(pixmap_path))
         height = 20 if image_name == "red_minus.png" else 15
         pixmap = pixmap.scaledToHeight(height)
         label.setPixmap(pixmap)

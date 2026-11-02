@@ -196,7 +196,7 @@ class ImportWorker(QThread):
         and updates the database.
         """
         begin = time_time()
-        raw_data_folder = os.path.relpath(
+        raw_data_folder = os.path.abspath(
             os.path.join(self.project.folder, "data", "raw_data")
         )
         # Process export logs from MRIManager

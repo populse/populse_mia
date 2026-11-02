@@ -211,7 +211,7 @@ class AdvancedSearch(QWidget):
         sources_dir = Config().getSourceImageDir()
         icon_path = os.path.join(sources_dir, "red_minus.png")
         remove_row_label = ClickableLabel()
-        pixmap = QPixmap(os.path.relpath(icon_path)).scaledToHeight(30)
+        pixmap = QPixmap(os.path.abspath(icon_path)).scaledToHeight(30)
         remove_row_label.setPixmap(pixmap)
         # Assemble row layout
         row_layout = [
@@ -830,7 +830,7 @@ class AdvancedSearch(QWidget):
         add_button = ClickableLabel()
         add_button.setObjectName("plus")
         add_button.setPixmap(
-            QPixmap(os.path.relpath(plus_icon_path)).scaledToHeight(20)
+            QPixmap(os.path.abspath(plus_icon_path)).scaledToHeight(20)
         )
         add_button.clicked.connect(self.add_search_bar)
         self.rows[-1][6] = add_button

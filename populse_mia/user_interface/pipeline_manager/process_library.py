@@ -2105,7 +2105,7 @@ class PackageLibraryDialog(QDialog):
             # Adding the module path to the system path
             sys.path.append(path)
             self.add_package(package)
-            self.paths.append(os.path.relpath(path))
+            self.paths.append(os.path.abs(path))
             return
 
         # Store original status to restore if addition fails

@@ -1525,16 +1525,16 @@ class PopUpDeleteProject(QDialog):
             self.main_window.project = Project(None, True)
             self.main_window.update_project("")
 
-        project_rel_path = os.path.relpath(project_path)
+        project_abs_path = os.path.abspath(project_path)
 
-        if project_rel_path in self.main_window.saved_projects.pathsList:
+        if project_abs_path in self.main_window.saved_projects.pathsList:
             self.main_window.saved_projects.removeSavedProject(
-                project_rel_path
+                project_abs_path
             )
             self.main_window.update_recent_projects_actions()
 
-        if project_rel_path in opened_projects:
-            opened_projects.remove(project_rel_path)
+        if project_abs_path in opened_projects:
+            opened_projects.remove(project_abs_path)
 
         shutil.rmtree(project_path)
 
@@ -2024,7 +2024,7 @@ class PopUpMultipleSort(QDialog):
         # Remove tag button
         self.remove_tag_label = ClickableLabel()
         remove_tag_picture = QtGui.QPixmap(
-            os.path.relpath(os.path.join(sources_images_dir, "red_minus.png"))
+            os.path.abspath(os.path.join(sources_images_dir, "red_minus.png"))
         ).scaledToHeight(20)
         self.remove_tag_label.setPixmap(remove_tag_picture)
         self.remove_tag_label.clicked.connect(self.remove_tag)
@@ -2032,7 +2032,7 @@ class PopUpMultipleSort(QDialog):
         self.add_tag_label = ClickableLabel()
         self.add_tag_label.setObjectName("plus")
         add_tag_picture = QtGui.QPixmap(
-            os.path.relpath(os.path.join(sources_images_dir, "green_plus.png"))
+            os.path.abspath(os.path.join(sources_images_dir, "green_plus.png"))
         ).scaledToHeight(15)
         self.add_tag_label.setPixmap(add_tag_picture)
         self.add_tag_label.clicked.connect(self.add_tag)
@@ -2221,11 +2221,11 @@ class PopUpNewProject(QFileDialog):
 
         entire_path = os.path.abspath(file_name)
         self.path, self.name = os.path.split(entire_path)
-        self.relative_path = os.path.relpath(file_name)
-        self.relative_subpath = os.path.relpath(self.path)
+        self.abs_path = os.path.abspath(file_name)
+        self.abs_subpath = os.path.abspath(self.path)
 
         # Check if project already exists
-        if os.path.exists(self.relative_path):
+        if os.path.exists(self.abs_path):
             message_already_exists()
 
         else:
@@ -2276,7 +2276,7 @@ class PopUpOpenProject(QFileDialog):
         """
         Process the selected directory and emit signal if valid.
 
-        Sets the path, name, and relative_path attributes based on the selected
+        Sets the path, name, and abs_path attributes based on the selected
         directory. If the directory exists, emits signal_create_project.
 
         :param file_name_tuple: Tuple containing selected directory
@@ -2292,12 +2292,11 @@ class PopUpOpenProject(QFileDialog):
         if not file_name:
             return
 
-        entire_path = os.path.abspath(file_name)
-        self.path, self.name = os.path.split(entire_path)
-        self.relative_path = os.path.relpath(file_name)
+        self.abs_path = os.path.abspath(file_name)
+        self.path, self.name = os.path.split(self.abs_path)
 
         # Check if directory exists and emit signal
-        if os.path.exists(entire_path):
+        if os.path.exists(self.abs_path):
             self.close()
             self.signal_create_project.emit()
 
@@ -5458,9 +5457,9 @@ class PopUpSeeAllProjects(QDialog):
 
         if file_name:
             self.path, self.name = os.path.split(os.path.abspath(file_name))
-            self.relative_path = os.path.relpath(file_name)
+            self.abs_path = os.path.abspath(file_name)
 
-            if self.mainWindow.switch_project(self.relative_path, self.name):
+            if self.mainWindow.switch_project(self.abs_path, self.name):
                 self.accept()
                 self.close()
 

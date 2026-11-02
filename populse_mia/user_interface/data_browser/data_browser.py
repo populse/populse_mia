@@ -519,7 +519,7 @@ class DataBrowser(QWidget):
         sources_images_dir = Config().getSourceImageDir()
         self.addRowLabel.setObjectName("plus")
         add_row_picture = QPixmap(
-            os.path.relpath(os.path.join(sources_images_dir, "green_plus.png"))
+            os.path.abspath(os.path.join(sources_images_dir, "green_plus.png"))
         ).scaledToHeight(20)
         self.addRowLabel.setPixmap(add_row_picture)
         self.addRowLabel.setFixedWidth(20)

@@ -85,7 +85,7 @@ class PipelineEditor(PipelineDeveloperView):
               been modified.
             - del_node: Deletes a node.
             - export_node_plugs: Exports all the plugs of a node.
-            - get_current_filename: Returns the relative path the pipeline was
+            - get_current_filename: Returns the absolute path the pipeline was
               last saved to. Empty if never saved.
             - save_pipeline: Saves the pipeline.
             - update_history: Updates the history for undos and redos.
@@ -1008,18 +1008,19 @@ class PipelineEditor(PipelineDeveloperView):
 
     def get_current_filename(self):
         """
-        Return the relative path to the last saved pipeline file.
+        Return the absolute path to the last saved pipeline file.
 
-        Returns the relative path from the current working directory to the
-        file where this pipeline was most recently saved. If the pipeline has
-        never been saved, returns an empty string.
+        Returns the absolute path to the file where this pipeline was most
+        recently saved. If the pipeline has never been saved, returns an empty
+        string.
 
-        :return: (str) Relative path to the pipeline file, or empty string if
-         never saved.
+        :return: Absolute path to the pipeline file, or empty string if never
+         saved.
+        :rtype: str
         """
         filename = getattr(self, "_pipeline_filename", None)
 
-        return os.path.relpath(filename) if filename else ""
+        return os.path.abspath(filename) if filename else ""
 
     def save_pipeline(self, filename=None):
         """
@@ -1772,7 +1773,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
     def get_current_filename(self):
         """
-        Return the relative path of the file last saved in the current editor.
+        Return the path of the file last saved in the current editor.
 
         If the pipeline has never been saved, the current tab title is
         returned.
@@ -1863,9 +1864,8 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         """
         Get the filename for the pipeline at the specified editor index.
 
-        Returns the relative path to the file where the pipeline was last
-        saved. If the pipeline has never been saved, returns the tab title
-        instead.
+        Returns the path to the file where the pipeline was last saved. If the
+        pipeline has never been saved, returns the tab title instead.
 
         :param idx: The zero-based index of the editor tab.
         :type idx: int
@@ -1907,7 +1907,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         Get the index of the first tab with the specified filename.
 
         :param filename: The pipeline filename to search for. Can be an
-         absolute or relative path; will be normalized to relative.
+         absolute or relative path; will be normalized to absolute.
         :type filename: str
 
         :return: The zero-based index of the matching tab, or None if
@@ -1923,7 +1923,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             return None
 
         # Normalize to relative path for consistent comparison
-        filename = os.path.relpath(filename)
+        filename = os.path.abspath(filename)
 
         return next(
             (

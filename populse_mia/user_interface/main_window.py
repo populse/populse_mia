@@ -391,7 +391,7 @@ class MainWindow(QMainWindow):
 
                 if self.exPopup.exec():
                     self.exPopup.get_filename(self.exPopup.selectedFiles())
-                    file_name = self.exPopup.relative_path
+                    file_name = self.exPopup.abs_path
                     # Removing the old project from the list of
                     # currently opened projects
                     config = Config()
@@ -401,7 +401,7 @@ class MainWindow(QMainWindow):
                     config.saveConfig()
                     # We remove the useless files from the old project
                     self.remove_raw_files_useless()
-                    self.project = Project(self.exPopup.relative_path, True)
+                    self.project = Project(self.exPopup.abs_path, True)
                     self.update_project(
                         file_name
                     )  # project updated everywhere
@@ -821,7 +821,7 @@ class MainWindow(QMainWindow):
                 if self.exPopup.exec():
                     project_name = self.exPopup.selectedFiles()
                     self.exPopup.get_filename(project_name)
-                    project_name = self.exPopup.relative_path
+                    project_name = self.exPopup.abs_path
                     self.data_browser.data_sent = False
 
                     # We switch the project
@@ -1416,7 +1416,7 @@ class MainWindow(QMainWindow):
         self.exPopup = PopUpSeeAllProjects(self.saved_projects, self)
 
         if self.exPopup.exec():
-            file_path = self.exPopup.relative_path
+            file_path = self.exPopup.abs_path
 
             if not self.test:
                 self.saved_projects_list = self.saved_projects.addSavedProject(
