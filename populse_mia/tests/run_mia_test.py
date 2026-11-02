@@ -9979,7 +9979,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_edt_tab = ppl_edt_tabs.get_current_editor()
 
         # Project setup
-        project_path = self.get_new_test_project()
+        project_path = str(Path(self.get_new_test_project()).resolve())
         ppl_manager.project.folder = project_path
         data_folder = Path(project_path, "data", "raw_data")
         nii_file = data_folder / (
@@ -9988,6 +9988,13 @@ class TestMIAPipelineManagerTab(TestMIACase):
         )
         document_path = str(nii_file.resolve())
         db_value = os.path.relpath(document_path, project_path)
+
+        self.assertTrue(
+            Path(document_path).is_relative_to(Path(project_path)),
+            f"Document is outside project folder:\n"
+            f"project_path={project_path}\n"
+            f"document_path={document_path}",
+        )
 
         # Insert document_path in the database
         with ppl_manager.project.database.data(write=True) as database_data:
