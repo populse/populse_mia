@@ -252,6 +252,7 @@ class CapsulNodeController(QWidget):
         hlayout = QHBoxLayout()
         label_node_name = QLabel("Node name:")
         self.line_edit_node_name = QLineEdit()
+        self.line_edit_node_name.editingFinished.connect(self.update_node_name)
         hlayout.addWidget(label_node_name)
         hlayout.addWidget(self.line_edit_node_name)
         v_box_final.addLayout(hlayout)
@@ -278,9 +279,6 @@ class CapsulNodeController(QWidget):
         if self.node_name not in ("inputs", "outputs"):
             self.line_edit_node_name.setText(self.node_name)
             self.line_edit_node_name.setReadOnly(False)
-            self.line_edit_node_name.editingFinished.connect(
-                self.update_node_name
-            )
 
         else:
             self.line_edit_node_name.setText("Pipeline inputs/outputs")
