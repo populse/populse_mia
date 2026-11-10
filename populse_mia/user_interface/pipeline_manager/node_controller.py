@@ -371,17 +371,19 @@ class CapsulNodeController(QWidget):
         """
         Clean up process notifications and signals.
         """
+        process = getattr(self, "process", None)
 
-        if hasattr(self, "process"):
-            self.process.on_trait_change(self.parameters_changed, remove=True)
+        if process is not None:
+            process.on_trait_change(
+                self.parameters_changed,
+                remove=True,
+            )
 
-        try:
-
-            if not sip.isdeleted(self):
+        if not sip.isdeleted(self):
+            try:
                 self.value_changed.disconnect()
-
-        except TypeError:
-            pass  # Signal was not connected
+            except TypeError:
+                pass  # Signal was not connected
 
     def rename_subprocesses(self, node, parent_node_name):
         """

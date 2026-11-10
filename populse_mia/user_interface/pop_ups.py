@@ -2675,42 +2675,6 @@ class PopUpPreferences(QDialog):
                         self, "Success", "Password changed successfully!"
                     )
 
-    def control_checkbox_toggled(self):
-        """Check if the user really wants to change the controller version."""
-        self.control_checkbox.toggle()
-        self.msg = QMessageBox()
-        self.msg.setIcon(QMessageBox.Warning)
-        self.msg.setText("Controller version change")
-        self.msg.setWindowTitle("Warning")
-        self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        config = Config()
-
-        if not self.control_checkbox_changed:
-            self.msg.setInformativeText(
-                f"To change the controller from "
-                f"{'V1' if config.isControlV1() else 'V2'} to "
-                f"{'V2' if config.isControlV1() else 'V1'}, Mia must be "
-                f"restarted. Would you like to plan this change for next "
-                f"start-up?"
-            )
-
-        else:
-            self.msg.setInformativeText(
-                f"Change of controller from "
-                f"{'V1' if config.isControlV1() else 'V2'} to "
-                f"{'V2' if config.isControlV1() else 'V1'} is already "
-                f"planned for next start-up. Would you like to cancel "
-                f"this change?"
-            )
-
-        return_value = self.msg.exec()
-
-        if return_value == QMessageBox.Yes:
-            self.control_checkbox_changed = not self.control_checkbox_changed
-            self.main_window.set_controller_version()
-
-        QApplication.restoreOverrideCursor()
-
     def create_afni_group(self):
         """Create the AFNI group box."""
         self.use_afni_label = QLabel("Use AFNI")
@@ -2916,10 +2880,7 @@ class PopUpPreferences(QDialog):
         self.edit_config.clicked.connect(self.edit_config_file)
         self.control_checkbox = QCheckBox("", self)
         self.control_label = QLabel("Version 1 controller")
-        self.control_checkbox_changed = (
-            self.main_window.get_controller_version()
-        )
-        self.control_checkbox.clicked.connect(self.control_checkbox_toggled)
+        self.control_checkbox.setChecked(Config().isControlV1())
         self.max_thumbnails_label = QLabel(
             "Number of thumbnails in Data Browser:"
         )
@@ -3510,8 +3471,16 @@ class PopUpPreferences(QDialog):
     def ok_clicked(self):
         """Handle the OK button click event."""
 
-        if self.validate_and_save(OK_clicked=True):
-            self.accept()
+        if not self.validate_and_save(OK_clicked=True):
+            return
+
+        # Apply the controller version change.
+        if not self.main_window.set_controller_version(
+            self.control_checkbox.isChecked()
+        ):
+            return
+
+        self.accept()
 
     def save_full_config(self, config):
         """
@@ -3526,7 +3495,6 @@ class PopUpPreferences(QDialog):
         """
         config.setAutoSave(self.save_checkbox.isChecked())
         config.set_radioView(self.radioView_checkbox.isChecked())
-        config.setControlV1(self.control_checkbox.isChecked())
         config.set_max_thumbnails(
             min(max(self.max_thumbnails_box.value(), 1), 15)
         )
