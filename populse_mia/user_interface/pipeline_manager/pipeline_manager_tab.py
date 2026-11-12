@@ -237,6 +237,8 @@ class PipelineManagerTab(QWidget):
             - complete_pipeline_parameters: Complete pipeline parameters.
             - controller_value_changed: Update history when a pipeline node is
               changed.
+            - create_node_controller: Create the node controller according to
+              the current preferences.
             - displayNodeParameters: Display the node controller when a node is
               clicked.
             - finish_execution: Handle pipeline execution completion and update
@@ -275,6 +277,8 @@ class PipelineManagerTab(QWidget):
             - undo: Undo the last action made on the current pipeline editor.
             - update_inheritance: Update the inheritance dictionary for a
               process node in a pipeline execution.
+            - update_node_controller: Update the node controller with the
+              current node and process.
             - update_node_list: Update the list of nodes in workflow.
             - updateProcessLibrary: Update the library of processes when a
               pipeline is saved.
@@ -455,92 +459,6 @@ class PipelineManagerTab(QWidget):
         self.iterationTable.iteration_table_updated.connect(
             self.update_scans_list
         )
-
-    def create_node_controller(self):
-        """Create the node controller according to the current preferences."""
-
-        config = Config()
-        node_controller_class = (
-            CapsulNodeController
-            if not config.isControlV1()
-            else NodeController
-        )
-
-        controller = node_controller_class(
-            self.project,
-            self.scan_list,
-            self,
-            self.main_window,
-        )
-
-        with self.project.database.data() as database_data:
-            controller.visibles_tags = database_data.get_shown_tags()
-
-        # To undo/redo
-        controller.value_changed.connect(self.controller_value_changed)
-
-        return controller
-
-    def update_node_controller(self):
-        """Replace the node controller if its version has changed."""
-
-        config = Config()
-        expected_class = (
-            CapsulNodeController
-            if not config.isControlV1()
-            else NodeController
-        )
-
-        old_controller = self.nodeController
-
-        if isinstance(old_controller, expected_class):
-            return True
-
-        # Do not replace the controller during pipeline execution
-        if self.stop_pipeline_action.isEnabled():
-            logger.warning(
-                "Cannot change the node controller during pipeline execution"
-            )
-            return False
-
-        # Create and initialize the replacement before modifying the
-        # current controller.
-        new_controller = self.create_node_controller()
-
-        try:
-            if (
-                self.current_node_name is not None
-                and self.current_process is not None
-            ):
-                new_controller.display_parameters(
-                    self.current_node_name,
-                    self.current_process,
-                    self.pipelineEditorTabs.get_current_pipeline(),
-                )
-
-        except Exception:
-            new_controller.release_process()
-            new_controller.deleteLater()
-            raise
-
-        # Release the old controller.
-        old_controller.release_process()
-
-        try:
-            old_controller.value_changed.disconnect(
-                self.controller_value_changed
-            )
-        except TypeError:
-            pass
-
-        # Replace the widget in the scroll area.
-        self.scrollArea.takeWidget()
-        self.nodeController = new_controller
-        self.scrollArea.setWidget(new_controller)
-        # Schedule the old widget for deletion.
-        old_controller.deleteLater()
-
-        return True
 
     def _register_node_io_in_database(
         self, job, node, pipeline_name="", history_id=""
@@ -1951,6 +1869,31 @@ class PipelineManagerTab(QWidget):
         # Add entry to undo history
         current_editor = self.pipelineEditorTabs.get_current_editor()
         self.pipelineEditorTabs.undos[current_editor].append(history_entry)
+
+    def create_node_controller(self):
+        """Create the node controller according to the current preferences."""
+
+        config = Config()
+        node_controller_class = (
+            CapsulNodeController
+            if not config.isControlV1()
+            else NodeController
+        )
+
+        controller = node_controller_class(
+            self.project,
+            self.scan_list,
+            self,
+            self.main_window,
+        )
+
+        with self.project.database.data() as database_data:
+            controller.visibles_tags = database_data.get_shown_tags()
+
+        # To undo/redo
+        controller.value_changed.connect(self.controller_value_changed)
+
+        return controller
 
     def displayNodeParameters(self, node_name, process):
         """
@@ -3939,6 +3882,66 @@ class PipelineManagerTab(QWidget):
             inheritance_dict = getattr(process, "inheritance_dict", {})
 
         job.inheritance_dict = inheritance_dict
+
+    def update_node_controller(self):
+        """Replace the node controller if its version has changed."""
+        config = Config()
+        expected_class = (
+            CapsulNodeController
+            if not config.isControlV1()
+            else NodeController
+        )
+        old_controller = self.nodeController
+
+        if isinstance(old_controller, expected_class):
+            return True
+
+        # Do not replace the controller during pipeline execution
+        if self.stop_pipeline_action.isEnabled():
+            logger.warning(
+                "Cannot change the node controller during pipeline execution"
+            )
+            return False
+
+        # Create and initialize the replacement before modifying the
+        # current controller.
+        new_controller = self.create_node_controller()
+
+        try:
+
+            if (
+                self.current_node_name is not None
+                and self.current_process is not None
+            ):
+                new_controller.display_parameters(
+                    self.current_node_name,
+                    self.current_process,
+                    self.pipelineEditorTabs.get_current_pipeline(),
+                )
+
+        except Exception:
+            new_controller.release_process()
+            new_controller.deleteLater()
+            raise
+
+        # Release the old controller.
+        old_controller.release_process()
+
+        try:
+            old_controller.value_changed.disconnect(
+                self.controller_value_changed
+            )
+        except TypeError:
+            pass
+
+        # Replace the widget in the scroll area.
+        self.scrollArea.takeWidget()
+        self.nodeController = new_controller
+        self.scrollArea.setWidget(new_controller)
+        # Schedule the old widget for deletion.
+        old_controller.deleteLater()
+
+        return True
 
     def update_node_list(self, brick=None):
         """

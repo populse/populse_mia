@@ -380,8 +380,10 @@ class CapsulNodeController(QWidget):
             )
 
         if not sip.isdeleted(self):
+
             try:
                 self.value_changed.disconnect()
+
             except TypeError:
                 pass  # Signal was not connected
 

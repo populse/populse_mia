@@ -2333,8 +2333,6 @@ class PopUpPreferences(QDialog):
             - browse_spm_standalone: Called when spm standalone browse button
               is clicked.
             - change_admin_psswd: Method to change the admin password.
-            - control_checkbox_toggled: Check before changing controller
-              version.
             - create_afni_group: Create the AFNI group box.
             - create_ants_group: Create the ANTS group box.
             - create_appearance_tab: Create the 'Appearance' tab.

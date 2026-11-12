@@ -105,8 +105,6 @@ class MainWindow(QMainWindow):
             - delete_project: Open a project and updates the recent projects
               list.
             - documentation: Open the documentation in a web browser.
-            - get_controller_version: Returns controller_version_changed
-              attribute.
             - import_data: Call the import software (MRI File Manager).
             - install_processes_pop_up: Open the install processes pop-up.
             - last_window_closed: Force exit the event loop after ipython
@@ -128,8 +126,8 @@ class MainWindow(QMainWindow):
             - saveChoice: Checks if the project needs to be saved as or just
               saved.
             - see_all_projects: Open a pop-up to show the recent projects.
-            - set_controller_version: Reverses controller_version_changed
-              attribute.
+            - set_controller_version: Change the node controller version at
+              runtime
             - setup_menu_actions: Initialize menu actions.
             - setup_window_size: Set the window size and maximize if needed.
             - software_preferences_pop_up: Open the Mia preferences pop-up.
