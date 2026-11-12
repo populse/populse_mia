@@ -5915,7 +5915,6 @@ class TestMIAMainWindow(TestMIACase):
 
         # Initial configuration
         config = Config(properties_path=self.properties_path)
-        config.setControlV1(True)
         config.setAutoSave(True)
         config.set_clinical_mode(True)
         config.set_use_fsl(True)
@@ -5924,12 +5923,18 @@ class TestMIAMainWindow(TestMIACase):
         config.set_use_mrtrix(True)
         config.set_mainwindow_size([100, 100, 100])
 
-        # Open and close the software preferences window
+        # Open the software preferences window
         main_wnd.software_preferences_pop_up()
+        # Default version of the controller is V2
+        self.assertFalse(config.isControlV1())
+        self.assertFalse(
+            main_wnd.pop_up_preferences.control_checkbox.isChecked()
+        )
+
+        # Close the software preferences window
         main_wnd.pop_up_preferences.close()
 
-        # Activate the V1 controller GUI and the user mode
-        config.setControlV1(False)
+        # Activate the user mode
         config.set_user_mode(True)
 
         # Enables Matlab MCR
@@ -6083,23 +6088,13 @@ class TestMIAMainWindow(TestMIACase):
         prefs.wrong_path("/mock_path", "mock_tool", extra_mess="mock_msg")
         self.assertTrue(hasattr(prefs, "msg"))
         self.assertEqual(prefs.msg.icon(), QMessageBox.Critical)
-        prefs.msg.close()
+        prefs.close()
 
+        # Open the software preferences window
+        main_wnd.software_preferences_pop_up()
+        prefs = main_wnd.pop_up_preferences
         # Sets the main window size
         prefs.use_current_mainwindow_size()
-
-        # Mocks the click of the OK button on 'QMessageBox.exec'
-        with patch(
-            "PyQt5.QtWidgets.QMessageBox.exec", return_value=QMessageBox.Yes
-        ):
-            # Programs the controller version to change to V1
-            prefs.control_checkbox_toggled()
-            prefs.control_checkbox_changed = True
-            self.assertTrue(main_wnd.get_controller_version())
-
-            # Cancels the above change
-            prefs.control_checkbox_toggled()
-            self.assertFalse(main_wnd.get_controller_version())
 
         # Mocks the execution of a 'capsul' method
         # (This fixes the Mac OS build)
@@ -6141,8 +6136,8 @@ class TestMIAMainWindow(TestMIACase):
         # Close the software preferences window
         prefs.close()
 
-        # Restore default config
-        config.set_use_spm_standalone(True)
+        # We use settings that make it easy to use `ok_clicked()`
+        config.set_use_spm_standalone(False)
         config.set_use_spm(False)
         config.set_use_matlab(False)
         config.set_use_matlab_standalone(False)
@@ -6150,6 +6145,24 @@ class TestMIAMainWindow(TestMIACase):
         config.set_use_afni(False)
         config.set_use_ants(False)
         config.set_use_mrtrix(False)
+
+        main_wnd.software_preferences_pop_up()
+        prefs = main_wnd.pop_up_preferences
+
+        # This is a hack to mock the parameters required to use `ok_clicked()`
+        prefs.projects_save_path_line_edit.setText(os.getcwd())
+        prefs.mri_conv_path_line_edit.setText(os.path.abspath(__file__))
+        prefs.resources_path_line_edit.setText(os.getcwd())
+        self.assertFalse(config.isControlV1())
+        self.assertFalse(prefs.control_checkbox.isChecked())
+        prefs.control_checkbox.setChecked(True)
+        prefs.ok_clicked()
+        config = Config()
+        self.assertTrue(config.isControlV1())
+
+        # Restore default config
+        config.set_use_spm_standalone(True)
+        config.setControlV1(False)
 
     def test_software_preferences_pop_up_config_file(self):
         """
