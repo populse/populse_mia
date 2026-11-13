@@ -105,8 +105,6 @@ class MainWindow(QMainWindow):
             - delete_project: Open a project and updates the recent projects
               list.
             - documentation: Open the documentation in a web browser.
-            - get_controller_version: Returns controller_version_changed
-              attribute.
             - import_data: Call the import software (MRI File Manager).
             - install_processes_pop_up: Open the install processes pop-up.
             - last_window_closed: Force exit the event loop after ipython
@@ -128,8 +126,8 @@ class MainWindow(QMainWindow):
             - saveChoice: Checks if the project needs to be saved as or just
               saved.
             - see_all_projects: Open a pop-up to show the recent projects.
-            - set_controller_version: Reverses controller_version_changed
-              attribute.
+            - set_controller_version: Change the node controller version at
+              runtime
             - setup_menu_actions: Initialize menu actions.
             - setup_window_size: Set the window size and maximize if needed.
             - software_preferences_pop_up: Open the Mia preferences pop-up.
@@ -179,7 +177,6 @@ class MainWindow(QMainWindow):
         self.saved_projects = SavedProjects()
         self.saved_projects_list = self.saved_projects.pathsList
         self.saved_projects_actions = []
-        self.controller_version_changed = False
         # Define main window view
         self.create_view_window()
         # Initialize menu
@@ -310,27 +307,6 @@ class MainWindow(QMainWindow):
                 opened_projects.remove(self.project.folder)
 
             config.set_opened_projects(opened_projects)
-
-            # Change controller version if needed
-            if self.controller_version_changed:
-                self.msg = QMessageBox()
-                self.msg.setIcon(QMessageBox.Warning)
-                self.msg.setText("Controller version change")
-                self.msg.setInformativeText(
-                    f"A change of controller version, from "
-                    f"{'V1' if config.isControlV1() else 'V2'} to "
-                    f"{'V2' if config.isControlV1() else 'V1'}, "
-                    f"is planned for next start-up. Do you confirm that "
-                    f"you would like to perform this "
-                    f"change?"
-                )
-                self.msg.setWindowTitle("Warning")
-                self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                return_value = self.msg.exec()
-
-                if return_value == QMessageBox.Yes:
-                    config.setControlV1(not config.isControlV1())
-
             config.saveConfig()
 
             if self.project is not None:
@@ -601,14 +577,6 @@ class MainWindow(QMainWindow):
         webbrowser.open(
             "https://populse.github.io/populse_mia/html/index.html"
         )
-
-    def get_controller_version(self):
-        """Gives the value of the controller_version_changed attribute.
-
-        :return: The value of the controller_version_changed attribute.
-        :rtype: bool
-        """
-        return self.controller_version_changed
 
     def import_data(self):
         """
@@ -1424,12 +1392,41 @@ class MainWindow(QMainWindow):
                 )
             self.update_recent_projects_actions()
 
-    def set_controller_version(self):
-        """Reverses the value of the controller_version_changed attribute.
+    def set_controller_version(self, use_v1):
+        """Change the node controller version at runtime.
 
-        From False to True and vice versa
+        :param use_v1: Whether to use the V1 controller.
+        :type use_v1: bool
+
+        :return: True if the requested version was applied, False otherwise.
+        :rtype: bool
         """
-        self.controller_version_changed = not self.controller_version_changed
+        config = Config()
+        old_version = config.isControlV1()
+
+        if old_version == use_v1:
+            return True
+
+        # Do not change the controller during pipeline execution.
+        if not self.pipeline_manager.run_pipeline_action.isEnabled():
+            logger.warning(
+                "Cannot change the node controller during pipeline execution"
+            )
+            return False
+
+        config.setControlV1(use_v1)
+
+        try:
+            self.pipeline_manager.update_node_controller()
+
+        except Exception:
+            config.setControlV1(old_version)
+            logger.exception("Failed to change the node controller")
+            return False
+
+        config.saveConfig()
+
+        return True
 
     def setup_menu_actions(self, sources_images_dir):
         """
