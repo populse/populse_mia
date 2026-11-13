@@ -3473,11 +3473,9 @@ class PopUpPreferences(QDialog):
             return
 
         # Apply the controller version change.
-        if not self.main_window.set_controller_version(
+        self.main_window.set_controller_version(
             self.control_checkbox.isChecked()
-        ):
-            return
-
+        )
         self.accept()
 
     def save_full_config(self, config):

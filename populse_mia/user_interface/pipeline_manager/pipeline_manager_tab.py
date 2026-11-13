@@ -3897,7 +3897,7 @@ class PipelineManagerTab(QWidget):
             return True
 
         # Do not replace the controller during pipeline execution
-        if self.stop_pipeline_action.isEnabled():
+        if not self.run_pipeline_action.isEnabled():
             logger.warning(
                 "Cannot change the node controller during pipeline execution"
             )

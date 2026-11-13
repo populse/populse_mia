@@ -1408,7 +1408,7 @@ class MainWindow(QMainWindow):
             return True
 
         # Do not change the controller during pipeline execution.
-        if self.pipeline_manager.stop_pipeline_action.isEnabled():
+        if not self.pipeline_manager.run_pipeline_action.isEnabled():
             logger.warning(
                 "Cannot change the node controller during pipeline execution"
             )
