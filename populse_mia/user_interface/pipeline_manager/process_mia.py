@@ -280,7 +280,8 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             or not process.inheritance_dict
         ):
             # The tags_inheritance() function has not been implemented in
-            # the brick, so we are using auto-inheritance.
+            # the brick (it is not a brick of the `mia_processes` library,
+            # for example), so we are using auto-inheritance.
             auto_inheritance_dict = update_auto_inheritance(process)
             # auto_inheritance_dict (dict) object format:
             # - if there is no ambiguity :
