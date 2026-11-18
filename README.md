@@ -7,7 +7,7 @@
 [![](https://img.shields.io/badge/license-CeCILL-blue.svg)](https://github.com/populse/populse_mia/blob/master/LICENSE)
 [![](https://img.shields.io/pypi/v/populse_mia.svg)](https://pypi.org/project/populse-mia/)
 [![](https://img.shields.io/pypi/status/populse_mia.svg)](https://pypi.org/project/populse-mia/)
-[![](https://img.shields.io/badge/python-3.10%2C%203.11-yellow.svg)](#)
+[![](https://img.shields.io/badge/python-3.10%2C%203.11%2C%203.12-yellow.svg)](#)
 [![](https://img.shields.io/badge/platform-Linux%2C%20OSX%2C%20Windows-orange.svg)](#)
 
 # Documentation
